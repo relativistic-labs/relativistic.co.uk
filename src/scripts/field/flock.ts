@@ -32,6 +32,7 @@ const WC = 0.8; // cohesion
 const WR = 7; // roost
 const WV = 1.4; // level flight: vertical speed damping
 const WN = 0.3; // wander
+const WD = 0.25; // a shared, slowly turning heading
 const TAU = 0.2; // banking lag
 const AMAX = 9; // most sideways pull a bank can give
 const KS = 1.1; // return to cruise speed
@@ -123,6 +124,7 @@ export function createFlock(max: number, demo: boolean) {
   let pred = false;
   let predAt = 0;
   let bend = 0;
+  let wd = 0; // the shared heading's weight: none while warming up, so the still is a fold
   let nextPred = 0;
   let qx = 0;
   let qy = 0;
@@ -168,6 +170,7 @@ export function createFlock(max: number, demo: boolean) {
     pred = false;
     all = true;
     nextPattern = nextPred = Infinity; // no shape and no predator until the flock is shown
+    wd = 0;
   }
 
   /** The flock is on screen: centre it in the view, and schedule the first shape and predator. */
@@ -176,6 +179,7 @@ export function createFlock(max: number, demo: boolean) {
     let z = 0;
     for (let i = 0; i < f.n; i++) (x += S[i * 8]!), (z += S[i * 8 + 2]!);
     for (let i = 0; i < f.n; i++) (S[i * 8]! -= x / f.n), (S[i * 8 + 2]! -= z / f.n);
+    wd = WD;
     nextPattern = f.t + (demo ? 2 : 12 + rand() * 6);
     nextPred = f.t + (demo ? 13 : 40 + rand() * 20);
   }
@@ -377,6 +381,8 @@ export function createFlock(max: number, demo: boolean) {
     all = false;
     frame++;
 
+    const dcos = Math.cos(t * 0.13) * V0;
+    const dsin = Math.sin(t * 0.13) * V0;
     const decay = Math.exp(-dt / 0.45);
     const bank = Math.min(1, dt / TAU);
     const tc = Math.cos(spin * (t - pStart));
@@ -444,6 +450,10 @@ export function createFlock(max: number, demo: boolean) {
         fz -= g * rz;
       }
       fy -= WV * vy;
+      // A faint shared heading that turns slowly, as a whole flock heads somewhere: enough to break a
+      // mill (birds circling the roost as a ring) without straightening the flock's own turns.
+      fx += wd * (dcos - vx);
+      fz += wd * (dsin - vz);
 
       // The escape wave: a bird panics when the predator is close, or a beat after a neighbour did;
       // then it can't be alarmed again for a while, so the wave travels on rather than echoing.

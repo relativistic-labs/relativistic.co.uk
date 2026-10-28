@@ -35,7 +35,7 @@ function flat(w: number, inside: (x: number, y: number) => boolean): Shape {
 function solid(w: number, point: (rand: Rand, out: Float32Array, o: number) => void): Shape {
   return {
     w,
-    spin: 0.32,
+    spin: 0.12, // slow: fast enough to show depth, too slow to leave the flock milling once released
     fill(rand, out, n) {
       for (let i = 0; i < n; i++) point(rand, out, i * 3);
     },

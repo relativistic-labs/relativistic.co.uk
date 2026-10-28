@@ -51,7 +51,7 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
   let drawn = false;
   let starting = false;
   let mode: Mode = 'pause';
-  let slowStrikes = 0;
+  let slow = 0; // 0: fine; 1: birds halved; 2: birds halved and the last second was slow
   let windowStart = 0;
   let windowFrames = 0;
   let colours: Record<'particle' | 'accent' | 'signal', Colour> | null = null;
@@ -59,7 +59,7 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
   let flock: Flock | null = null;
   let still: Float32Array | null = null;
   let gpu: { p: WebGLProgram; u: Record<string, WebGLUniformLocation | null> } | null = null;
-  const parallel = gl.getExtension('KHR_parallel_shader_compile');
+  let parallel: KHR_parallel_shader_compile | null = null;
 
   function setup() {
     const p = gl!.createProgram()!;
@@ -130,19 +130,22 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
     flock.step(last ? Math.min((now - last) / 1000, 1 / 30) : 1 / 60);
     last = now;
     draw(false);
-    // If frames average over 20 ms across a second, halve the birds. Still slow: a still frame.
+    // If frames average over 20 ms across a second, halve the birds; still slow the next second, a
+    // still frame. Later, only two slow seconds in a row stop it, so a passing hiccup doesn't.
     if (!windowStart) windowStart = now;
     windowFrames++;
-    if (now - windowStart >= 1000) {
+    // (Not for recordings, where a GPU-less machine's screen recorder is what makes frames slow.)
+    if (!demo && now - windowStart >= 1000) {
       const average = (now - windowStart) / windowFrames;
       windowStart = now;
       windowFrames = 0;
-      if (average > 20) {
-        if (++slowStrikes === 1) flock.shed();
-        else {
-          emit({ type: 'slow' });
-          return apply('still');
-        }
+      if (average <= 20) slow = slow && 1;
+      else if (slow === 2) {
+        emit({ type: 'slow' });
+        return apply('still');
+      } else {
+        if (!slow) flock.shed();
+        slow = 2;
       }
     }
     raf = frameLater(frame);
@@ -173,20 +176,24 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
   async function init() {
     if (starting) return;
     starting = true;
+    await pause(); // creating the context was one task; the program is another
+    parallel = gl!.getExtension('KHR_parallel_shader_compile');
     gpu = setup();
     while (!linked()) {
       if (!gpu) return;
       await new Promise(frameLater);
     }
+    await pause();
     while (!width) await new Promise(frameLater);
     if (!flock) {
-      flock = createFlock(Math.round(Math.min(2000, Math.max(500, (width * height) / 64))), demo);
+      // About 2,000 birds beside the headline on a desktop and 800 in the band on a phone.
+      flock = createFlock(Math.round(Math.min(2000, Math.max(500, (width * height) / 75))), demo);
       // Warm up in a square roost whatever the canvas, so the flock folds the same way on a phone.
       flock.aspect(1);
       flock.reset();
       for (let s = 1; s <= WARM; s++) {
         flock.step(1 / 20);
-        if (!(s % 10)) await pause();
+        if (!(s % 5)) await pause();
       }
       flock.aspect(width / height);
       flock.show();

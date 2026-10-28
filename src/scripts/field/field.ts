@@ -50,7 +50,7 @@ export async function startField(root: HTMLButtonElement): Promise<void> {
   };
   if (!canvas || !('WebGL2RenderingContext' in window)) return off(); // no WebGL2: no field, nothing else lost
 
-  // A test-only switch that shortens the gaps between shapes and the predator, for recordings.
+  // A test-only switch for recordings: shorter gaps between shapes and the predator, and no shedding.
   const demo = location.search.includes('field-demo');
   let visible = true;
   let slow = false;
