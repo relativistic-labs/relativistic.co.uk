@@ -381,13 +381,13 @@
   }
 
   /* The field: decorative, never behind text. A button with no visible chrome: click, tap,
-     Enter or Space pauses it. */
+     Enter or Space pauses it. A short band above the headline on phones; square beside it on
+     wide screens. */
   .field {
     position: relative;
     display: block;
     width: 100%;
-    height: min(30svh, 260px);
-    min-height: 180px;
+    height: clamp(120px, 20svh, 170px);
     margin: 0;
     padding: 0;
     border: 0;
@@ -405,14 +405,14 @@
   .field:disabled {
     cursor: default;
   }
+  /* No WebGL2, or the worker failed: the field gives its space back */
   .field.is-off {
-    visibility: hidden;
+    display: none;
   }
   @media (min-width: 900px) {
     .field {
       height: auto;
       aspect-ratio: 1;
-      min-height: 0;
     }
   }
   .field__canvas {
@@ -421,7 +421,7 @@
     height: 100%;
     opacity: 0;
     transition: opacity 600ms var(--ease-out);
-    /* Soft edges, so a formation never meets a hard frame */
+    /* Soft edges, so the flock never meets a hard frame */
     mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
       linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent);
     mask-composite: intersect;
