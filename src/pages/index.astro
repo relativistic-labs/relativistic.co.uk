@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Opening from '../components/Opening.astro';
+import Story from '../components/Story.astro';
+import HowWeWork from '../components/HowWeWork.astro';
+import Founders from '../components/Founders.astro';
+import Models from '../components/Models.astro';
+import Sponsorship from '../components/Sponsorship.astro';
+import Contact from '../components/Contact.astro';
+import { getFounders } from '../lib/content';
+import { show, site } from '../site.config';
+
+// Founder Person entries are emitted only when the team section is on.
+const founders = show.team ? await getFounders() : [];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  url: site.url,
+  logo: new URL('/apple-touch-icon.png', site.url).href,
+  email: site.email,
+  description: site.description,
+  sameAs: [site.github],
+  ...(founders.length > 0 && {
+    founder: founders.map((f) => ({
+      '@type': 'Person',
+      name: f.data.name,
+      sameAs: f.data.links.map((l) => l.url),
+    })),
+  }),
+};
+---
+
+<Base title={site.title} description={site.description} path="/" jsonLd={jsonLd} markdownAlternate>
+  <Opening />
+  <Story />
+  <HowWeWork />
+  {show.team && <Founders />}
+  {show.models && <Models />}
+  {show.sponsorship && <Sponsorship />}
+  <Contact />
+</Base>
