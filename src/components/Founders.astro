@@ -1,0 +1,83 @@
+---
+import { getImage, Picture } from 'astro:assets';
+import SectionLabel from './SectionLabel.astro';
+import { team } from '../content/copy';
+import { getFounders } from '../lib/content';
+import { sectionNumber } from '../site.config';
+
+// Card widths: five across from 1100 px, three and two from 640 px, one per row (40%) below.
+const sizes = '(min-width: 1100px) 214px, (min-width: 640px) 30vw, 38vw';
+const widths = [240, 320, 480, 640];
+const founders = await Promise.all(
+  (await getFounders()).map(async (f) => {
+    const rendered = f.data.portraitRendered
+      ? await getImage({ src: f.data.portraitRendered, widths, format: 'avif', quality: 60 })
+      : null;
+    return { ...f, rendered: rendered?.srcSet.attribute };
+  }),
+);
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((w) => w[0])
+    .join('');
+---
+
+<section id="team" class="section wrap" aria-labelledby="team-heading" data-team>
+  <SectionLabel number={sectionNumber('team')} label="Team" />
+  <h2 id="team-heading">{team.heading}</h2>
+  <ul class="founders">
+    {
+      founders.map((f) => (
+        <li class="founder">
+          {f.data.portrait === 'to-come' ? (
+            <div class="portrait portrait--pending">
+              <span class="portrait__monogram" aria-hidden="true">
+                {initials(f.data.name)}
+              </span>
+              <p class="portrait__state">Portrait to come</p>
+            </div>
+          ) : (
+            <div class="portrait" data-rendered-srcset={f.rendered}>
+              <Picture
+                src={f.data.portrait}
+                alt={f.data.name}
+                formats={['avif', 'webp']}
+                fallbackFormat="jpg"
+                widths={widths}
+                sizes={sizes}
+                quality={60}
+                loading="lazy"
+                decoding="async"
+              />
+              <p class="portrait__state" aria-hidden="true">
+                As observed
+              </p>
+            </div>
+          )}
+          <div class="founder__text">
+            <h3>{f.data.name}</h3>
+            <p class="founder__role">{f.data.role}</p>
+            <p class="founder__profile">{f.body?.trim()}</p>
+            {f.data.links.length > 0 && (
+              <ul class="founder__links">
+                {f.data.links.map((l) => (
+                  <li>
+                    <a href={l.url}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  import { initPortraits } from '../scripts/portraits';
+
+  const section = document.querySelector('[data-team]');
+  if (section) initPortraits(section);
+</script>
