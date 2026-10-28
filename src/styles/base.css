@@ -495,7 +495,8 @@
       grid-column: span 2;
       grid-template-columns: minmax(0, 1fr);
       grid-template-areas: 'portrait' 'name' 'role' 'profile' 'links';
-      grid-template-rows: auto;
+      /* The profile takes the slack, so every card's links sit on the same line */
+      grid-template-rows: auto auto auto 1fr auto;
     }
     .founder > .portrait {
       margin-bottom: var(--space-3);
