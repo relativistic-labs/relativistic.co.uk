@@ -1,19 +1,20 @@
 ---
-// The particle field: decorative, and an enhancement. Without JavaScript or WebGL2 it simply isn't drawn.
+import { fontData } from 'astro:assets';
+
+// The background field: decorative, and an enhancement. Without JavaScript or WebGL2 it isn't shown.
+// It is a button so the animation can be paused from a pointer or the keyboard (WCAG 2.2.2).
+// The worker samples the typed line with the page's Commit Mono subset.
+const mono = fontData['--font-commit']?.[0]?.src[0]?.url;
 ---
 
-<div class="field" data-field>
-  <canvas class="field__canvas" aria-hidden="true"></canvas>
-  <div class="field__bar">
-    <p class="field__scene" aria-hidden="true"><b data-scene-number>001</b> / <span data-scene-name>Unbound</span></p>
-    <button class="field__pause" type="button" aria-pressed="false" data-pause hidden>Pause motion</button>
-  </div>
-</div>
+<button class="field" type="button" data-field data-mono={mono} aria-pressed="false" aria-label="Pause background animation">
+  <canvas class="field__canvas"></canvas>
+</button>
 
 <script>
   import { startField } from '../scripts/field/field';
 
-  const root = document.querySelector<HTMLElement>('[data-field]');
+  const root = document.querySelector<HTMLButtonElement>('[data-field]');
   if (root) {
     // After first paint, when the browser is idle. Nothing waits for the field.
     const start = () => void startField(root);

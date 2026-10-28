@@ -1,19 +1,16 @@
 /**
- * The particle field, page side. Decides when the field runs, and tells the renderer (core.ts)
- * the size, theme and pointer. The renderer runs in a worker on an OffscreenCanvas where possible.
+ * The background field, page side. The field is a button: clicking or tapping it (or Enter or Space
+ * on it) pauses and plays the animation, which meets WCAG 2.2.2 without any visible control. This
+ * side decides when the field runs and tells the renderer (core.ts) the size and theme; the renderer
+ * runs in a worker on an OffscreenCanvas where possible.
  *
- * Never competes with the page: idle start, stops off-screen and in hidden tabs, sheds particles
- * if frames are slow, and shows one still frame of GRANTED for reduced motion.
+ * Never competes with the page: idle start, stops off-screen and in hidden tabs, sheds particles if
+ * frames are slow, and shows one still frame (the document) for reduced motion.
  */
 import type { Colour, FromField, Mode, ToField } from './core';
 
-const SCENES = [
-  ['001', 'Unbound'],
-  ['002', 'Granted'],
-  ['003', 'Shared'],
-  ['004', 'Running'],
-] as const;
 const STORAGE_KEY = 'relativistic-motion';
+const LABEL = { playing: 'Pause background animation', paused: 'Play background animation' };
 const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const darkQuery = matchMedia('(prefers-color-scheme: dark)');
 
@@ -42,12 +39,13 @@ function theme(root: HTMLElement): ToField {
   return message;
 }
 
-export async function startField(root: HTMLElement): Promise<void> {
+export async function startField(root: HTMLButtonElement): Promise<void> {
   const canvas = root.querySelector('canvas');
-  const sceneNumber = root.querySelector('[data-scene-number]');
-  const sceneName = root.querySelector('[data-scene-name]');
-  const pause = root.querySelector<HTMLButtonElement>('[data-pause]');
-  if (!canvas || !('WebGL2RenderingContext' in window)) return; // no WebGL2: no field, nothing else lost
+  const off = () => {
+    root.disabled = true;
+    root.classList.add('is-off');
+  };
+  if (!canvas || !('WebGL2RenderingContext' in window)) return off(); // no WebGL2: no field, nothing else lost
 
   let visible = true;
   let slow = false;
@@ -56,36 +54,37 @@ export async function startField(root: HTMLElement): Promise<void> {
   try {
     paused = localStorage.getItem(STORAGE_KEY) === 'paused';
   } catch {
-    // storage blocked: motion plays, and the control still works for this visit
+    // storage blocked: motion plays, and pausing still works for this visit
   }
 
   const receive = (m: FromField) => {
-    if (m.type === 'scene') {
-      const [n, name] = SCENES[m.scene]!;
-      if (sceneNumber) sceneNumber.textContent = n;
-      if (sceneName) sceneName.textContent = name;
-    } else if (m.type === 'drawn') root.classList.add('is-drawn');
+    if (m.type === 'drawn') root.classList.add('is-drawn');
     else if (m.type === 'slow') (slow = true), update();
+    else if (m.type === 'failed') off();
   };
 
   let send: (m: ToField) => void;
   if ('transferControlToOffscreen' in canvas) {
     const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module', name: 'field' });
     const offscreen = canvas.transferControlToOffscreen();
-    worker.postMessage({ canvas: offscreen }, [offscreen]);
+    worker.postMessage({ canvas: offscreen, mono: root.dataset['mono'] }, [offscreen]);
     worker.onmessage = (e: MessageEvent<FromField>) => receive(e.data);
     send = (m) => worker.postMessage(m);
   } else {
     const { createField } = await import('./core');
-    const handle = createField(canvas, receive);
-    if (!handle) return;
+    const handle = createField(canvas, root.dataset['mono'], receive);
+    if (!handle) return off();
     send = handle;
   }
 
   /** Decide whether the field runs, from every input that can stop it. */
   function update() {
-    if (pause) pause.hidden = motionQuery.matches;
-    const next: Mode = motionQuery.matches || slow ? 'still' : visible && !document.hidden && !paused ? 'run' : 'pause';
+    const still = motionQuery.matches || slow;
+    // Reduced motion: a still frame, so there's nothing to pause.
+    root.disabled = still;
+    root.setAttribute('aria-pressed', String(paused || still));
+    root.setAttribute('aria-label', paused || still ? LABEL.paused : LABEL.playing);
+    const next: Mode = still ? 'still' : visible && !document.hidden && !paused ? 'run' : 'pause';
     if (next === mode) return;
     mode = next;
     root.dataset['running'] = String(next === 'run');
@@ -104,30 +103,16 @@ export async function startField(root: HTMLElement): Promise<void> {
   darkQuery.addEventListener('change', () => send(theme(root)));
   document.addEventListener('visibilitychange', update);
   motionQuery.addEventListener('change', update);
-  window.addEventListener(
-    'pointermove',
-    (e: PointerEvent) => {
-      if (mode !== 'run') return;
-      const r = canvas.getBoundingClientRect();
-      send({ type: 'pointer', x: e.clientX - r.left, y: e.clientY - r.top });
-    },
-    { passive: true },
-  );
-  document.addEventListener('pointerleave', () => send({ type: 'pointer', x: -1e4, y: -1e4 }));
 
-  // WCAG 2.2.2: a visible control. The choice is stored only once someone presses it.
-  if (pause) {
-    pause.setAttribute('aria-pressed', String(paused));
-    pause.addEventListener('click', () => {
-      paused = !paused;
-      pause.setAttribute('aria-pressed', String(paused));
-      try {
-        localStorage.setItem(STORAGE_KEY, paused ? 'paused' : 'playing');
-      } catch {
-        // storage blocked: the choice lasts for this visit
-      }
-      update();
-    });
-  }
+  // The choice is stored only once someone makes it.
+  root.addEventListener('click', () => {
+    paused = !paused;
+    try {
+      localStorage.setItem(STORAGE_KEY, paused ? 'paused' : 'playing');
+    } catch {
+      // storage blocked: the choice lasts for this visit
+    }
+    update();
+  });
   update();
 }
