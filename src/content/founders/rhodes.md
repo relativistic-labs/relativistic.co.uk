@@ -7,4 +7,4 @@ links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/tamlynrhodes/
 ---
-I build web and mobile products, from the Sanger Institute’s COVID sample tracker to Trainline’s frontend. I co-founded Outlandish, and my degree, in 2005, was in artificial intelligence.
+I build web and mobile products, including the Sanger Institute’s COVID sample tracker. I co-founded Outlandish, and studied artificial intelligence.

@@ -4,8 +4,8 @@ import type { Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { countWords } from './lib/words';
 
-/** The review's profile template caps each founder at 45 words, so five editors can't break the page budget. */
-export const PROFILE_MAX_WORDS = 45;
+/** Each founder's profile is at most 32 words (round 3), so five editors can't break the page budget. */
+export const PROFILE_MAX_WORDS = 32;
 
 const foundersGlob = glob({ pattern: '*.md', base: './src/content/founders' });
 

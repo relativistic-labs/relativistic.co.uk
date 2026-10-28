@@ -61,12 +61,12 @@ const headline = fontData['--font-instrument']?.[0]?.src[0]?.url;
     <Header />
     {
       REVIEW_BUILD && (
-        <div class="phase-banner">
+        <section class="phase-banner" aria-label="Site status">
           <p class="wrap">
-            <strong class="tag tag--blue">Preview</strong>
+            <strong class="tag tag--accent">Preview</strong>
             <span>This site is a work in progress.</span>
           </p>
-        </div>
+        </section>
       )
     }
     <main id="main" tabindex="-1">

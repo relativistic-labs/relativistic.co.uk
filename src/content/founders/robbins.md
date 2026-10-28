@@ -9,4 +9,4 @@ links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/harryrobbins/
 ---
-Through Equal Experts, I led delivery of an analytics platform used by more than 4,000 analysts and data scientists, and a synthetic data product for HMRC. Before that I founded and ran Outlandish for 11 years.
+I founded and ran Outlandish for 11 years, then led delivery of an analytics platform used by more than 4,000 analysts.

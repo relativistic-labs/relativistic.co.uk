@@ -15,7 +15,7 @@ export const site = {
   github: 'https://github.com/relativistic-labs',
   title: 'Relativistic · Agents can build what your people need',
   description:
-    'We help organisations give their people AI agents that can do real work on real systems, safely. Five senior engineers and consultants.',
+    'AI agents that build the tools your people need, safely. Five senior engineers who guide you, guard you and build with you.',
   // UK trading disclosures render in the footer once the company is incorporated.
   company: null as Company | null,
 } as const;

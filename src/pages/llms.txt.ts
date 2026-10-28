@@ -1,9 +1,11 @@
 import type { APIRoute } from 'astro';
+import { PREVIEW_URL } from 'astro:env/server';
 import { opening } from '../content/copy';
 import { show, site } from '../site.config';
 
 export const GET: APIRoute = () => {
-  const url = (path: string) => new URL(path, site.url).href;
+  // A preview build points agents at itself, not at production.
+  const url = (path: string) => new URL(path, PREVIEW_URL ?? site.url).href;
   const body = [
     `# ${site.name}`,
     '',

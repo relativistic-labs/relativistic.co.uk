@@ -11,7 +11,7 @@
     "build": "astro build",
     "build:all-on": "SHOW_TEAM=true SHOW_MODELS=true SHOW_SPONSORSHIP=true astro build",
     "build:all-off": "SHOW_TEAM=false SHOW_MODELS=false SHOW_SPONSORSHIP=false astro build",
-    "build:review": "DEPLOY_TARGET=cloudflare REVIEW_BUILD=true SHOW_TEAM=true SHOW_MODELS=true SHOW_SPONSORSHIP=true astro build",
+    "build:review": "DEPLOY_TARGET=cloudflare REVIEW_BUILD=true PREVIEW_URL=https://relativistic-site-review.harryrobbins.workers.dev SHOW_TEAM=true SHOW_MODELS=false SHOW_SPONSORSHIP=false astro build",
     "build:cloudflare": "DEPLOY_TARGET=cloudflare astro build",
     "preview": "astro preview",
     "check": "astro check",
@@ -21,7 +21,8 @@
     "lhci": "lhci autorun",
     "deploy:review": "pnpm build:review && wrangler deploy --config wrangler.review.jsonc",
     "links": "node tests/links.mjs",
-    "dev:workers": "wrangler dev --config wrangler.jsonc --port 8787 --ip 127.0.0.1"
+    "dev:workers": "wrangler dev --config wrangler.jsonc --port 8787 --ip 127.0.0.1",
+    "headers": "node tests/headers.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",

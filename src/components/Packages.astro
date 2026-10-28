@@ -1,0 +1,21 @@
+---
+import Section from './Section.astro';
+import { packages } from '../content/copy';
+---
+
+<Section id="packages" question={packages.question} heading={packages.heading}>
+  <ul class="packages">
+    {
+      packages.items.map((p) => (
+        <li>
+          <h3>{p.name}</h3>
+          <p class="packages__for">
+            <strong class="tag">{p.tag}</strong>
+          </p>
+          <p>{p.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="measure">{packages.money}</p>
+</Section>

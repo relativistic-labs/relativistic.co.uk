@@ -28,6 +28,8 @@ export default defineConfig({
       SHOW_SPONSORSHIP: envField.boolean({ context: 'server', access: 'public', default: false }),
       // Review deployments must never be indexed: adds a robots meta tag here and X-Robots-Tag in _headers.
       REVIEW_BUILD: envField.boolean({ context: 'server', access: 'public', default: false }),
+      // Where a preview build is served, so /llms.txt points agents there rather than at production.
+      PREVIEW_URL: envField.string({ context: 'server', access: 'public', optional: true }),
     },
   },
 

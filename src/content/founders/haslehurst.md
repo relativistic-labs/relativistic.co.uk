@@ -7,4 +7,4 @@ links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/ahaslehurst/
 ---
-I spent three and a half years with JUXT, providing technical leadership on software for a tier-one bank. Before that I was a senior developer at the Ministry of Justice. I hold a first-class degree in mathematics.
+I provided technical leadership on software for a tier-one bank with JUXT, and hold a first-class degree in mathematics.

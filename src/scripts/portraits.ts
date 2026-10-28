@@ -82,7 +82,7 @@ function prepare(card: HTMLElement, index: number) {
         card.classList.add('is-shifting');
         setTimeout(() => {
           card.classList.remove('is-rendered');
-          if (state) state.textContent = 'As observed';
+          if (state) state.textContent = 'The real photo';
         }, DURATION / 2);
         setTimeout(() => {
           shift.remove();
