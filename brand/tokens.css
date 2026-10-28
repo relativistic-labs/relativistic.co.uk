@@ -20,9 +20,9 @@
   --ink-muted: oklch(0.74 0.014 255); /* #a5abb4 */
   --ink-accent: oklch(0.70 0.16 250); /* #42a3fd */
   --ink-signal: oklch(0.74 0.14 45); /* #f28c5c */
-  --paper-bg: oklch(0.975 0.006 85); /* #f9f6f2 */
-  --paper-raised: oklch(0.945 0.008 85); /* #efece7 */
-  --paper-rule: oklch(0.86 0.010 85); /* #d4d1ca */
+  --paper-bg: oklch(1 0 0); /* #ffffff */
+  --paper-raised: oklch(0.964 0.003 85); /* #f4f3f1 */
+  --paper-rule: oklch(0.781 0.008 254); /* #b4b8bd */
   --paper-text: oklch(0.215 0.016 255); /* #151a21 */
   --paper-muted: oklch(0.47 0.016 255); /* #555b64 */
   --paper-accent: oklch(0.50 0.19 264); /* #2858cd */

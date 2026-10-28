@@ -1,0 +1,40 @@
+# services-tall: the phone layout of services.d2. One column under 360 px wide at 1x, so it
+# shows at full size on a 375 px phone. Our support is a note here rather than a frame, to save
+# a level of nesting, and invisible edges (opacity 0) set the order of the column.
+# Engine: ELK, top to bottom. TALA spread the same content over 1,000 px (compared 28 October 2026).
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: down
+
+support: "Our support · RUN\ngovernance done right" {class: note}
+
+account: "Your Cloudflare\naccount · START\nEU data where\nneeded" {
+  class: frame
+
+  os: "Cloudflare OS\nSTART" {
+    class: frame
+    blueprints: "Blueprints\nSTART, GROW" {class: service}
+  }
+  gateway: "AI Gateway\nbudgets, audit\nSTART, RUN" {class: service}
+  auth: "Auth and\nconnectors\nSTART" {class: service}
+}
+
+models: "Models\nyou choose" {class: external}
+systems: "Your data\nand systems" {class: external}
+approval: "Approval · START\nDPIA, security\nreview, policies" {class: note}
+
+support -> account.os {style.opacity: 0}
+account.os -> account.gateway {class: emphasis}
+account.gateway -> account.auth {style.opacity: 0}
+account.gateway -> models {class: flow}
+account.auth -> systems {class: flow}
+account.auth -> models {style.opacity: 0}
+models -> systems {style.opacity: 0}
+systems -> approval {style.opacity: 0}

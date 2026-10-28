@@ -1,0 +1,48 @@
+# options: a side-by-side comparison in a grid. Tiers, deployment options, trade-offs.
+#
+# Engine: elk, though it makes no difference: a grid places its cells itself, and all three
+# engines give the same table. The engine only matters for edges between cells.
+# Limit: 2 to 4 columns, up to 5 rows. Keep each cell to a few words; break a long one over
+# two lines with \n.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+options: {
+  grid-rows: 5
+  grid-columns: 4
+  grid-gap: 0
+  style.stroke: transparent
+  style.fill: transparent
+  label: ""
+
+  h0: Option {class: head}
+  h1: Shared {class: head}
+  h2: Dedicated {class: head}
+  h3: Your own account {class: head}
+
+  r1: Where it runs {class: head}
+  r1a: "Our Cloudflare account,\none workspace each" {class: cell}
+  r1b: "A Cloudflare account\nwe run only for you" {class: cell}
+  r1c: "Your Cloudflare\naccount" {class: cell}
+
+  r2: Who operates it {class: head}
+  r2a: Us {class: cell}
+  r2b: Us {class: cell}
+  r2c: Us, with your admins {class: cell}
+
+  r3: Your data {class: head}
+  r3a: Kept apart by workspace {class: cell}
+  r3b: In its own account {class: cell}
+  r3c: "Never leaves\nyour account" {class: cell}
+
+  r4: Good for {class: head}
+  r4a: A trial, up to 5 people {class: cell}
+  r4b: A team of 20 {class: cell}
+  r4c: "An organisation\nof 100" {class: cell}
+}

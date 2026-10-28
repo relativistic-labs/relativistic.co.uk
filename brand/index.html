@@ -328,7 +328,7 @@
           <tr><td><code translate="no">--color-text</code></td><td><span class="chip" style="background:#f2f0ec"></span>#f2f0ec<br><span class="muted mono">oklch(0.955 0.006 85)</span></td><td class="num">16.9</td><td><span class="chip" style="background:#151a21"></span>#151a21<br><span class="muted mono">oklch(0.215 0.016 255)</span></td><td class="num">16.3</td><td>Body and headings</td></tr>
           <tr><td><code translate="no">--color-muted</code></td><td><span class="chip" style="background:#a5abb4"></span>#a5abb4<br><span class="muted mono">oklch(0.74 0.014 255)</span></td><td class="num">8.4</td><td><span class="chip" style="background:#555b64"></span>#555b64<br><span class="muted mono">oklch(0.47 0.016 255)</span></td><td class="num">6.3</td><td>Secondary text, labels</td></tr>
           <tr><td><code translate="no">--color-accent</code></td><td><span class="chip" style="background:#42a3fd"></span>#42a3fd<br><span class="muted mono">oklch(0.70 0.16 250)</span></td><td class="num">7.2</td><td><span class="chip" style="background:#2858cd"></span>#2858cd<br><span class="muted mono">oklch(0.50 0.19 264)</span></td><td class="num">5.8</td><td>Links, focus, the one thing per view</td></tr>
-          <tr><td><code translate="no">--color-signal</code></td><td><span class="chip" style="background:#f28c5c"></span>#f28c5c<br><span class="muted mono">oklch(0.74 0.14 45)</span></td><td class="num">8.0</td><td><span class="chip" style="background:#bb4717"></span>#bb4717<br><span class="muted mono">oklch(0.55 0.16 40)</span></td><td class="num">4.9</td><td>Rare: “outside the cone”; about 1% of field particles</td></tr>
+          <tr><td><code translate="no">--color-signal</code></td><td><span class="chip" style="background:#f28c5c"></span>#f28c5c<br><span class="muted mono">oklch(0.74 0.14 45)</span></td><td class="num">8.0</td><td><span class="chip" style="background:#bb4717"></span>#bb4717<br><span class="muted mono">oklch(0.55 0.16 40)</span></td><td class="num">4.9</td><td>Rare: a denial in diagrams; about 1% of field particles</td></tr>
         </tbody>
       </table>
     </div>
@@ -356,7 +356,7 @@
     <p>Both open source under the SIL Open Font License: no licence cost, self-hosted, no third-party requests. Instrument Sans is variable in weight (400 to 700) and width (75 to 100); large headings condense slightly to 92.</p>
     <div class="spec">
       <span class="label">Display · Instrument Sans 600 · wdth 92 · −0.025&nbsp;em · line height 1.08</span>
-      <div class="big">Somewhere safe to run it.</div>
+      <div class="big">Somewhere safe to build it.</div>
     </div>
     <div class="spec">
       <span class="label">Body · Instrument Sans 400 · 17–18&nbsp;px · line height 1.55 · 60–68 characters</span>
@@ -466,19 +466,49 @@
     <h2 id="h-diagrams">Diagrams, not screenshots</h2>
     <div class="grid2">
       <ul>
-        <li>1&nbsp;px strokes in text or muted; one 1.5&nbsp;px path in accent: the one that matters.</li>
-        <li>Geometry on the 45° grid. Labels in mono, sentence case, at least 12&nbsp;px when placed.</li>
-        <li>Frame: an organisation. Cone: an agent’s reach. Node: a resource. Grant: an arrow with a key notch. Denial: a stopped line ending in a bar, in signal. Viewer: access checks only.</li>
-        <li>Every diagram must work in greyscale: grant and denial differ in shape, not only colour.</li>
+        <li>Clarity beats the motif. Use the form a reader understands fastest: boxes and arrows, containers, a sequence, a table. The light cone belongs to the field and the social card, never to a diagram.</li>
+        <li>1&nbsp;px strokes in text or muted, and one 1.5&nbsp;px accent path: the one that matters. Square corners and right angles; no shadows, gradients or 3D.</li>
+        <li>Labels in Commit Mono, sentence case, at least 12&nbsp;px at 1×.</li>
+        <li>Every diagram works in greyscale. A grant is a heavier arrow with a label; a denial is dashed, ends in a cross and has a label; anything outside the boundary is dashed.</li>
       </ul>
-      <p class="muted">The SVGs use CSS custom properties with fallbacks, so the same file adapts to the theme when inlined into a page that loads <code translate="no">tokens.css</code>, and uses fixed colours as an image. Labels are live text with Commit Mono embedded, so they stay editable.</p>
+      <div>
+        <p>Diagrams are written in <a href="https://d2lang.com">D2</a>, a text language: a layout engine places the shapes and routes the lines, so nobody draws coordinates. <code translate="no">diagrams/d2/brand.d2</code> holds the style, and eight templates cover the usual layouts. Give every shape and edge a class:</p>
+        <pre class="mono raised" style="padding:var(--space-4);overflow-x:auto;border-radius:var(--radius-1);font-size:var(--text-small)"><code translate="no">...@../brand
+
+acme: Acme {
+  class: frame
+  agent: Agent {class: agent}
+  crm: CRM {class: resource}
+  payroll: Payroll {class: resource}
+  agent -&gt; crm: read {class: grant}
+  agent -&gt; payroll: not granted {class: deny}
+}</code></pre>
+        <p class="muted">Then run <code translate="no">diagrams/d2/render.sh</code>. It writes an SVG that follows the reader’s light or dark setting, fixed paper and ink SVGs for slides and documents, and 2× PNGs of both. Never use <code translate="no">d2 --watch</code>. The <a href="diagrams/d2/README.md">README</a> has the classes, the templates and the versions.</p>
+      </div>
     </div>
-    <figure><picture><source srcset="diagrams/kit-ink.svg" media="(prefers-color-scheme: dark)"><img src="diagrams/kit-paper.svg" alt="The diagram kit: frame, cone, node, grant, denial and viewer" width="1200" height="260" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>The kit. Single components without labels are in <code translate="no">diagrams/components/</code>.</figcaption></figure>
+    <figure><picture><source srcset="diagrams/kit-ink.svg" media="(prefers-color-scheme: dark)"><img src="diagrams/kit-paper.svg" alt="The diagram kit. Shapes: frame, agent (a solid box), person, resource, service (raised), store (a cylinder), external (dashed) and note. Edges: flow (a muted arrow), grant (an accent arrow), deny (a dashed line ending in a cross) and emphasis (an accent arrow)." width="1596" height="542" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>The kit: one class per element in <code translate="no">brand.d2</code>. Unlabelled single components for hand-drawn keys are in <code translate="no">diagrams/components/</code>.</figcaption></figure>
     <div class="grid2" style="margin-top:var(--space-5)">
-      <figure><picture><source srcset="diagrams/example-ink.svg" media="(prefers-color-scheme: dark)"><img src="diagrams/example-paper.svg" alt="Worked example on paper: an agent at the apex of a cone inside an organisation frame, with a grant to read the CRM and a denied request to payroll outside the cone" width="880" height="560" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>Worked example, in the current theme.</figcaption></figure>
-      <figure><picture><source srcset="diagrams/example-ink.svg" media="(prefers-color-scheme: dark)"><img class="greyscale" src="diagrams/example-paper.svg" alt="The same worked example in greyscale" width="880" height="560" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>Greyscale test: still readable without colour.</figcaption></figure>
+      <figure><picture><source srcset="diagrams/example-ink.svg" media="(prefers-color-scheme: dark)"><img src="diagrams/example-paper.svg" alt="Worked example: inside the Acme frame, an agent acts for Priya. It has a grant to read the CRM. Its request to payroll was not granted and stops with a cross." width="690" height="318" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>Worked example, in the current theme. Source: <code translate="no">d2/examples/example.d2</code>.</figcaption></figure>
+      <figure><picture><source srcset="diagrams/example-ink.svg" media="(prefers-color-scheme: dark)"><img class="greyscale" src="diagrams/example-paper.svg" alt="The same worked example in greyscale" width="690" height="318" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>Greyscale test: the grant and the denial still differ in weight, dash and ending.</figcaption></figure>
     </div>
-    <div class="dl"><a href="diagrams/example-paper.svg" download>example-paper.svg</a><a href="diagrams/example-ink.svg" download>example-ink.svg</a><a href="diagrams/kit-paper.svg" download>kit-paper.svg</a><a href="diagrams/kit-ink.svg" download>kit-ink.svg</a></div>
+    <h3 style="margin-top:var(--space-6)">Templates</h3>
+    <div class="grid2">
+      <table style="align-self:start">
+        <thead><tr><th scope="col">Template</th><th scope="col">Engine</th><th scope="col">Use it for</th></tr></thead>
+        <tbody>
+          <tr><td><code translate="no">access</code></td><td>ELK</td><td>The core diagram: one agent, its grants and denials, the internet</td></tr>
+          <tr><td><code translate="no">architecture</code></td><td>TALA</td><td>What runs where, in nested accounts</td></tr>
+          <tr><td><code translate="no">flow</code></td><td>ELK</td><td>A process, left to right</td></tr>
+          <tr><td><code translate="no">sequence</code></td><td>Its own</td><td>Requests, checks and replies, in order</td></tr>
+          <tr><td><code translate="no">options</code></td><td>Grid</td><td>Tiers or deployment options side by side</td></tr>
+          <tr><td><code translate="no">hierarchy</code></td><td>ELK</td><td>An organisation, its teams and people</td></tr>
+          <tr><td><code translate="no">timeline</code></td><td>Grid</td><td>The phases of a plan</td></tr>
+          <tr><td><code translate="no">data-model</code></td><td>ELK</td><td>Tables and the keys between them</td></tr>
+        </tbody>
+      </table>
+      <figure><a class="thumb" href="diagrams/d2/out/contact-paper.png"><picture><source srcset="diagrams/d2/out/contact-ink.png" media="(prefers-color-scheme: dark)"><img src="diagrams/d2/out/contact-paper.png" alt="Contact sheet of the eight templates: access, architecture, flow, sequence, options, hierarchy, timeline and data model" width="1840" height="2726" loading="lazy"></picture></a><figcaption>All eight, rendered by <code translate="no">render.sh</code>. Each file’s header says when to use it, why its engine won, and how big it can get.</figcaption></figure>
+    </div>
+    <div class="dl"><a href="diagrams/d2/brand.d2" download>brand.d2</a><a href="diagrams/d2/README.md">README.md</a><a href="diagrams/example-paper.svg" download>example-paper.svg</a><a href="diagrams/example-ink.svg" download>example-ink.svg</a><a href="diagrams/kit-paper.svg" download>kit-paper.svg</a><a href="diagrams/kit-ink.svg" download>kit-ink.svg</a><a href="diagrams/d2/out/contact-paper.png">contact-paper.png</a><a href="diagrams/d2/out/contact-ink.png">contact-ink.png</a></div>
   </section>
 
   <!-- 10 TEMPLATES -->
@@ -487,7 +517,7 @@
     <h2 id="h-templates">Social, slides, documents and email</h2>
     <p class="muted">Headlines on the social card and slides use the content review’s recommended Option A. It is not approved copy yet: every template is editable HTML, and the rasters re-render from it with <code translate="no">build/render.mjs</code>.</p>
     <div class="grid2">
-      <figure><a class="thumb" href="social/og.png"><img src="social/og.png" alt="Social card: the lockup, the headline 'Agents can build what your people need. We give them somewhere safe to run it.' and the GRANTED cone on ink" width="1200" height="630" loading="lazy"></a><figcaption>Social card, 1200 × 630, ink. Source: <a href="social/og.html">social/og.html</a>.</figcaption></figure>
+      <figure><a class="thumb" href="social/og.png"><img src="social/og.png" alt="Social card: the lockup, the headline 'Agents can build what your people need. We give them somewhere safe to build it.', the GRANTED cone on ink and the address relativistic.co.uk" width="1200" height="630" loading="lazy"></a><figcaption>Social card, 1200 × 630, ink. Source: <a href="social/og.html">social/og.html</a>.</figcaption></figure>
       <figure><a class="thumb" href="slides/index.html"><img src="slides/preview.png" alt="Slide template contact sheet: title, section, statement, content, diagram and closing layouts in ink and paper" width="1624" height="691" loading="lazy"></a><figcaption>Slides, 16:9, six layouts in both themes. <a href="slides/index.html">HTML</a> · <a href="slides/slides.pdf">PDF</a>.</figcaption></figure>
       <figure><a class="thumb" href="documents/proposal.html"><img src="documents/preview.png" alt="Proposal and letter templates on A4 paper" width="1429" height="1000" loading="lazy"></a><figcaption>A4 proposal and letter, paper. <a href="documents/proposal.html">Proposal</a> (<a href="documents/proposal.pdf">PDF</a>) · <a href="documents/letter.html">Letter</a> (<a href="documents/letter.pdf">PDF</a>).</figcaption></figure>
       <figure>
@@ -496,7 +526,7 @@
         </div>
         <figcaption>Email signature: no images, system font. <a href="email/signature.html">Template</a> · <a href="email/signature.txt">plain text</a> · <a href="email/signature-example.html">example</a>.</figcaption>
       </figure>
-      <figure><a class="thumb" href="social/linkedin-cover@2x.png"><img src="social/linkedin-cover@2x.png" alt="LinkedIn cover: the four formations with their labels on a hairline axis" width="2256" height="382" loading="lazy"></a><figcaption>LinkedIn cover, 1128 × 191 (and 2×). Source: <a href="social/linkedin-cover.html">social/linkedin-cover.html</a>.</figcaption></figure>
+      <figure><a class="thumb" href="social/linkedin-cover@2x.png"><img src="social/linkedin-cover@2x.png" alt="LinkedIn cover: the four formations above a hairline axis" width="2256" height="382" loading="lazy"></a><figcaption>LinkedIn cover, 1128 × 191 (and 2×). Source: <a href="social/linkedin-cover.html">social/linkedin-cover.html</a>.</figcaption></figure>
       <figure style="display:flex;gap:var(--space-4);align-items:flex-end"><img src="social/avatar.png" alt="Profile avatar: the symbol on ink" width="140" height="140" loading="lazy"><img src="icons/apple-touch-icon.png" alt="Apple touch icon" width="90" height="90" loading="lazy"><figcaption>Avatar, 500 × 500, for GitHub and LinkedIn; it survives a circular crop. Apple touch icon, 180 × 180.</figcaption></figure>
     </div>
   </section>
@@ -521,7 +551,8 @@
           <li><code translate="no">logo/</code>: symbol, wordmark and horizontal lockup, each on ink, on paper, black and white.</li>
           <li><code translate="no">icons/</code>: <code translate="no">favicon.ico</code>, <code translate="no">icon.svg</code>, <code translate="no">apple-touch-icon.png</code>.</li>
           <li><code translate="no">field/</code>: <code translate="no">field.js</code>, <code translate="no">reference.html</code> and eight stills.</li>
-          <li><code translate="no">build/</code>: the scripts that generate tokens, outlines, diagrams and rasters.</li>
+          <li><code translate="no">build/</code>: the scripts that generate tokens, outlines, diagram components and rasters.</li>
+          <li><code translate="no">diagrams/d2/</code>: the D2 style, templates, fonts as TTF and <code translate="no">render.sh</code>.</li>
         </ul>
       </div>
     </div>

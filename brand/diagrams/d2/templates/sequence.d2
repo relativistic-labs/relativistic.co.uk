@@ -1,0 +1,26 @@
+# sequence: who calls whom, in order. Requests, checks and replies.
+#
+# Engine: none. D2 lays out sequence diagrams itself, whatever the engine.
+# Limit: about 5 actors and 10 messages. Keep self-messages short: their labels run to the
+# right and must not reach the next lifeline.
+#
+# Sequence layout stretches the person glyph to its own minimum size, so people are boxes here
+# (class: person with shape: rectangle). render.sh draws lifelines as 1 px dashes.
+
+...@../brand
+
+shape: sequence_diagram
+
+priya: Priya {class: person; shape: rectangle; height: 60}
+agent: Agent {class: agent}
+gateway: AI Gateway {class: service}
+model: Model provider {class: external}
+
+priya -> agent: Summarise the Q3 supplier contracts {class: flow}
+agent -> gateway: Model call, as Priya {class: flow}
+gateway -> gateway: £212 of £400 used {class: flow}
+gateway -> model: Forward, with the provider key {class: grant}
+model -> gateway: Response {class: flow}
+gateway -> gateway: Log 3,140 tokens {class: flow}
+gateway -> agent: Response {class: flow}
+agent -> priya: Summary, with sources {class: flow}

@@ -1,0 +1,43 @@
+# services: what we deliver, and which service delivers each part (the site's "How we work with
+# you"). Mono tags name the service: START (the first deployment), RUN (ongoing support), GROW
+# (more teams and apps). No cone: diagrams use conventional shapes.
+#
+# Engine: ELK. It keeps the nesting in the order written and the arrows short and straight; TALA
+# stacked the same content into a taller, wider column with a long accent edge (compared on
+# 28 October 2026). services-tall.d2 is the same content top to bottom, for phones.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: right
+
+support: "Our support · RUN\ngovernance done right" {
+  class: frame
+
+  approval: "Approval · START\nDPIA, security review,\npolicies" {class: note}
+
+  account: "Your Cloudflare account · START\nEU data where needed" {
+    class: frame
+
+    os: "Cloudflare OS · START" {
+      class: frame
+      blueprints: "Blueprints\nSTART, GROW" {class: service}
+    }
+
+    auth: "Auth and connectors\nSTART" {class: service}
+    gateway: "AI Gateway\nbudgets, audit\nSTART, RUN" {class: service}
+  }
+}
+
+systems: "Your data\nand systems" {class: external}
+models: "Models\nyou choose" {class: external}
+
+support.account.os -> support.account.auth {class: flow}
+support.account.auth -> systems {class: flow}
+support.account.os -> support.account.gateway {class: emphasis}
+support.account.gateway -> models {class: flow}

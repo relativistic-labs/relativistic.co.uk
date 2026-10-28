@@ -1,0 +1,63 @@
+# kit: every class in brand.d2, named. render.sh copies the rendered SVGs to
+# brand/diagrams/kit-{paper,ink}.svg.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+grid-rows: 2
+vertical-gap: 16
+
+shapes: "" {
+  grid-columns: 8
+  horizontal-gap: 40
+  style: {stroke: transparent; fill: transparent}
+
+  frame: frame {class: frame; width: 150; height: 96}
+  agent: agent {class: agent; height: 96}
+  person: person {class: person}
+  resource: resource {class: resource; height: 96}
+  service: service {class: service; height: 96}
+  store: store {class: store; height: 96}
+  external: external {class: external; height: 96}
+  note: note {class: note; height: 96}
+}
+
+edges: "" {
+  grid-columns: 4
+  horizontal-gap: 40
+  style: {stroke: transparent; fill: transparent}
+
+  flow: "" {
+    direction: right
+    style: {stroke: transparent; fill: transparent}
+    a: "" {class: resource; width: 24; height: 24}
+    b: "" {class: resource; width: 24; height: 24}
+    a -> b: flow {class: flow}
+  }
+  grant: "" {
+    direction: right
+    style: {stroke: transparent; fill: transparent}
+    a: "" {class: resource; width: 24; height: 24}
+    b: "" {class: resource; width: 24; height: 24}
+    a -> b: grant {class: grant}
+  }
+  deny: "" {
+    direction: right
+    style: {stroke: transparent; fill: transparent}
+    a: "" {class: resource; width: 24; height: 24}
+    b: "" {class: resource; width: 24; height: 24}
+    a -> b: deny {class: deny}
+  }
+  emphasis: "" {
+    direction: right
+    style: {stroke: transparent; fill: transparent}
+    a: "" {class: resource; width: 24; height: 24}
+    b: "" {class: resource; width: 24; height: 24}
+    a -> b: emphasis {class: emphasis}
+  }
+}

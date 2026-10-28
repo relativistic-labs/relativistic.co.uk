@@ -1,0 +1,63 @@
+# data-model: tables and the keys between them.
+#
+# Engine: elk. It routes each key from column to column with right angles and no crossings,
+# in the least space. TALA spreads the tables out and detours around them; dagre curves its
+# edges and points them at the table instead of the column.
+# Limit: about 6 tables of up to 8 columns. render.sh sets tables in Commit Mono: D2 draws
+# sql_table text in its regular face whatever style.font says.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: right
+
+teams: {
+  class: table
+  id: uuid {constraint: primary_key}
+  name: text
+  monthly_budget_gbp: numeric
+}
+
+people: {
+  class: table
+  id: uuid {constraint: primary_key}
+  team_id: uuid {constraint: foreign_key}
+  email: text {constraint: unique}
+  role: builder or user
+}
+
+agents: {
+  class: table
+  id: uuid {constraint: primary_key}
+  acts_for: uuid {constraint: foreign_key}
+  name: text
+}
+
+grants: {
+  class: table
+  id: uuid {constraint: primary_key}
+  agent_id: uuid {constraint: foreign_key}
+  resource: text
+  scope: read or write
+}
+
+requests: {
+  class: table
+  id: uuid {constraint: primary_key}
+  agent_id: uuid {constraint: foreign_key}
+  person_id: uuid {constraint: foreign_key}
+  tokens: integer
+  cost_gbp: numeric
+  at: timestamptz
+}
+
+people.team_id -> teams.id {class: flow}
+agents.acts_for -> people.id {class: flow}
+grants.agent_id -> agents.id {class: flow}
+requests.agent_id -> agents.id {class: flow}
+requests.person_id -> people.id {class: flow}

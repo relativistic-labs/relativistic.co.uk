@@ -1,0 +1,43 @@
+# access: what an agent can and cannot reach. The core Relativistic diagram.
+#
+# Use it when the point is containment: one agent, the person it acts for, what it was granted
+# and what it was not. Keep to one agent, up to six resources and one or two denials. More than
+# that and the grants stop reading as a choice someone made.
+#
+# Engine: elk, left to right. It reads like the sentence: a person, their agent, then what the
+# agent can reach, with grants stacked above denials and the internet outside the frame.
+# TALA packs it squarer but scatters granted and denied resources along one row; dagre
+# curves its edges and crosses the frame label.
+#
+# Vocabulary: frame, agent, person, resource, service, external; grant, deny, flow.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: right
+
+acme: Acme workspace {
+  class: frame
+
+  priya: Priya {class: person}
+  agent: Agent {class: agent}
+  docs: Project documents {class: resource}
+  crm: CRM {class: resource}
+  gateway: Model gateway {class: service}
+  payroll: Payroll {class: resource}
+
+  priya -> agent: acts for {class: flow}
+  agent -> docs: read {class: grant}
+  agent -> crm: read {class: grant}
+  agent -> gateway: £40 a month {class: grant}
+  agent -> payroll: not granted {class: deny}
+}
+
+internet: Internet {class: external}
+
+acme.agent -> internet: no internet {class: deny}

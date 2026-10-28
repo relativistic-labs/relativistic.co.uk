@@ -1,0 +1,25 @@
+# flow: a process from left to right, one step per shape.
+#
+# Engine: elk. It keeps the steps on one straight line in the order written, with labels
+# inline. TALA folds the line back on itself to save space, which breaks the left-to-right
+# reading; dagre gives the same line but curves any edge that has to branch.
+# Limit: about 6 steps in a line. More than that, split it. Keep labels to two short lines.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: right
+
+ask: "Priya asks for\na supplier tracker" {class: person}
+build: "An agent\nbuilds it" {class: agent}
+app: "A private app,\nonly Priya sees it" {class: service}
+team: "Her team opens it,\naccess checked" {class: resource}
+
+ask -> build: plain English {class: flow}
+build -> app: deploys {class: flow}
+app -> team: shared like a document {class: emphasis}

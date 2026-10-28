@@ -1,0 +1,25 @@
+# example: the worked example for the brand guidelines, slides and documents.
+# One agent in an organisation's frame, one grant and one denial. Kept narrow (about 600 px)
+# so it shows at full size in the slide template's diagram column and a document's text width. render.sh copies the
+# rendered SVGs to brand/diagrams/example-{paper,ink}.svg.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: right
+
+acme: Acme {
+  class: frame
+
+  agent: Priya’s agent {class: agent}
+  crm: CRM {class: resource}
+  payroll: Payroll {class: resource}
+
+  agent -> crm: read {class: grant}
+  agent -> payroll: not granted {class: deny}
+}

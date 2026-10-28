@@ -12,27 +12,27 @@ const out = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Colour: the design brief's table. [oklch, hex] per theme.
 // ---------------------------------------------------------------------------
 const colour = {
-  bg:     { ink: ['oklch(0.165 0.012 255)', '#0b0f14'], paper: ['oklch(0.975 0.006 85)', '#f9f6f2'], use: 'Page background' },
-  raised: { ink: ['oklch(0.205 0.014 255)', '#13181e'], paper: ['oklch(0.945 0.008 85)', '#efece7'], use: 'Cards, code, the footer band' },
-  rule:   { ink: ['oklch(0.31 0.016 255)', '#2b3138'],  paper: ['oklch(0.86 0.010 85)', '#d4d1ca'],  use: 'Hairlines, axes, borders. Decorative (about 1.5:1): never the only signal of anything' },
+  bg:     { ink: ['oklch(0.165 0.012 255)', '#0b0f14'], paper: ['oklch(1 0 0)', '#ffffff'], use: 'Page background' },
+  raised: { ink: ['oklch(0.205 0.014 255)', '#13181e'], paper: ['oklch(0.964 0.003 85)', '#f4f3f1'], use: 'Cards, code, the footer band' },
+  rule:   { ink: ['oklch(0.31 0.016 255)', '#2b3138'],  paper: ['oklch(0.781 0.008 254)', '#b4b8bd'],  use: 'Hairlines, axes, borders. Decorative (about 1.5:1): never the only signal of anything' },
   text:   { ink: ['oklch(0.955 0.006 85)', '#f2f0ec'],  paper: ['oklch(0.215 0.016 255)', '#151a21'], use: 'Body and headings' },
   muted:  { ink: ['oklch(0.74 0.014 255)', '#a5abb4'],  paper: ['oklch(0.47 0.016 255)', '#555b64'],  use: 'Secondary text, labels' },
   accent: { ink: ['oklch(0.70 0.16 250)', '#42a3fd'],   paper: ['oklch(0.50 0.19 264)', '#2858cd'],   use: 'Cherenkov blue. Links, focus, the one thing per view that matters. At most about 5% of a view' },
-  signal: { ink: ['oklch(0.74 0.14 45)', '#f28c5c'],    paper: ['oklch(0.55 0.16 40)', '#bb4717'],    use: 'Redshift. Rare: "outside the cone" in diagrams, about 1% of field particles. Not a second brand colour' },
+  signal: { ink: ['oklch(0.74 0.14 45)', '#f28c5c'],    paper: ['oklch(0.55 0.16 40)', '#bb4717'],    use: 'Redshift. Rare: denials in diagrams, about 1% of field particles. Not a second brand colour' },
 };
 
 // WCAG 2.x contrast ratios, computed from the hex values (see brand/index.html).
 const contrast = [
-  { fg: 'text', bg: 'bg', ink: 16.9, paper: 16.29 },
-  { fg: 'text', bg: 'raised', ink: 15.71, paper: 14.91 },
-  { fg: 'muted', bg: 'bg', ink: 8.36, paper: 6.34 },
-  { fg: 'muted', bg: 'raised', ink: 7.77, paper: 5.8 },
-  { fg: 'accent', bg: 'bg', ink: 7.23, paper: 5.82 },
-  { fg: 'accent', bg: 'raised', ink: 6.72, paper: 5.33 },
-  { fg: 'signal', bg: 'bg', ink: 7.97, paper: 4.85 },
-  { fg: 'signal', bg: 'raised', ink: 7.4, paper: 4.44, note: 'Paper: below 4.5:1. Signal text on paper raised only at 24 px and above; diagrams use it for strokes (3:1 is enough for graphics).' },
-  { fg: 'bg', bg: 'accent', ink: 7.23, paper: 5.82, note: 'Text on an accent fill (a primary button)' },
-  { fg: 'rule', bg: 'bg', ink: 1.47, paper: 1.42, note: 'Decorative only' },
+  { fg: 'text', bg: 'bg', ink: 16.9, paper: 17.48 },
+  { fg: 'text', bg: 'raised', ink: 15.71, paper: 15.76 },
+  { fg: 'muted', bg: 'bg', ink: 8.36, paper: 6.85 },
+  { fg: 'muted', bg: 'raised', ink: 7.77, paper: 6.18 },
+  { fg: 'accent', bg: 'bg', ink: 7.23, paper: 6.24 },
+  { fg: 'accent', bg: 'raised', ink: 6.72, paper: 5.62 },
+  { fg: 'signal', bg: 'bg', ink: 7.97, paper: 5.22 },
+  { fg: 'signal', bg: 'raised', ink: 7.4, paper: 4.7 },
+  { fg: 'bg', bg: 'accent', ink: 7.23, paper: 6.24, note: 'Text on an accent fill (a primary button)' },
+  { fg: 'rule', bg: 'bg', ink: 1.47, paper: 1.99, note: 'Structure only: never the only signal of anything' },
 ];
 
 // ---------------------------------------------------------------------------

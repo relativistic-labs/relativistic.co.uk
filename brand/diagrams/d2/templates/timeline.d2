@@ -1,0 +1,40 @@
+# timeline: phases in order, with what happens in each.
+#
+# Engine: elk. A grid reads better than a flow here: the phases line up as columns, with what
+# happens in each underneath. The grid places its cells itself, so all three engines give the
+# same result; the engine only draws the arrows between the phase headings. The last arrow
+# uses emphasis: the step the plan is building towards.
+# Limit: 3 to 6 phases, one to three short lines in each.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+plan: {
+  grid-rows: 2
+  grid-columns: 5
+  horizontal-gap: 32
+  vertical-gap: 0
+  style.stroke: transparent
+  style.fill: transparent
+  label: ""
+
+  w0: Week 0 {class: head}
+  w1: Weeks 1-2 {class: head}
+  w3: Weeks 3-11 {class: head}
+  w12: Week 12 {class: head}
+  next: If it works {class: head}
+
+  w0-do: "Order signed\nTeam chosen" {class: cell}
+  w1-do: "Onboarding\nBlueprint chosen" {class: cell}
+  w3-do: "Blueprint built\nFortnightly\ncheck-ins" {class: cell}
+  w12-do: "Review with\nthe founders" {class: cell}
+  next-do: "An instance\nof your own" {class: cell}
+
+  w0 -> w1 -> w3 -> w12 {class: flow}
+  w12 -> next {class: emphasis}
+}

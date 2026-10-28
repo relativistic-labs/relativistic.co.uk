@@ -18,9 +18,6 @@
   .row { position: absolute; left: 372px; right: 44px; top: 0; bottom: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
   .cell { position: relative; }
   .cell canvas { position: absolute; left: 0; top: 0; width: 100%; height: 191px; }
-  .cell span { position: absolute; left: 50%; transform: translateX(-50%); top: 160px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); white-space: nowrap; }
-  .cell span b { color: var(--ink-text); font-weight: 400; }
-  .cell.on span b { color: var(--ink-accent); }
   .tick { z-index: 1; position: absolute; left: 50%; top: 146px; height: 9px; border-left: 1px solid var(--ink-muted); }
 </style>
 </head>
@@ -33,7 +30,7 @@
   RelativisticField.FORMATIONS.forEach(function (f) {
     var cell = document.createElement('div');
     cell.className = 'cell' + (f.id === 'granted' ? ' on' : '');
-    cell.innerHTML = '<canvas aria-hidden="true"></canvas><i class="tick"></i><span><b>' + f.number + '</b> / ' + f.label + '</span>';
+    cell.innerHTML = '<canvas aria-hidden="true"></canvas><i class="tick"></i>';
     row.appendChild(cell);
     var field = RelativisticField.create(cell.querySelector('canvas'), { theme: 'ink', interactive: false, count: 1100, sizeScale: 0.6, scale: { unbound: 0.19, granted: 0.33, shared: 0.315, running: 0.315 }[f.id], originY: f.id === 'granted' ? 0.34 : 0.4 });
     field.still(f.id, 6);
