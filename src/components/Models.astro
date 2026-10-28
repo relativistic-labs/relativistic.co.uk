@@ -1,0 +1,18 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import { models as copy } from '../content/copy';
+import { getModels, lineupSentence } from '../lib/content';
+import { sectionNumber } from '../site.config';
+
+const models = await getModels();
+---
+
+<section id="models" class="section wrap" aria-labelledby="models-heading">
+  <SectionLabel number={sectionNumber('models')} label="Models" />
+  <h2 id="models-heading">{copy.heading}</h2>
+  <div class="prose">
+    <p>{copy.intro}</p>
+    <p>{lineupSentence(models)}</p>
+    <p>{copy.premium}</p>
+  </div>
+</section>

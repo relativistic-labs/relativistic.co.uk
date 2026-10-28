@@ -1,0 +1,27 @@
+# Model line-up for the "Models included" block (SHOW_MODELS).
+# servedFrom is a placeholder until each serving route is settled (content plan review: settle
+# where each model runs before naming it publicly). "evaluated" is the date of the source check.
+- id: gpt-6-luna
+  order: 1
+  model: GPT-6 Luna
+  provider: OpenAI
+  servedFrom: "[UK/EU]"
+  evaluated: 2026-10-28
+  tier: included
+  schools: false
+- id: mimo-v2-6-pro
+  order: 2
+  model: MiMo-V2.6-Pro
+  provider: Xiaomi
+  servedFrom: "[UK/EU]"
+  evaluated: 2026-10-28
+  tier: included
+  schools: false
+- id: deepseek-v4-1-flash
+  order: 3
+  model: DeepSeek V4.1 Flash
+  provider: DeepSeek
+  servedFrom: "[UK/EU]"
+  evaluated: 2026-10-28
+  tier: included
+  schools: false

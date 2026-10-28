@@ -1,0 +1,21 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import { howWeWork } from '../content/copy';
+import { sectionNumber } from '../site.config';
+---
+
+<section id="how-we-work" class="section wrap" aria-labelledby="how-heading">
+  <SectionLabel number={sectionNumber('how-we-work')} label="How we work" />
+  <h2 id="how-heading">{howWeWork.heading}</h2>
+  <dl class="steps">
+    {
+      howWeWork.steps.map((s) => (
+        <div>
+          <dt>{s.term}</dt>
+          <dd>{s.text}</dd>
+        </div>
+      ))
+    }
+  </dl>
+  <p class="product">{howWeWork.product}</p>
+</section>

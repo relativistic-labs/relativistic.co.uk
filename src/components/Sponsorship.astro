@@ -1,0 +1,14 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import { sponsorship } from '../content/copy';
+import { sectionNumber } from '../site.config';
+---
+
+<section id="sponsorship" class="section wrap" aria-labelledby="sponsorship-heading">
+  <SectionLabel number={sectionNumber('sponsorship')} label="Sponsorship" />
+  <h2 id="sponsorship-heading" class="measure">{sponsorship.heading}</h2>
+  <div class="prose">
+    <p>{sponsorship.body}</p>
+    <p><strong>{sponsorship.ask}</strong> <a href="#contact">{sponsorship.action}</a>.</p>
+  </div>
+</section>
