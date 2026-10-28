@@ -20,7 +20,8 @@
     "test:e2e": "playwright test",
     "lhci": "lhci autorun",
     "deploy:review": "pnpm build:review && wrangler deploy --config wrangler.review.jsonc",
-    "links": "node tests/links.mjs"
+    "links": "node tests/links.mjs",
+    "dev:workers": "wrangler dev --config wrangler.jsonc --port 8787 --ip 127.0.0.1"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",

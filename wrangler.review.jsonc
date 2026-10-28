@@ -1,0 +1,15 @@
+// Review build: the same static-assets Worker shape as production, with every section switched on,
+// on its workers.dev URL only. Build with `pnpm build:review`, which adds `X-Robots-Tag: noindex`
+// to every path in _headers and a robots noindex meta tag to every page. No routes, no custom domain.
+// Access control (Cloudflare Access) is added from the dashboard.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "relativistic-site-review",
+  "compatibility_date": "2026-10-28",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": true,
+  "preview_urls": false
+}
