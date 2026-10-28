@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f9f6f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f14" media="(prefers-color-scheme: dark)">
+<title>Brand guidelines · Relativistic</title>
+<link rel="icon" href="icons/favicon.ico" sizes="32x32">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: 88px; }
+  a, button { -webkit-tap-highlight-color: rgb(66 163 253 / 0.18); }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); font-size: var(--text-body); line-height: var(--leading-body); font-kerning: normal; -webkit-text-size-adjust: 100%; }
+  a { color: var(--color-text); text-decoration-color: var(--color-accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; transition: text-decoration-thickness var(--duration-fast) var(--ease-out); }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); border-radius: var(--radius-1); }
+  .skip { position: absolute; left: var(--space-4); top: -100px; background: var(--color-accent); color: var(--color-bg); padding: var(--space-3) var(--space-4); z-index: 10; text-decoration: none; font-weight: 600; }
+  .skip:focus { top: var(--space-4); }
+  .wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--page-margin); }
+  .label { font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); font-weight: 400; }
+  .label b { color: var(--color-accent); font-weight: 400; }
+  .muted { color: var(--color-muted); }
+  code, .mono { font-family: var(--font-mono); font-size: 0.88em; }
+  h1, h2, h3 { font-weight: 600; text-wrap: balance; margin: 0; }
+  h1 { font-size: var(--text-step-5); font-stretch: var(--stretch-display); letter-spacing: var(--tracking-display); line-height: var(--leading-tight); max-width: 16ch; }
+  h2 { font-size: var(--text-step-3); font-stretch: var(--stretch-display); letter-spacing: var(--tracking-display); line-height: 1.12; margin-bottom: var(--space-4); }
+  h3 { font-size: var(--text-step-1); letter-spacing: var(--tracking-heading); line-height: var(--leading-heading); margin: var(--space-6) 0 var(--space-3); }
+  p, ul, ol { margin: 0 0 var(--space-4); max-width: var(--measure); }
+  li { margin-bottom: var(--space-2); }
+
+  /* Header */
+  .top { border-bottom: var(--rule); }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 80px; flex-wrap: wrap; }
+  .top img { height: 26px; width: auto; display: block; }
+  .hero { padding: var(--space-8) var(--page-margin) var(--space-7); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-6); align-items: center; }
+  .hero p { font-size: var(--text-step-1); line-height: 1.45; color: var(--color-muted); margin-top: var(--space-5); max-width: 40ch; }
+  .hero .still { width: 100%; height: auto; aspect-ratio: 1; display: block; }
+
+  nav.toc { border-top: var(--rule); border-bottom: var(--rule); position: sticky; top: 0; background: var(--color-bg); z-index: 5; }
+  nav.toc ol { list-style: none; display: flex; gap: var(--space-1) var(--space-5); flex-wrap: wrap; margin: 0; padding: var(--space-2) 0; max-width: none; counter-reset: toc; }
+  nav.toc li { margin: 0; counter-increment: toc; }
+  nav.toc a { display: inline-flex; align-items: center; min-height: var(--target-min); font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; text-decoration: none; color: var(--color-muted); }
+  nav.toc a::before { content: counter(toc, decimal-leading-zero) " "; color: var(--color-accent); margin-right: 0.5ch; }
+  nav.toc a:hover { color: var(--color-text); }
+
+  /* Sections: a hairline with a mono label sitting on it, like an axis */
+  section.block { padding: var(--space-8) 0 var(--space-6); }
+  .axis { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-5); }
+  .axis::after { content: ""; flex: 1; border-top: var(--rule); }
+  .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+  .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+  .panel { position: relative; padding: var(--space-6); border-radius: var(--radius-1); min-height: 200px; display: flex; align-items: center; justify-content: center; }
+  .panel > .label { position: absolute; top: var(--space-3); left: var(--space-4); }
+  .ink { background: var(--ink-bg); color: var(--ink-text); color-scheme: dark; }
+  .paper { background: var(--paper-bg); color: var(--paper-text); color-scheme: light; box-shadow: inset 0 0 0 1px var(--paper-rule); }
+  .raised { background: var(--color-raised); }
+  figure { margin: 0; }
+  figcaption { margin-top: var(--space-2); font-size: var(--text-small); color: var(--color-muted); }
+  .dl { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin-top: var(--space-3); font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: 0.02em; }
+  .dl a { display: inline-flex; align-items: center; min-height: 32px; }
+
+  /* Symbol */
+  .construct svg { width: 100%; max-width: 360px; height: auto; display: block; }
+  .sizes { display: flex; align-items: flex-end; gap: var(--space-6); }
+  .sizes span { display: block; text-align: center; margin-top: var(--space-2); }
+  .tabbar { padding: 8px 8px 0; border-radius: var(--radius-1); display: flex; gap: 2px; }
+  .tabbar.light { background: #dfe3e8; }
+  .tabbar.dark { background: #202124; }
+  .tabbar { overflow: hidden; }
+  .tab { display: inline-flex; align-items: center; gap: 8px; flex: 0 1 200px; min-width: 0; white-space: nowrap; overflow: hidden; height: 34px; padding: 0 12px; border-radius: 8px 8px 0 0; font: 12px/1 system-ui, sans-serif; }
+  .tabbar.light .tab { background: #fff; color: #1f1f1f; }
+  .tabbar.dark .tab { background: #35363a; color: #e8eaed; }
+  .tab.other { background: transparent !important; }
+  .tab svg, .tab img { width: 16px; height: 16px; flex: none; display: block; }
+
+  /* Lockup clear space: the x-height (510 of 5415 units across the lockup) on every side */
+  .clear { --w: min(100%, 420px); position: relative; width: var(--w); }
+  .clear .box { padding: calc(var(--w) * 510 / 5415); outline: 1px dashed var(--color-accent); outline-offset: -1px; }
+  .clear .box img { display: block; width: 100%; height: auto; outline: 1px solid var(--color-rule); }
+
+  /* Do and don't */
+  .donts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+  .donts figure .panel { min-height: 140px; padding: var(--space-5); }
+  .donts img { width: 70%; height: auto; display: block; }
+  .verdict { font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; display: block; margin-top: var(--space-2); }
+  .verdict.no::before { content: "× Don't · "; color: var(--color-signal); }
+  .verdict.yes::before { content: "+ Do · "; color: var(--color-accent); }
+
+  /* Colour */
+  table { width: 100%; border-collapse: collapse; font-size: var(--text-small); font-variant-numeric: tabular-nums; }
+  th { text-align: left; font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); font-weight: 400; padding: 0 var(--space-3) var(--space-2) 0; border-bottom: 1px solid var(--color-text); }
+  td { padding: var(--space-3) var(--space-3) var(--space-3) 0; border-bottom: var(--rule); vertical-align: top; }
+  td.num, th.num { text-align: right; }
+  .chip { display: inline-block; width: 28px; height: 28px; vertical-align: middle; margin-right: var(--space-2); border-radius: var(--radius-1); box-shadow: inset 0 0 0 1px rgb(127 127 127 / 0.35); }
+  .scroll { overflow-x: auto; }
+  .flag { color: var(--color-signal); }
+
+  /* Type */
+  .spec { padding: var(--space-6); border-top: var(--rule); }
+  .spec .big { font-size: clamp(2.5rem, 1rem + 5vw, 5.5rem); font-weight: 600; font-stretch: 92%; letter-spacing: -0.025em; line-height: 1; margin: var(--space-3) 0; }
+  .spec .mono-big { font-family: var(--font-mono); font-size: clamp(1.25rem, 0.8rem + 1.5vw, 2rem); line-height: 1.4; margin: var(--space-3) 0; }
+
+  /* Components */
+  .btn { display: inline-flex; align-items: center; min-height: var(--target-min); padding: 0 var(--space-5); background: var(--color-accent); color: var(--color-bg); font: 600 var(--text-body)/1 var(--font-sans); border: 0; border-radius: var(--radius-1); cursor: pointer; text-decoration: none; touch-action: manipulation; transition: background-color var(--duration-fast) var(--ease-out); }
+  .btn:hover { background: color-mix(in oklch, var(--color-accent), var(--color-text) 18%); }
+  .btn.secondary { background: transparent; color: var(--color-text); box-shadow: inset 0 0 0 1px var(--color-rule); transition: box-shadow var(--duration-fast) var(--ease-out); }
+  .btn.secondary:hover { background: transparent; box-shadow: inset 0 0 0 1px var(--color-muted); }
+  .spacing { display: grid; gap: var(--space-2); }
+  .spacing div { display: grid; grid-template-columns: 80px 1fr; align-items: center; gap: var(--space-3); font-family: var(--font-mono); font-size: var(--text-label); }
+  .spacing i { display: block; height: 8px; background: var(--color-accent); }
+
+  /* Field */
+  .stills figure img { width: 100%; height: auto; display: block; border-radius: var(--radius-1); }
+  .stills figcaption .label { display: block; color: var(--color-text); }
+
+  /* Portraits */
+  .portrait { margin: 0; max-width: 260px; }
+  .portrait-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--color-raised); }
+  .portrait-frame img, .portrait-frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .portrait-state { position: absolute; left: var(--space-2); bottom: var(--space-2); padding: 2px 6px; background: var(--ink-bg); color: var(--ink-text); font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .portrait.is-rendered .portrait-state { color: var(--ink-accent); }
+
+  /* Templates */
+  .thumb { display: block; border-radius: var(--radius-1); overflow: hidden; box-shadow: 0 0 0 1px var(--color-rule); }
+  .thumb img { display: block; width: 100%; height: auto; }
+  .thumb { transition: box-shadow var(--duration-fast) var(--ease-out); }
+  .thumb:hover { box-shadow: 0 0 0 1px var(--color-accent); }
+  .sig { padding: var(--space-5); background: #fff; color: #151a21; border-radius: var(--radius-1); box-shadow: inset 0 0 0 1px var(--paper-rule); }
+  .greyscale { filter: grayscale(1); }
+
+  footer.end { border-top: var(--rule); padding: var(--space-6) 0 var(--space-8); margin-top: var(--space-8); }
+
+  @media (max-width: 900px) {
+    .hero, .grid2, .grid3 { grid-template-columns: minmax(0, 1fr); }
+    .grid4, .donts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero { padding-top: var(--space-7); }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+  @media (forced-colors: active) { .chip { forced-color-adjust: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a href="./" aria-label="Relativistic brand guidelines, home">
+      <picture><source srcset="logo/lockup-on-ink.svg" media="(prefers-color-scheme: dark)"><img src="logo/lockup-on-paper.svg" alt="" width="181" height="26" fetchpriority="high"></picture>
+    </a>
+    <span class="label">Brand guidelines · v1.0 · 28 October 2026</span>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap hero">
+    <div>
+      <div class="label"><b>00</b> / Relativistic brand</div>
+      <h1 style="margin-top:var(--space-4)">Precise, calm, contained, human.</h1>
+      <p>Everything here is built from one idea: the light cone. Verticals, horizontals and 45° diagonals; hairlines and labelled axes; particles that are free but stay inside a boundary. This page is the reference for the site build and for everything else the company makes.</p>
+    </div>
+    <div>
+      <picture><source srcset="field/stills/002-granted-ink@2x.png" media="(prefers-color-scheme: dark)"><img class="still" src="field/stills/002-granted-paper@2x.png" alt="" width="1600" height="1600" fetchpriority="high"></picture>
+    </div>
+  </div>
+
+  <nav class="toc" aria-label="Sections">
+    <div class="wrap">
+      <ol>
+        <li><a href="#idea">Idea</a></li>
+        <li><a href="#symbol">Symbol</a></li>
+        <li><a href="#lockups">Lockups</a></li>
+        <li><a href="#colour">Colour</a></li>
+        <li><a href="#type">Type</a></li>
+        <li><a href="#layout">Layout</a></li>
+        <li><a href="#field">Field</a></li>
+        <li><a href="#portraits">Portraits</a></li>
+        <li><a href="#diagrams">Diagrams</a></li>
+        <li><a href="#templates">Templates</a></li>
+        <li><a href="#files">Files</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <div class="wrap">
+
+  <!-- 01 IDEA -->
+  <section class="block" id="idea" aria-labelledby="h-idea">
+    <div class="axis"><span class="label"><b>01</b> / Idea</span></div>
+    <h2 id="h-idea">The light cone</h2>
+    <div class="grid2">
+      <div>
+        <p>In relativity, an event can only affect what lies inside its light cone: the region something travelling at the speed of light could reach. That is the company’s proposition as geometry. An agent can only reach what it has been granted, and inside that shape it can move as fast as it likes.</p>
+        <p>On a spacetime diagram, light travels at exactly 45°. The symbol, the grid, the diagrams and the field all come from that angle. The words never mention physics; the geometry carries it.</p>
+      </div>
+      <ul>
+        <li><strong>Geometry.</strong> Verticals, horizontals and 45° diagonals. Nothing else.</li>
+        <li><strong>Structure.</strong> 1&nbsp;px hairlines with mono labels sitting on them, like axes on an engineering drawing.</li>
+        <li><strong>Colour.</strong> Blue-black ink, warm paper and one vivid blue. A rare redshift for “outside the cone”.</li>
+        <li><strong>Motion.</strong> Particles that are free, but stay inside a boundary.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 02 SYMBOL -->
+  <section class="block" id="symbol" aria-labelledby="h-symbol">
+    <div class="axis"><span class="label"><b>02</b> / Symbol</span></div>
+    <h2 id="h-symbol">The worldline r</h2>
+    <div class="grid2">
+      <div>
+        <p>A lowercase r whose shoulder is a straight 45° stroke: a worldline (the stem, time running upward) with a light ray leaving it. It is drawn on the 16-unit favicon grid with every vertex on a whole unit, so the stem and the notch are pixel-sharp at 16 and 32&nbsp;px.</p>
+        <p class="mono">path: M3 2H6V5L9 2H13L6 9V14H3Z<br>grid: 16 × 16 · stem 3 · notch 3 · arm at 45°</p>
+        <p>Route A of three. The routes board records why: <a href="routes/index.html">routes/index.html</a>.</p>
+        <ul>
+          <li>One colour, solid. No gradients, glows, outlines or accent colour.</li>
+          <li>Minimum size 16&nbsp;px tall. Below 24&nbsp;px use the 16-grid files as they are; do not redraw.</li>
+        </ul>
+      </div>
+      <figure class="construct">
+        <svg viewBox="-1.5 -1.5 19 19" role="img" aria-labelledby="construct-t">
+          <title id="construct-t">Construction of the symbol on a 16 by 16 grid</title>
+          <g stroke="currentColor" stroke-opacity="0.18" stroke-width="0.04">
+            <path d="M0 0V16M1 0V16M2 0V16M3 0V16M4 0V16M5 0V16M6 0V16M7 0V16M8 0V16M9 0V16M10 0V16M11 0V16M12 0V16M13 0V16M14 0V16M15 0V16M16 0V16"/>
+            <path d="M0 0H16M0 1H16M0 2H16M0 3H16M0 4H16M0 5H16M0 6H16M0 7H16M0 8H16M0 9H16M0 10H16M0 11H16M0 12H16M0 13H16M0 14H16M0 15H16M0 16H16"/>
+          </g>
+          <path d="M0 15L15 0" stroke="var(--color-accent)" stroke-width="0.05" stroke-dasharray="0.25 0.2"/>
+          <path fill="currentColor" fill-opacity="0.88" d="M3 2H6V5L9 2H13L6 9V14H3Z"/>
+          <g font-family="Commit Mono, monospace" font-size="0.62" fill="var(--color-muted)">
+            <text x="3.1" y="15.2">3</text><text x="6.3" y="4">3</text><text x="10.2" y="7.4">45°</text><text x="-1.2" y="2.2">2</text><text x="-1.4" y="14.2">14</text>
+          </g>
+        </svg>
+        <figcaption>On the 16-unit grid. The dashed line is the 45° the arm follows.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Sizes and themes</h3>
+    <div class="grid2">
+      <div class="panel ink"><span class="label">Ink</span>
+        <div class="sizes">
+          <div><img loading="lazy" src="logo/symbol-on-ink.svg" alt="" width="14" height="16"><span class="label">16</span></div>
+          <div><img loading="lazy" src="logo/symbol-on-ink.svg" alt="" width="27" height="32"><span class="label">32</span></div>
+          <div><img loading="lazy" src="logo/symbol-on-ink.svg" alt="Symbol on ink" width="107" height="128"><span class="label">128</span></div>
+        </div>
+      </div>
+      <div class="panel paper"><span class="label">Paper</span>
+        <div class="sizes">
+          <div><img loading="lazy" src="logo/symbol-on-paper.svg" alt="" width="14" height="16"><span class="label">16</span></div>
+          <div><img loading="lazy" src="logo/symbol-on-paper.svg" alt="" width="27" height="32"><span class="label">32</span></div>
+          <div><img loading="lazy" src="logo/symbol-on-paper.svg" alt="Symbol on paper" width="107" height="128"><span class="label">128</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>The favicon at 16&nbsp;px, in a tab</h3>
+    <div class="grid2">
+      <div class="tabbar light"><span class="tab"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="#151a21" d="M3 2H6V5L9 2H13L6 9V14H3Z"/></svg>Relativistic</span><span class="tab other">Inbox</span></div>
+      <div class="tabbar dark"><span class="tab"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="#f2f0ec" d="M3 2H6V5L9 2H13L6 9V14H3Z"/></svg>Relativistic</span><span class="tab other">Inbox</span></div>
+      <div class="tabbar light"><span class="tab"><img loading="lazy" src="icons/favicon.ico" alt="" width="16" height="16">favicon.ico</span><span class="tab other">Inbox</span></div>
+      <div class="tabbar dark"><span class="tab"><img loading="lazy" src="icons/favicon.ico" alt="" width="16" height="16">favicon.ico</span><span class="tab other">Inbox</span></div>
+    </div>
+    <p class="muted" style="margin-top:var(--space-3)"><code translate="no">icon.svg</code> switches colour with <code translate="no">prefers-color-scheme</code>: ink on light browser chrome, pale on dark. <code translate="no">favicon.ico</code> and <code translate="no">apple-touch-icon.png</code> are a solid ink square, because they cannot switch.</p>
+    <div class="dl"><a href="logo/symbol-on-ink.svg" download>symbol-on-ink.svg</a><a href="logo/symbol-on-paper.svg" download>symbol-on-paper.svg</a><a href="logo/symbol-black.svg" download>symbol-black.svg</a><a href="logo/symbol-white.svg" download>symbol-white.svg</a><a href="icons/icon.svg" download>icon.svg</a><a href="icons/favicon.ico" download>favicon.ico</a><a href="icons/apple-touch-icon.png" download>apple-touch-icon.png</a></div>
+  </section>
+
+  <!-- 03 LOCKUPS -->
+  <section class="block" id="lockups" aria-labelledby="h-lockups">
+    <div class="axis"><span class="label"><b>03</b> / Lockups</span></div>
+    <h2 id="h-lockups">Wordmark and lockups</h2>
+    <div class="grid2">
+      <div>
+        <p><code translate="no">relativistic</code> in lowercase, Instrument Sans 600 at normal width, tracked −0.02&nbsp;em, outlined to paths: no file depends on an installed font. No full stop. The symbol stands on the baseline and its top meets the ascender of the l, so the two share one height.</p>
+        <ul>
+          <li><strong>Clear space</strong> equals the wordmark’s x-height on every side (the dashed box).</li>
+          <li><strong>Minimum size</strong>: the horizontal lockup at 96&nbsp;px wide; the symbol at 16&nbsp;px.</li>
+          <li>Two lockups only: horizontal (symbol and wordmark) and symbol alone. The wordmark alone is for places where the symbol already appears nearby.</li>
+        </ul>
+      </div>
+      <div class="panel paper"><span class="label">Clear space: x-height</span><div class="clear"><div class="box"><img loading="lazy" src="logo/lockup-on-paper.svg" alt="Horizontal lockup with its clear space shown as a dashed box" width="542" height="74"></div></div></div>
+    </div>
+    <div class="grid2" style="margin-top:var(--space-5)">
+      <div class="panel ink"><span class="label">Ink</span><img loading="lazy" src="logo/lockup-on-ink.svg" alt="Lockup on ink" width="360" height="49"></div>
+      <div class="panel paper"><span class="label">Paper</span><img loading="lazy" src="logo/lockup-on-paper.svg" alt="Lockup on paper" width="360" height="49"></div>
+      <div class="panel paper"><span class="label">Minimum: 96&nbsp;px</span><img loading="lazy" src="logo/lockup-on-paper.svg" alt="Lockup at its minimum width of 96 pixels" width="96" height="13"></div>
+      <div class="panel ink"><span class="label">Wordmark only</span><img loading="lazy" src="logo/wordmark-on-ink.svg" alt="Wordmark on ink" width="300" height="49"></div>
+    </div>
+    <div class="dl"><a href="logo/lockup-on-ink.svg" download>lockup-on-ink.svg</a><a href="logo/lockup-on-paper.svg" download>lockup-on-paper.svg</a><a href="logo/lockup-black.svg" download>lockup-black.svg</a><a href="logo/lockup-white.svg" download>lockup-white.svg</a><a href="logo/wordmark-on-ink.svg" download>wordmark-on-ink.svg</a><a href="logo/wordmark-on-paper.svg" download>wordmark-on-paper.svg</a><a href="logo/wordmark-black.svg" download>wordmark-black.svg</a><a href="logo/wordmark-white.svg" download>wordmark-white.svg</a></div>
+
+    <h3>Do and don’t</h3>
+    <div class="donts">
+      <figure><div class="panel paper"><img loading="lazy" src="logo/lockup-on-paper.svg" alt="The lockup as supplied" width="200" height="27"></div><figcaption><span class="verdict yes">Use the supplied files</span></figcaption></figure>
+      <figure><div class="panel paper"><img loading="lazy" src="logo/lockup-on-paper.svg" alt="The lockup tinted blue" width="200" height="27" style="filter: invert(29%) sepia(85%) saturate(2400%) hue-rotate(215deg) brightness(90%)"></div><figcaption><span class="verdict no">Recolour it, even in accent</span></figcaption></figure>
+      <figure><div class="panel paper"><img loading="lazy" src="logo/lockup-on-paper.svg" alt="The lockup squashed horizontally" width="200" height="27" style="transform: scaleX(0.7)"></div><figcaption><span class="verdict no">Stretch, squash or condense it</span></figcaption></figure>
+      <figure><div class="panel ink"><img loading="lazy" src="logo/lockup-on-ink.svg" alt="The lockup with a glow" width="200" height="27" style="filter: drop-shadow(0 0 6px #42a3fd)"></div><figcaption><span class="verdict no">Add glows, shadows or outlines</span></figcaption></figure>
+      <figure><div class="panel paper"><img loading="lazy" src="logo/symbol-on-paper.svg" alt="The symbol rotated" width="40" height="48" style="transform: rotate(-20deg); width: auto; height: 48px"></div><figcaption><span class="verdict no">Rotate the symbol off the grid</span></figcaption></figure>
+      <figure><div class="panel" style="background:#f38020"><img loading="lazy" src="logo/lockup-white.svg" alt="The lockup on orange" width="200" height="27"></div><figcaption><span class="verdict no">Use orange: it implies Cloudflare</span></figcaption></figure>
+      <figure><div class="panel" style="background: linear-gradient(135deg, #3b2c85, #b33fa0)"><img loading="lazy" src="logo/lockup-white.svg" alt="The lockup on a purple gradient" width="200" height="27"></div><figcaption><span class="verdict no">Use gradients behind it</span></figcaption></figure>
+      <figure><div class="panel ink"><img loading="lazy" src="logo/lockup-on-ink.svg" alt="The lockup on ink" width="200" height="27"></div><figcaption><span class="verdict yes">Ink or paper, nothing busier</span></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 04 COLOUR -->
+  <section class="block" id="colour" aria-labelledby="h-colour">
+    <div class="axis"><span class="label"><b>04</b> / Colour</span></div>
+    <h2 id="h-colour">Ink, paper and Cherenkov blue</h2>
+    <div class="grid2">
+      <p>Two themes, designed together. The site follows the reader’s system setting. Use <strong>ink</strong> for social images, the field hero and dark-room slides; <strong>paper</strong> for documents, proposals and print. Cherenkov radiation is the blue glow of particles travelling faster than light can through a medium: a real relativistic effect, and a reason for the blue.</p>
+      <ul>
+        <li>Accent covers at most about 5% of any view: links, focus, the one thing that matters.</li>
+        <li>Signal is an exception, not a second brand colour.</li>
+        <li>No gradients except the field’s own glow. Never Cloudflare orange.</li>
+        <li>Rules are decorative (about 1.5:1). Never the only signal of anything.</li>
+      </ul>
+    </div>
+    <div class="scroll">
+      <table>
+        <caption class="label" style="text-align:left;padding-bottom:var(--space-3)">Tokens from tokens.css, with WCAG 2 contrast against the page background</caption>
+        <thead><tr><th scope="col">Token</th><th scope="col">Ink</th><th scope="col" class="num">On ink bg</th><th scope="col">Paper</th><th scope="col" class="num">On paper bg</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><td><code translate="no">--color-bg</code></td><td><span class="chip" style="background:#0b0f14"></span>#0b0f14<br><span class="muted mono">oklch(0.165 0.012 255)</span></td><td class="num">—</td><td><span class="chip" style="background:#f9f6f2"></span>#f9f6f2<br><span class="muted mono">oklch(0.975 0.006 85)</span></td><td class="num">—</td><td>Page</td></tr>
+          <tr><td><code translate="no">--color-raised</code></td><td><span class="chip" style="background:#13181e"></span>#13181e<br><span class="muted mono">oklch(0.205 0.014 255)</span></td><td class="num">—</td><td><span class="chip" style="background:#efece7"></span>#efece7<br><span class="muted mono">oklch(0.945 0.008 85)</span></td><td class="num">—</td><td>Cards, code, the footer band</td></tr>
+          <tr><td><code translate="no">--color-rule</code></td><td><span class="chip" style="background:#2b3138"></span>#2b3138<br><span class="muted mono">oklch(0.31 0.016 255)</span></td><td class="num">1.47</td><td><span class="chip" style="background:#d4d1ca"></span>#d4d1ca<br><span class="muted mono">oklch(0.86 0.010 85)</span></td><td class="num">1.42</td><td>Hairlines and axes (decorative)</td></tr>
+          <tr><td><code translate="no">--color-text</code></td><td><span class="chip" style="background:#f2f0ec"></span>#f2f0ec<br><span class="muted mono">oklch(0.955 0.006 85)</span></td><td class="num">16.9</td><td><span class="chip" style="background:#151a21"></span>#151a21<br><span class="muted mono">oklch(0.215 0.016 255)</span></td><td class="num">16.3</td><td>Body and headings</td></tr>
+          <tr><td><code translate="no">--color-muted</code></td><td><span class="chip" style="background:#a5abb4"></span>#a5abb4<br><span class="muted mono">oklch(0.74 0.014 255)</span></td><td class="num">8.4</td><td><span class="chip" style="background:#555b64"></span>#555b64<br><span class="muted mono">oklch(0.47 0.016 255)</span></td><td class="num">6.3</td><td>Secondary text, labels</td></tr>
+          <tr><td><code translate="no">--color-accent</code></td><td><span class="chip" style="background:#42a3fd"></span>#42a3fd<br><span class="muted mono">oklch(0.70 0.16 250)</span></td><td class="num">7.2</td><td><span class="chip" style="background:#2858cd"></span>#2858cd<br><span class="muted mono">oklch(0.50 0.19 264)</span></td><td class="num">5.8</td><td>Links, focus, the one thing per view</td></tr>
+          <tr><td><code translate="no">--color-signal</code></td><td><span class="chip" style="background:#f28c5c"></span>#f28c5c<br><span class="muted mono">oklch(0.74 0.14 45)</span></td><td class="num">8.0</td><td><span class="chip" style="background:#bb4717"></span>#bb4717<br><span class="muted mono">oklch(0.55 0.16 40)</span></td><td class="num">4.9</td><td>Rare: “outside the cone”; about 1% of field particles</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Other pairings in use</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th scope="col">Pairing</th><th scope="col" class="num">Ink</th><th scope="col" class="num">Paper</th><th scope="col">Where</th></tr></thead>
+        <tbody>
+          <tr><td>Text on raised</td><td class="num">15.7</td><td class="num">14.9</td><td>Cards, notes</td></tr>
+          <tr><td>Muted on raised</td><td class="num">7.8</td><td class="num">5.8</td><td>Card captions</td></tr>
+          <tr><td>Accent on raised</td><td class="num">6.7</td><td class="num">5.3</td><td>Links in cards</td></tr>
+          <tr><td>Background on accent</td><td class="num">7.2</td><td class="num">5.8</td><td>Primary button text</td></tr>
+          <tr><td>Signal on raised</td><td class="num">7.4</td><td class="num flag">4.44</td><td><span class="flag">Paper: below 4.5.</span> Signal text on paper raised only at 24&nbsp;px or larger.</td></tr>
+          <tr><td>Muted on rule</td><td class="num">—</td><td class="num flag">4.49</td><td>Avoid: never set text on a rule-coloured fill.</td></tr>
+          <tr><td>Email signature on white (text, muted, link)</td><td class="num">—</td><td class="num">17.5, 6.9, 6.2</td><td>email/signature.html</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 05 TYPE -->
+  <section class="block" id="type" aria-labelledby="h-type">
+    <div class="axis"><span class="label"><b>05</b> / Type</span></div>
+    <h2 id="h-type">Instrument Sans and Commit Mono</h2>
+    <p>Both open source under the SIL Open Font License: no licence cost, self-hosted, no third-party requests. Instrument Sans is variable in weight (400 to 700) and width (75 to 100); large headings condense slightly to 92.</p>
+    <div class="spec">
+      <span class="label">Display · Instrument Sans 600 · wdth 92 · −0.025&nbsp;em · line height 1.08</span>
+      <div class="big">Somewhere safe to run it.</div>
+    </div>
+    <div class="spec">
+      <span class="label">Body · Instrument Sans 400 · 17–18&nbsp;px · line height 1.55 · 60–68 characters</span>
+      <p style="margin-top:var(--space-3)">Every agent starts with access to nothing and must be granted each resource it uses. What it builds is a real app, private until it is shared like a document. Whoever opens an agent’s work must be allowed to see what the agent saw.</p>
+    </div>
+    <div class="spec">
+      <span class="label">Technical voice · Commit Mono 400 · labels 12&nbsp;px uppercase, +0.06&nbsp;em · data in sentence case</span>
+      <div class="mono-big">002 / GRANTED<br>grant: crm.read → agent/finance-assistant</div>
+    </div>
+    <h3>Scale</h3>
+    <p class="muted">Fluid with <code translate="no">clamp()</code>: a ratio of 1.2 at 360&nbsp;px rising to 1.333 at 1440&nbsp;px. Body text never below 16&nbsp;px; nothing at all below 12&nbsp;px. One <code translate="no">h1</code> per page.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th scope="col">Token</th><th scope="col" class="num">Size (px)</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><td><code translate="no">--text-label</code></td><td class="num">12</td><td>Mono labels. The smallest size anywhere.</td></tr>
+          <tr><td><code translate="no">--text-small</code></td><td class="num">16</td><td>Captions and footnotes</td></tr>
+          <tr><td><code translate="no">--text-body</code></td><td class="num">17–18</td><td>Body text</td></tr>
+          <tr><td><code translate="no">--text-step-1</code></td><td class="num">20.4–24</td><td>Lead paragraph, h4</td></tr>
+          <tr><td><code translate="no">--text-step-2</code></td><td class="num">24.5–32</td><td>h3</td></tr>
+          <tr><td><code translate="no">--text-step-3</code></td><td class="num">29.4–42.6</td><td>h2, section headings</td></tr>
+          <tr><td><code translate="no">--text-step-4</code></td><td class="num">35.3–56.8</td><td>Statements</td></tr>
+          <tr><td><code translate="no">--text-step-5</code></td><td class="num">42.3–75.8</td><td>h1 in the hero</td></tr>
+          <tr><td><code translate="no">--text-step-6</code></td><td class="num">50.8–101</td><td>Title slides and the social card only</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 06 LAYOUT -->
+  <section class="block" id="layout" aria-labelledby="h-layout">
+    <div class="axis"><span class="label"><b>06</b> / Layout</span></div>
+    <h2 id="h-layout">Rules as structure</h2>
+    <div class="grid2">
+      <ul>
+        <li>One reading column for the narrative; a 12-column grid on wide screens lets the hero split into text and field.</li>
+        <li>1&nbsp;px hairlines divide sections, and mono labels sit on them like axis labels: <span class="label"><b>02</b> / Story</span>.</li>
+        <li>Square corners, or 2&nbsp;px at most. No pills.</li>
+        <li>Focus is designed: a 2&nbsp;px accent outline offset by 3&nbsp;px. Primary controls are at least 44&nbsp;px tall.</li>
+        <li>Interface transitions take 150 to 250&nbsp;ms and ease out. No scroll-jacking, no parallax, no text that animates in.</li>
+        <li>Founders: five equal cards in alphabetical order, same crop, same height, same elements in the same places.</li>
+      </ul>
+      <div>
+        <p style="display:flex;gap:var(--space-4);flex-wrap:wrap"><a class="btn" href="#layout">Talk to us</a><a class="btn secondary" href="#layout">How we work</a></p>
+        <p class="muted">Tab to the buttons to see the focus ring.</p>
+        <div class="spacing" aria-label="Spacing scale">
+          <div><span>space-1</span><i style="width:4px"></i></div>
+          <div><span>space-2</span><i style="width:8px"></i></div>
+          <div><span>space-3</span><i style="width:12px"></i></div>
+          <div><span>space-4</span><i style="width:16px"></i></div>
+          <div><span>space-5</span><i style="width:24px"></i></div>
+          <div><span>space-6</span><i style="width:32px"></i></div>
+          <div><span>space-7</span><i style="width:48px"></i></div>
+          <div><span>space-8</span><i style="width:64px"></i></div>
+          <div><span>space-9</span><i style="width:96px"></i></div>
+          <div><span>space-10</span><i style="width:128px"></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 FIELD -->
+  <section class="block" id="field" aria-labelledby="h-field">
+    <div class="axis"><span class="label"><b>07</b> / Field</span></div>
+    <h2 id="h-field">The field tells the story in four formations</h2>
+    <p>Each formation holds for 9 seconds, with a slow eased blend into the next. Particles part around the pointer, but in GRANTED they never leave the cone. About 1% are in signal colour; in GRANTED they are the ones stopped at the boundary. On ink, particles are pale with an accent glow at the apex; on paper, they are ink dots, and density replaces the glow. With reduced motion, the field shows one still of GRANTED.</p>
+    <p><a href="field/reference.html">Open the reference implementation</a> (Canvas 2D; the maths for the WebGL2 port is in <code translate="no">field/field.js</code>).</p>
+    <div class="grid4 stills">
+      <figure><img src="field/stills/001-unbound-ink@2x.png" alt="UNBOUND on ink: a scattered, drifting field" width="1600" height="1600" loading="lazy"><figcaption><span class="label"><b>001</b> / Unbound</span>Agents can do anything, and that’s the problem.</figcaption></figure>
+      <figure><img src="field/stills/002-granted-ink@2x.png" alt="GRANTED on ink: particles stream upward inside a light cone, bright at the apex" width="1600" height="1600" loading="lazy"><figcaption><span class="label"><b>002</b> / Granted</span>Access granted, and only what was granted.</figcaption></figure>
+      <figure><img src="field/stills/003-shared-ink@2x.png" alt="SHARED on ink: three linked orbits" width="1600" height="1600" loading="lazy"><figcaption><span class="label"><b>003</b> / Shared</span>Work shared like a document, with access checked.</figcaption></figure>
+      <figure><img src="field/stills/004-running-ink@2x.png" alt="RUNNING on ink: a calm sphere, slowly turning" width="1600" height="1600" loading="lazy"><figcaption><span class="label"><b>004</b> / Running</span>It keeps going after everyone has logged off.</figcaption></figure>
+      <figure><img src="field/stills/001-unbound-paper@2x.png" alt="UNBOUND on paper" width="1600" height="1600" loading="lazy"></figure>
+      <figure><img src="field/stills/002-granted-paper@2x.png" alt="GRANTED on paper" width="1600" height="1600" loading="lazy"></figure>
+      <figure><img src="field/stills/003-shared-paper@2x.png" alt="SHARED on paper" width="1600" height="1600" loading="lazy"></figure>
+      <figure><img src="field/stills/004-running-paper@2x.png" alt="RUNNING on paper" width="1600" height="1600" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <!-- 08 PORTRAITS -->
+  <section class="block" id="portraits" aria-labelledby="h-portraits">
+    <div class="axis"><span class="label"><b>08</b> / Portraits</span></div>
+    <h2 id="h-portraits">Rendered, then as observed</h2>
+    <div class="grid2">
+      <div>
+        <p>Founders are photographed as they really are, under identical conditions (see <a href="photography.md">photography.md</a>). Each photo also gets an AI edit, changing only clothes and grooming, that makes them look sharp and businesslike. On the site, the card shows the edit first, labelled <span class="label">Rendered / AI</span>, then shifts once to the real photo, labelled <span class="label">As observed</span>.</p>
+        <ul>
+          <li><strong>The real photo is always the default.</strong> It is the only image in the HTML, and the one used for social cards, LinkedIn, press, documents and slides. Readers without JavaScript, with reduced motion, or using a screen reader get the real photo.</li>
+          <li><strong>The shift is a Doppler shift.</strong> Bands on the 45° grid slide along their own diagonal, splitting into blueshift (accent) ahead and redshift (signal) behind. About 600&nbsp;ms, once per card, never looping, no flicker and no full-frame flash.</li>
+          <li>Every founder consents to both images, and can withdraw consent to the edit at any time.</li>
+        </ul>
+        <p><a href="portraits/glitch-demo.html">Open the demo, frame by frame</a> · <code translate="no">portraits/glitch.js</code></p>
+      </div>
+      <figure class="portrait" data-rendered="portraits/placeholder-rendered.svg">
+        <div class="portrait-frame">
+          <img src="portraits/placeholder-observed.svg" alt="Placeholder portrait: a silhouette in casual clothes" width="480" height="600" loading="lazy">
+          <span class="portrait-state" aria-hidden="true">As observed</span>
+        </div>
+        <figcaption>Placeholder silhouettes, not faces. Plays once when scrolled into view.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 09 DIAGRAMS -->
+  <section class="block" id="diagrams" aria-labelledby="h-diagrams">
+    <div class="axis"><span class="label"><b>09</b> / Diagrams</span></div>
+    <h2 id="h-diagrams">Diagrams, not screenshots</h2>
+    <div class="grid2">
+      <ul>
+        <li>1&nbsp;px strokes in text or muted; one 1.5&nbsp;px path in accent: the one that matters.</li>
+        <li>Geometry on the 45° grid. Labels in mono, sentence case, at least 12&nbsp;px when placed.</li>
+        <li>Frame: an organisation. Cone: an agent’s reach. Node: a resource. Grant: an arrow with a key notch. Denial: a stopped line ending in a bar, in signal. Viewer: access checks only.</li>
+        <li>Every diagram must work in greyscale: grant and denial differ in shape, not only colour.</li>
+      </ul>
+      <p class="muted">The SVGs use CSS custom properties with fallbacks, so the same file adapts to the theme when inlined into a page that loads <code translate="no">tokens.css</code>, and uses fixed colours as an image. Labels are live text with Commit Mono embedded, so they stay editable.</p>
+    </div>
+    <figure><picture><source srcset="diagrams/kit-ink.svg" media="(prefers-color-scheme: dark)"><img src="diagrams/kit-paper.svg" alt="The diagram kit: frame, cone, node, grant, denial and viewer" width="1200" height="260" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>The kit. Single components without labels are in <code translate="no">diagrams/components/</code>.</figcaption></figure>
+    <div class="grid2" style="margin-top:var(--space-5)">
+      <figure><picture><source srcset="diagrams/example-ink.svg" media="(prefers-color-scheme: dark)"><img src="diagrams/example-paper.svg" alt="Worked example on paper: an agent at the apex of a cone inside an organisation frame, with a grant to read the CRM and a denied request to payroll outside the cone" width="880" height="560" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>Worked example, in the current theme.</figcaption></figure>
+      <figure><picture><source srcset="diagrams/example-ink.svg" media="(prefers-color-scheme: dark)"><img class="greyscale" src="diagrams/example-paper.svg" alt="The same worked example in greyscale" width="880" height="560" style="width:100%;height:auto;box-shadow:0 0 0 1px var(--color-rule)" loading="lazy"></picture><figcaption>Greyscale test: still readable without colour.</figcaption></figure>
+    </div>
+    <div class="dl"><a href="diagrams/example-paper.svg" download>example-paper.svg</a><a href="diagrams/example-ink.svg" download>example-ink.svg</a><a href="diagrams/kit-paper.svg" download>kit-paper.svg</a><a href="diagrams/kit-ink.svg" download>kit-ink.svg</a></div>
+  </section>
+
+  <!-- 10 TEMPLATES -->
+  <section class="block" id="templates" aria-labelledby="h-templates">
+    <div class="axis"><span class="label"><b>10</b> / Templates</span></div>
+    <h2 id="h-templates">Social, slides, documents and email</h2>
+    <p class="muted">Headlines on the social card and slides use the content review’s recommended Option A. It is not approved copy yet: every template is editable HTML, and the rasters re-render from it with <code translate="no">build/render.mjs</code>.</p>
+    <div class="grid2">
+      <figure><a class="thumb" href="social/og.png"><img src="social/og.png" alt="Social card: the lockup, the headline 'Agents can build what your people need. We give them somewhere safe to run it.' and the GRANTED cone on ink" width="1200" height="630" loading="lazy"></a><figcaption>Social card, 1200 × 630, ink. Source: <a href="social/og.html">social/og.html</a>.</figcaption></figure>
+      <figure><a class="thumb" href="slides/index.html"><img src="slides/preview.png" alt="Slide template contact sheet: title, section, statement, content, diagram and closing layouts in ink and paper" width="1624" height="691" loading="lazy"></a><figcaption>Slides, 16:9, six layouts in both themes. <a href="slides/index.html">HTML</a> · <a href="slides/slides.pdf">PDF</a>.</figcaption></figure>
+      <figure><a class="thumb" href="documents/proposal.html"><img src="documents/preview.png" alt="Proposal and letter templates on A4 paper" width="1429" height="1000" loading="lazy"></a><figcaption>A4 proposal and letter, paper. <a href="documents/proposal.html">Proposal</a> (<a href="documents/proposal.pdf">PDF</a>) · <a href="documents/letter.html">Letter</a> (<a href="documents/letter.pdf">PDF</a>).</figcaption></figure>
+      <figure>
+        <div class="sig">
+          <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;width:auto"><tr><td style="padding:12px 0 0 0;border-top:1px solid #d4d1ca;border-bottom:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;color:#151a21;"><span style="font-weight:600;">Harry Robbins</span><br><span style="color:#555b64;">Co-founder, product and delivery</span><br>Relativistic<span style="color:#555b64;"> · </span><a href="https://relativistic.co.uk" style="color:#2858cd;">relativistic.co.uk</a></td></tr></table>
+        </div>
+        <figcaption>Email signature: no images, system font. <a href="email/signature.html">Template</a> · <a href="email/signature.txt">plain text</a> · <a href="email/signature-example.html">example</a>.</figcaption>
+      </figure>
+      <figure><a class="thumb" href="social/linkedin-cover@2x.png"><img src="social/linkedin-cover@2x.png" alt="LinkedIn cover: the four formations with their labels on a hairline axis" width="2256" height="382" loading="lazy"></a><figcaption>LinkedIn cover, 1128 × 191 (and 2×). Source: <a href="social/linkedin-cover.html">social/linkedin-cover.html</a>.</figcaption></figure>
+      <figure style="display:flex;gap:var(--space-4);align-items:flex-end"><img src="social/avatar.png" alt="Profile avatar: the symbol on ink" width="140" height="140" loading="lazy"><img src="icons/apple-touch-icon.png" alt="Apple touch icon" width="90" height="90" loading="lazy"><figcaption>Avatar, 500 × 500, for GitHub and LinkedIn; it survives a circular crop. Apple touch icon, 180 × 180.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 11 FILES -->
+  <section class="block" id="files" aria-labelledby="h-files">
+    <div class="axis"><span class="label"><b>11</b> / Files</span></div>
+    <h2 id="h-files">Files and how the site uses them</h2>
+    <div class="grid2">
+      <div>
+        <p>The site imports <code translate="no">brand/tokens.css</code> directly and loads the fonts from <code translate="no">brand/fonts/</code> through Astro’s Fonts API. Copy the icons and the social card into <code translate="no">public/</code> when they change:</p>
+        <pre class="mono raised" style="padding:var(--space-4);overflow-x:auto;border-radius:var(--radius-1)"><code translate="no">&lt;link rel="icon" href="/favicon.ico" sizes="32x32"&gt;
+&lt;link rel="icon" href="/icon.svg" type="image/svg+xml"&gt;
+&lt;link rel="apple-touch-icon" href="/apple-touch-icon.png"&gt;
+&lt;meta property="og:image" content="https://relativistic.co.uk/og.png"&gt;</code></pre>
+        <p class="muted">Fonts: <code translate="no">instrument-sans-wght.woff2</code> (30&nbsp;KB, normal width) fits the site’s 45&nbsp;KB critical path; the width axis needs <code translate="no">instrument-sans-wdth-wght.woff2</code> (57&nbsp;KB). Without it, <code translate="no">font-stretch</code> falls back to normal width and nothing breaks.</p>
+      </div>
+      <div>
+        <ul>
+          <li><a href="tokens.css">tokens.css</a> and <a href="tokens.json">tokens.json</a>: colour, type, space, rules, radii, focus, motion, field and portrait settings. Generated by <code translate="no">build/tokens.mjs</code>.</li>
+          <li><a href="fonts/fonts.css">fonts/</a>: WOFF2 files, <code translate="no">fonts.css</code> and the OFL licences (<a href="fonts/OFL-InstrumentSans.txt">Instrument Sans</a>, <a href="fonts/OFL-CommitMono.txt">Commit Mono</a>).</li>
+          <li><code translate="no">logo/</code>: symbol, wordmark and horizontal lockup, each on ink, on paper, black and white.</li>
+          <li><code translate="no">icons/</code>: <code translate="no">favicon.ico</code>, <code translate="no">icon.svg</code>, <code translate="no">apple-touch-icon.png</code>.</li>
+          <li><code translate="no">field/</code>: <code translate="no">field.js</code>, <code translate="no">reference.html</code> and eight stills.</li>
+          <li><code translate="no">build/</code>: the scripts that generate tokens, outlines, diagrams and rasters.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  </div>
+</main>
+
+<footer class="end">
+  <div class="wrap">
+    <p class="label">Relativistic brand guidelines · brand/ is the master copy · Fonts under the SIL Open Font License 1.1</p>
+  </div>
+</footer>
+<script src="portraits/glitch.js"></script>
+<script>RelativisticGlitch.init(document);</script>
+</body>
+</html>

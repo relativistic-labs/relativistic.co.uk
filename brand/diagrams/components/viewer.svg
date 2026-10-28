@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 28" width="24" height="28" role="img" aria-label="Viewer"><style>
+.bg{fill:var(--color-bg, #f9f6f2)}
+.line{fill:none;stroke:var(--color-text, #151a21);stroke-width:1}
+.faint{fill:none;stroke:var(--color-muted, #555b64);stroke-width:1}
+.dots{fill:none;stroke:var(--color-muted, #555b64);stroke-width:1;stroke-dasharray:1 4;stroke-linecap:round}
+.grant{fill:none;stroke:var(--color-accent, #2858cd);stroke-width:1.5;stroke-linejoin:miter}
+.deny{fill:none;stroke:var(--color-signal, #bb4717);stroke-width:1.5}
+.node{fill:var(--color-bg, #f9f6f2);stroke:var(--color-text, #151a21);stroke-width:1}
+.agent{fill:var(--color-text, #151a21)}
+.person{fill:var(--color-text, #151a21)}
+.tick{fill:none;stroke:var(--color-rule, #d4d1ca);stroke-width:1}
+text{font-family:"Commit Mono",ui-monospace,Menlo,Consolas,monospace;font-size:15px;fill:var(--color-text, #151a21)}
+text.m{fill:var(--color-muted, #555b64)}
+text.a{fill:var(--color-accent, #2858cd)}
+text.s{fill:var(--color-signal, #bb4717)}
+</style><g><circle class="person" cx="12" cy="9" r="4.5"/><path class="person" d="M3 25L10 18H14L21 25Z"/></g></svg>

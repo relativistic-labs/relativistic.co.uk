@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field reference · Relativistic brand</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); font-size: var(--text-body); line-height: var(--leading-body); }
+  .label { font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); }
+  .stage { position: relative; height: 100svh; min-height: 520px; display: grid; grid-template-rows: auto 1fr auto; }
+  header, footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-4) var(--page-margin); border-bottom: var(--rule); flex-wrap: wrap; }
+  footer { border-bottom: 0; border-top: var(--rule); }
+  h1 { font-size: var(--text-step-1); font-weight: 600; letter-spacing: var(--tracking-heading); margin: 0; }
+  canvas { width: 100%; height: 100%; display: block; }
+  .scene b { color: var(--color-accent); font-weight: 400; }
+  .controls { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  button { font: inherit; font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; min-height: var(--target-min); padding: 0 var(--space-4); color: var(--color-text); background: transparent; border: 1px solid var(--color-rule); border-radius: var(--radius-1); cursor: pointer; transition: border-color var(--duration-fast) var(--ease-out); touch-action: manipulation; }
+  button:hover { border-color: var(--color-muted); }
+  button[aria-pressed="true"] { border-color: var(--color-accent); color: var(--color-accent); }
+  button:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+  .notes { max-width: var(--measure); padding: var(--space-7) var(--page-margin); }
+  .notes h2 { font-size: var(--text-step-2); letter-spacing: var(--tracking-heading); margin: 0 0 var(--space-4); }
+  .notes code { font-family: var(--font-mono); font-size: 0.9em; }
+  @media (forced-colors: active) { canvas { display: none; } }
+
+  /* Still mode (?still=granted&theme=ink): just the canvas, for rendering PNGs. */
+  body.still header, body.still footer, body.still .notes { display: none; }
+  body.still .stage { height: 100vh; min-height: 0; grid-template-rows: 1fr; }
+</style>
+</head>
+<body>
+<main class="stage">
+  <header>
+    <h1>The field: reference implementation</h1>
+    <div class="controls" role="group" aria-label="Formation">
+      <button type="button" data-formation="auto" aria-pressed="true">Cycle</button>
+      <button type="button" data-formation="unbound" aria-pressed="false">001 Unbound</button>
+      <button type="button" data-formation="granted" aria-pressed="false">002 Granted</button>
+      <button type="button" data-formation="shared" aria-pressed="false">003 Shared</button>
+      <button type="button" data-formation="running" aria-pressed="false">004 Running</button>
+    </div>
+  </header>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <footer>
+    <span class="label scene" aria-live="off"><b id="scene-number">001</b> / <span id="scene-name">UNBOUND</span></span>
+    <span class="label">Move your pointer through the field. In GRANTED, nothing leaves the cone.</span>
+    <button type="button" id="pause" aria-pressed="false">Pause motion</button>
+  </footer>
+</main>
+<section class="notes" aria-labelledby="notes">
+  <h2 id="notes">Notes for the WebGL2 port</h2>
+  <p>The maths lives in <code>field.js</code>. Every formation is a closed-form function of a particle's fixed attributes (<code>u</code>, <code>angle</code>, <code>seed</code>, <code>size</code>, <code>signal</code>) and time, so it moves into a vertex shader as written. Uniforms: time, the two formations being blended, the blend factor, the pointer, the cone weight and the theme colours.</p>
+  <p>Brief details implemented here: four formations of 9 seconds with a smootherstep blend; about 1% signal particles, which in GRANTED sit on the cone's boundary; the pointer clamp that keeps particles inside the cone; pale particles with an accent glow at the apex on ink, ink dots with density on paper; colours read from the theme's custom properties; reduced motion draws one still of GRANTED; forced colours hide the canvas.</p>
+  <p>Stills: <code>reference.html?still=granted&amp;theme=ink&amp;t=6</code>.</p>
+</section>
+<script src="field.js"></script>
+<script>
+  (function () {
+    var params = new URLSearchParams(location.search);
+    var stillId = params.get('still');
+    var theme = params.get('theme') || 'auto';
+    if (theme === 'ink' || theme === 'paper') document.documentElement.dataset.theme = theme;
+
+    var canvas = document.getElementById('field');
+    var number = document.getElementById('scene-number');
+    var name = document.getElementById('scene-name');
+    var field = RelativisticField.create(canvas, {
+      theme: theme,
+      scale: parseFloat(params.get('scale')) || 0.3,
+      originY: parseFloat(params.get('originY')) || 0.5,
+      onFormation: function (f) { number.textContent = f.number; name.textContent = f.label; }
+    });
+
+    if (stillId) {
+      document.body.classList.add('still');
+      field.still(stillId, parseFloat(params.get('t')) || 6);
+      document.body.dataset.ready = 'true';
+      return;
+    }
+
+    var pause = document.getElementById('pause');
+    var buttons = document.querySelectorAll('[data-formation]');
+    var pinned = null;
+    function setPressed(id) { buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.formation === id)); }); }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var id = b.dataset.formation;
+        setPressed(id);
+        if (id === 'auto') { pinned = null; field.start(); pause.setAttribute('aria-pressed', 'false'); pause.textContent = 'Pause motion'; }
+        else { pinned = id; field.still(id, 6); pause.setAttribute('aria-pressed', 'true'); pause.textContent = 'Resume motion'; }
+      });
+    });
+    pause.addEventListener('click', function () {
+      if (field.isRunning()) { field.stop(); pause.setAttribute('aria-pressed', 'true'); pause.textContent = 'Resume motion'; }
+      else { pinned = null; setPressed('auto'); field.start(); pause.setAttribute('aria-pressed', 'false'); pause.textContent = 'Pause motion'; }
+    });
+    field.start();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" width="480" height="600" role="img" aria-label="Placeholder portrait: rendered (businesslike AI edit)">
+  <title>Placeholder portrait: rendered</title>
+  <!-- Placeholder only. Same backdrop, pose and framing as placeholder-observed.svg; only clothes and grooming change. No face. -->
+  <rect width="480" height="600" fill="#cfccc5"/>
+  <path d="M0 0H480V600H0Z" fill="url(#light)" opacity=".5"/>
+  <defs><linearGradient id="light" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6e3dc"/><stop offset="1" stop-color="#cfccc5" stop-opacity="0"/></linearGradient></defs>
+  <!-- body: suit -->
+  <path d="M40 600C48 470 120 410 200 392H280C360 410 432 470 440 600Z" fill="#262c38"/>
+  <path d="M204 380H276L240 480Z" fill="#eeebe4"/>
+  <path d="M233 392H247L252 470L240 492L228 470Z" fill="#3f4656"/>
+  <path d="M200 392L240 500L186 430L172 404ZM280 392L240 500L294 430L308 404Z" fill="#1b2029"/>
+  <!-- neck and head -->
+  <rect x="212" y="300" width="56" height="84" fill="#b3ada3"/>
+  <ellipse cx="240" cy="228" rx="78" ry="92" fill="#bdb7ad"/>
+  <!-- hair: neat -->
+  <path d="M162 214C160 160 198 130 244 130C290 130 322 158 318 214C310 190 296 176 270 172C246 168 220 172 200 182C184 190 170 200 162 214Z" fill="#3a3632"/>
+  <text x="24" y="40" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="16" letter-spacing="1" fill="#555b64">PLACEHOLDER · RENDERED</text>
+</svg>

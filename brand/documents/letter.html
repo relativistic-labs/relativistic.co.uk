@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en-GB" data-theme="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Letter subject] · Relativistic</title>
+<!--
+  Relativistic letter template. A4, paper theme. The recipient's address sits where a UK
+  DL or C5 window envelope shows it (20 mm from the left, 50 mm from the top). Print to PDF
+  from Chrome with "Background graphics" on and margins "Default".
+  Text in [square brackets] is a placeholder. Company details stay as placeholders until the
+  company is incorporated; UK trading disclosure rules require them on business letters.
+-->
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../tokens.css">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper-raised); }
+  body { margin: 0; color: var(--color-text); font-family: var(--font-sans); font-size: 10.5pt; line-height: 1.55; }
+  .sheet { position: relative; width: 210mm; min-height: 297mm; margin: 10mm auto; background: var(--paper-bg); box-shadow: 0 0 0 1px var(--paper-rule); padding: 0; }
+  .label { font-family: var(--font-mono); font-size: 9pt; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); }
+
+  .head { position: absolute; left: 20mm; right: 20mm; top: 16mm; display: flex; justify-content: space-between; align-items: flex-start; }
+  .head .lockup { height: 8mm; width: auto; display: block; }
+  .from { text-align: right; font-size: 9pt; line-height: 1.5; color: var(--color-muted); }
+  .from a { color: var(--color-text); text-decoration: none; }
+
+  .to { position: absolute; left: 20mm; top: 50mm; width: 90mm; font-size: 10.5pt; line-height: 1.45; }
+  .ref { position: absolute; right: 20mm; top: 50mm; text-align: right; display: grid; gap: 1mm; font-size: 10pt; }
+
+  .body { padding: 98mm 20mm 40mm; max-width: 170mm; }
+  .body h1 { font-size: 13pt; font-weight: 600; letter-spacing: var(--tracking-heading); margin: 0 0 6mm; }
+  .body p { margin: 0 0 4mm; max-width: 66ch; }
+  .signoff { margin-top: 10mm; }
+  .signoff .name { margin-top: 14mm; font-weight: 600; }
+  .signoff .role { color: var(--color-muted); }
+
+  .foot { position: absolute; left: 20mm; right: 20mm; bottom: 12mm; padding-top: 3mm; border-top: var(--rule); font-size: 9pt; color: var(--color-muted); }
+  /* A fold mark for a DL envelope: one third down the sheet. Decorative. */
+  .fold { position: absolute; left: 0; top: 99mm; width: 5mm; border-top: 1px solid var(--paper-rule); }
+
+  @media print {
+    html { background: none; }
+    .sheet { margin: 0; box-shadow: none; }
+    * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<article class="sheet">
+  <i class="fold" aria-hidden="true"></i>
+  <header class="head">
+    <img class="lockup" src="../logo/lockup-on-paper.svg" alt="Relativistic">
+    <div class="from">[Founder name], [role]<br>[email address]<br><a href="https://relativistic.co.uk">relativistic.co.uk</a></div>
+  </header>
+
+  <address class="to" style="font-style:normal">
+    [Recipient name]<br>
+    [Role]<br>
+    [Organisation]<br>
+    [Address line 1]<br>
+    [Town]<br>
+    [Postcode]
+  </address>
+  <div class="ref">
+    <span class="label">Date</span><span>[1 November 2026]</span>
+    <span class="label" style="margin-top:2mm">Our reference</span><span>[REL-2026-001]</span>
+  </div>
+
+  <div class="body">
+    <h1>[Subject line, in sentence case]</h1>
+    <p>Dear [name],</p>
+    <p>[First paragraph: why you are writing, in one or two sentences.]</p>
+    <p>[Body. Instrument Sans at 10.5 pt. Plain, specific and short: one idea per paragraph.]</p>
+    <p>[Closing paragraph: what happens next, and who does it.]</p>
+    <div class="signoff">
+      <p>Yours sincerely,</p>
+      <p class="name">[Founder name]</p>
+      <p class="role">[Role], Relativistic</p>
+    </div>
+  </div>
+
+  <footer class="foot">[Relativistic Ltd] · Registered in England and Wales, no. [00000000] · Registered office: [address] · relativistic.co.uk</footer>
+</article>
+</body>
+</html>
