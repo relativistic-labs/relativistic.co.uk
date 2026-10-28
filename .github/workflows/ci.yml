@@ -55,6 +55,15 @@ jobs:
       - name: Lighthouse (mobile)
         run: pnpm lhci
 
+      - name: Cloudflare build and its _headers
+        run: pnpm build:cloudflare && pnpm headers
+      - name: Review build and its _headers
+        run: pnpm build:review && pnpm headers --review
+      - name: Behaviour, review build (phase banner, preview links)
+        run: pnpm exec playwright test --grep @both
+      - name: GitHub Pages build has no _headers
+        run: pnpm build && pnpm headers --pages
+
       - if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

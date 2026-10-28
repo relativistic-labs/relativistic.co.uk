@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { countWords, sectionsOn, WORDS_ALL_ON, WORDS_CORE } from './helpers';
+import { AVOID, sectionsOn, wordsIn, WORDS_ALL_ON, WORDS_CORE, WORDS_MODELS, WORDS_SPONSORSHIP } from './helpers';
 
 test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
@@ -9,11 +9,12 @@ test.describe('without JavaScript', () => {
     const on = await sectionsOn(page);
     const main = page.locator('main');
     await expect(main.locator('h1')).toContainText('Agents can build what your people need');
-    for (const id of ['story', 'how-we-work', 'trust', 'contact']) await expect(page.locator(`#${id} h2`)).toBeVisible();
+    for (const id of ['example', 'help', 'packages', 'trust', 'story', 'contact']) await expect(page.locator(`#${id} h2`)).toBeVisible();
     // Every section after the opening carries the reader's question as a caption.
     await expect(page.locator('main .question')).toHaveCount(await page.locator('main section.section').count());
-    await expect(page.locator('#trust .summary dt')).toHaveCount(7);
-    await expect(page.locator('#how-we-work figure svg[role="img"]').first()).toBeAttached();
+    await expect(page.locator('#trust .summary dt')).toHaveCount(9);
+    await expect(page.locator('#packages h3')).toHaveText(['Shared', 'Managed', 'Enterprise']);
+    await expect(page.locator('#example figure svg[role="img"]').first()).toBeAttached();
     const mail = page.locator('#contact a[href="mailto:hello@relativistic.co.uk"]');
     await expect(mail).toBeVisible();
     await expect(mail).toHaveText('hello@relativistic.co.uk');
@@ -34,10 +35,39 @@ test.describe('without JavaScript', () => {
 test('word budget for the rendered <main> @both', async ({ page }) => {
   await page.goto('/');
   const on = await sectionsOn(page);
-  const limit = on.team || on.models || on.sponsorship ? WORDS_ALL_ON : WORDS_CORE;
-  const words = countWords(await page.locator('main').innerText());
-  test.info().annotations.push({ type: 'words', description: `${words} of ${limit}` });
+  const models = on.models ? await wordsIn(page, '#models') : 0;
+  const sponsorship = on.sponsorship ? await wordsIn(page, '#sponsorship') : 0;
+  const words = (await wordsIn(page, 'main')) - models - sponsorship;
+  const limit = on.team ? WORDS_ALL_ON : WORDS_CORE;
+  test.info().annotations.push({ type: 'words', description: `${words} of ${limit} (models ${models}, sponsorship ${sponsorship})` });
   expect(words, `rendered <main> is ${words} words; the limit is ${limit}`).toBeLessThanOrEqual(limit);
+  expect(models).toBeLessThanOrEqual(WORDS_MODELS);
+  expect(sponsorship).toBeLessThanOrEqual(WORDS_SPONSORSHIP);
+});
+
+test('plain words: no product or infrastructure jargon, Cloudflare OS named once @both', async ({ page }) => {
+  await page.goto('/');
+  const text = await page.locator('main').evaluate((m) => {
+    const clone = m.cloneNode(true) as HTMLElement;
+    clone.querySelectorAll('svg').forEach((s) => s.remove());
+    return clone.textContent ?? '';
+  });
+  for (const word of AVOID) expect(text, `"${word}" is on the page`).not.toMatch(new RegExp(`\\b${word}\\b`, 'i'));
+  expect(text.match(/\bkeys?\b/gi)?.length ?? 0, '"key" only in "passwords or keys"').toBe(text.match(/passwords or keys/g)?.length ?? 0);
+  expect(text.match(/Cloudflare OS/g)?.length ?? 0).toBe(1);
+});
+
+test('/index.md says what the page says, including the diagram @both', async ({ page, request }) => {
+  const md = (await (await request.get('/index.md')).text()).replace(/\*\*|\*|^#+ |\[([^\]]*)\]\([^)]*\)|[<>]/gm, '$1').replace(/\s+/g, ' ');
+  await page.goto('/');
+  const pieces = await page.locator('main').evaluate((m) =>
+    [...m.querySelectorAll('h1, h2, h3, p, li, dt, dd, desc')]
+      .filter((e) => !e.closest('.opening__action, .portrait, .founder__links') && !e.querySelector('p, li, h3'))
+      .map((e) => (e.textContent ?? '').replace(/\s+/g, ' ').trim())
+      .filter(Boolean),
+  );
+  expect(pieces.length).toBeGreaterThan(20);
+  for (const piece of pieces) expect(md, `missing from /index.md: ${piece}`).toContain(piece);
 });
 
 test('optional sections link only to themselves or to contact @both', async ({ page }) => {

@@ -16,7 +16,15 @@ export default defineConfig({
     // Headless Chromium draws WebGL2 with SwiftShader, so the field is exercised for real.
     launchOptions: { args: ['--enable-unsafe-swiftshader', '--use-angle=swiftshader'] },
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: /layout\.spec/ },
+    // A phone (390 × 844): the accessibility and layout checks again at phone width.
+    {
+      name: 'phone',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
+      testMatch: /(accessibility|layout)\.spec/,
+    },
+  ],
   webServer: {
     command: `pnpm exec astro preview --port ${PORT} --host 127.0.0.1 --ignore-lock`,
     url: `http://127.0.0.1:${PORT}/`,

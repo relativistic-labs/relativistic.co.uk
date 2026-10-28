@@ -128,7 +128,7 @@ test.describe('founder portraits', () => {
     await expect(card).toHaveClass(/is-observed/, { timeout: 10_000 });
     await expect(card.locator('.shift, .portrait__rendered')).toHaveCount(0);
     await expect(card.locator('img[alt="Harry Robbins"]')).toBeVisible();
-    await expect(card.locator('.portrait__state')).toHaveText('As observed');
+    await expect(card.locator('.portrait__state')).toHaveText('The real photo');
   });
 
   test('reduced motion never requests the polished layer', async ({ page }) => {
