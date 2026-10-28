@@ -18,14 +18,14 @@
   --ink-rule: oklch(0.31 0.016 255); /* #2b3138 */
   --ink-text: oklch(0.955 0.006 85); /* #f2f0ec */
   --ink-muted: oklch(0.74 0.014 255); /* #a5abb4 */
-  --ink-accent: oklch(0.70 0.16 250); /* #42a3fd */
+  --ink-accent: oklch(0.80 0.11 190); /* #59d4cd */
   --ink-signal: oklch(0.74 0.14 45); /* #f28c5c */
   --paper-bg: oklch(1 0 0); /* #ffffff */
   --paper-raised: oklch(0.964 0.003 85); /* #f4f3f1 */
   --paper-rule: oklch(0.781 0.008 254); /* #b4b8bd */
   --paper-text: oklch(0.215 0.016 255); /* #151a21 */
   --paper-muted: oklch(0.47 0.016 255); /* #555b64 */
-  --paper-accent: oklch(0.50 0.19 264); /* #2858cd */
+  --paper-accent: oklch(0.48 0.08 190); /* #0c6c68 */
   --paper-signal: oklch(0.55 0.16 40); /* #bb4717 */
 
   /* Colour: theme-aware (use these) */

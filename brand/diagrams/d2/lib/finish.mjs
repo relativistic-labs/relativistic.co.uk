@@ -33,12 +33,12 @@ if (!outDir || sources.length === 0) {
 
 // The palette (brand/tokens.json). Paper values are what brand.d2 writes; ink is what they become.
 const PALETTE = {
-  bg: ['#f9f6f2', '#0b0f14'],
-  raised: ['#efece7', '#13181e'],
-  rule: ['#d4d1ca', '#2b3138'],
+  bg: ['#ffffff', '#0b0f14'],
+  raised: ['#f4f3f1', '#13181e'],
+  rule: ['#b4b8bd', '#2b3138'],
   text: ['#151a21', '#f2f0ec'],
   muted: ['#555b64', '#a5abb4'],
-  accent: ['#2858cd', '#42a3fd'],
+  accent: ['#0c6c68', '#59d4cd'],
   signal: ['#bb4717', '#f28c5c'],
 };
 const ALLOWED = new Set(Object.values(PALETTE).flat());

@@ -15,12 +15,12 @@
 # Use only these seven values if you style anything by hand:
 #
 #   token    paper     ink
-#   bg       #f9f6f2   #0b0f14
-#   raised   #efece7   #13181e
-#   rule     #d4d1ca   #2b3138
+#   bg       #ffffff   #0b0f14
+#   raised   #f4f3f1   #13181e
+#   rule     #b4b8bd   #2b3138
 #   text     #151a21   #f2f0ec
 #   muted    #555b64   #a5abb4
-#   accent   #2858cd   #42a3fd
+#   accent   #0c6c68   #59d4cd
 #   signal   #bb4717   #f28c5c
 
 vars: {
@@ -37,21 +37,21 @@ vars: {
       N1: "#151a21"
       N2: "#555b64"
       N3: "#555b64"
-      N4: "#d4d1ca"
-      N5: "#d4d1ca"
-      N6: "#efece7"
-      N7: "#f9f6f2"
+      N4: "#b4b8bd"
+      N5: "#b4b8bd"
+      N6: "#f4f3f1"
+      N7: "#ffffff"
       B1: "#151a21"
       B2: "#151a21"
       B3: "#555b64"
-      B4: "#f9f6f2"
-      B5: "#efece7"
-      B6: "#f9f6f2"
+      B4: "#ffffff"
+      B5: "#f4f3f1"
+      B6: "#ffffff"
       AA2: "#555b64"
-      AA4: "#efece7"
-      AA5: "#efece7"
-      AB4: "#efece7"
-      AB5: "#efece7"
+      AA4: "#f4f3f1"
+      AA5: "#f4f3f1"
+      AB4: "#f4f3f1"
+      AB5: "#f4f3f1"
     }
     dark-theme-overrides: {
       N1: "#f2f0ec"
@@ -116,7 +116,7 @@ classes: {
       stroke-width: 1
       border-radius: 0
       font-size: 16
-      font-color: "#f9f6f2"
+      font-color: "#ffffff"
       bold: true
       shadow: false
       3d: false
@@ -128,7 +128,7 @@ classes: {
   resource: {
     shape: rectangle
     style: {
-      fill: "#f9f6f2"
+      fill: "#ffffff"
       stroke: "#151a21"
       stroke-width: 1
       border-radius: 0
@@ -165,7 +165,7 @@ classes: {
     width: 40
     height: 52
     style: {
-      fill: "#efece7"
+      fill: "#f4f3f1"
       stroke: "#151a21"
       stroke-width: 1
       font-size: 16
@@ -180,7 +180,7 @@ classes: {
   service: {
     shape: rectangle
     style: {
-      fill: "#efece7"
+      fill: "#f4f3f1"
       stroke: "#151a21"
       stroke-width: 1
       border-radius: 0
@@ -197,7 +197,7 @@ classes: {
   store: {
     shape: cylinder
     style: {
-      fill: "#efece7"
+      fill: "#f4f3f1"
       stroke: "#151a21"
       stroke-width: 1
       font-size: 16
@@ -212,7 +212,7 @@ classes: {
   note: {
     shape: page
     style: {
-      fill: "#f9f6f2"
+      fill: "#ffffff"
       stroke: "#555b64"
       stroke-width: 1
       font-size: 14
@@ -229,10 +229,10 @@ classes: {
     shape: sql_table
     style: {
       fill: "#151a21"
-      stroke: "#f9f6f2"
+      stroke: "#ffffff"
       stroke-width: 1
       font-size: 16
-      font-color: "#f9f6f2"
+      font-color: "#ffffff"
       bold: false
       shadow: false
     }
@@ -243,8 +243,8 @@ classes: {
   head: {
     shape: rectangle
     style: {
-      fill: "#efece7"
-      stroke: "#d4d1ca"
+      fill: "#f4f3f1"
+      stroke: "#b4b8bd"
       stroke-width: 1
       border-radius: 0
       font-size: 16
@@ -258,8 +258,8 @@ classes: {
   cell: {
     shape: rectangle
     style: {
-      fill: "#f9f6f2"
-      stroke: "#d4d1ca"
+      fill: "#ffffff"
+      stroke: "#b4b8bd"
       stroke-width: 1
       border-radius: 0
       font-size: 16
@@ -276,7 +276,7 @@ classes: {
   # A neutral connection. Most edges are this.
   flow: {
     style: {
-      fill: "#f9f6f2"
+      fill: "#ffffff"
       stroke: "#555b64"
       stroke-width: 1
       border-radius: 0
@@ -294,12 +294,12 @@ classes: {
   # them at 1.5.)
   grant: {
     style: {
-      fill: "#f9f6f2"
-      stroke: "#2858cd"
+      fill: "#ffffff"
+      stroke: "#0c6c68"
       stroke-width: 2
       border-radius: 0
       font-size: 14
-      font-color: "#2858cd"
+      font-color: "#0c6c68"
       bold: false
       italic: false
       animated: false
@@ -312,7 +312,7 @@ classes: {
   # cf-one and cf-one-required, are crow's-foot notation and would read as cardinality.)
   deny: {
     style: {
-      fill: "#f9f6f2"
+      fill: "#ffffff"
       stroke: "#bb4717"
       stroke-width: 2
       stroke-dash: 3
@@ -331,12 +331,12 @@ classes: {
   # passing under it never runs through the text; on a shape it would fill the shape.)
   emphasis: {
     style: {
-      fill: "#f9f6f2"
-      stroke: "#2858cd"
+      fill: "#ffffff"
+      stroke: "#0c6c68"
       stroke-width: 2
       border-radius: 0
       font-size: 14
-      font-color: "#2858cd"
+      font-color: "#0c6c68"
       bold: false
       italic: false
     }

@@ -55,8 +55,8 @@
   // Theme palettes (hex equivalents of the oklch tokens in brand/tokens.css).
   // Used for stills, and as the fallback when CSS custom properties are absent.
   var PALETTES = {
-    ink: { bg: '#0b0f14', particle: '#f2f0ec', accent: '#42a3fd', signal: '#f28c5c', glow: true },
-    paper: { bg: '#f9f6f2', particle: '#151a21', accent: '#2858cd', signal: '#bb4717', glow: false }
+    ink: { bg: '#0b0f14', particle: '#f2f0ec', accent: '#59d4cd', signal: '#f28c5c', glow: true },
+    paper: { bg: '#ffffff', particle: '#151a21', accent: '#0c6c68', signal: '#bb4717', glow: false }
   };
 
   // ---------------------------------------------------------------------------

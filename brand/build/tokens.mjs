@@ -17,7 +17,7 @@ const colour = {
   rule:   { ink: ['oklch(0.31 0.016 255)', '#2b3138'],  paper: ['oklch(0.781 0.008 254)', '#b4b8bd'],  use: 'Hairlines, axes, borders. Decorative (about 1.5:1): never the only signal of anything' },
   text:   { ink: ['oklch(0.955 0.006 85)', '#f2f0ec'],  paper: ['oklch(0.215 0.016 255)', '#151a21'], use: 'Body and headings' },
   muted:  { ink: ['oklch(0.74 0.014 255)', '#a5abb4'],  paper: ['oklch(0.47 0.016 255)', '#555b64'],  use: 'Secondary text, labels' },
-  accent: { ink: ['oklch(0.70 0.16 250)', '#42a3fd'],   paper: ['oklch(0.50 0.19 264)', '#2858cd'],   use: 'Cherenkov blue. Links, focus, the one thing per view that matters. At most about 5% of a view' },
+  accent: { ink: ['oklch(0.80 0.11 190)', '#59d4cd'],   paper: ['oklch(0.48 0.08 190)', '#0c6c68'],   use: 'Starling teal, from the sheen on a starling\'s feathers. Links, the one thing per view that matters. At most about 5% of a view' },
   signal: { ink: ['oklch(0.74 0.14 45)', '#f28c5c'],    paper: ['oklch(0.55 0.16 40)', '#bb4717'],    use: 'Redshift. Rare: denials in diagrams, about 1% of field particles. Not a second brand colour' },
 };
 
@@ -27,11 +27,11 @@ const contrast = [
   { fg: 'text', bg: 'raised', ink: 15.71, paper: 15.76 },
   { fg: 'muted', bg: 'bg', ink: 8.36, paper: 6.85 },
   { fg: 'muted', bg: 'raised', ink: 7.77, paper: 6.18 },
-  { fg: 'accent', bg: 'bg', ink: 7.23, paper: 6.24 },
-  { fg: 'accent', bg: 'raised', ink: 6.72, paper: 5.62 },
+  { fg: 'accent', bg: 'bg', ink: 10.73, paper: 6.25 },
+  { fg: 'accent', bg: 'raised', ink: 9.96, paper: 5.64 },
   { fg: 'signal', bg: 'bg', ink: 7.97, paper: 5.22 },
   { fg: 'signal', bg: 'raised', ink: 7.4, paper: 4.7 },
-  { fg: 'bg', bg: 'accent', ink: 7.23, paper: 6.24, note: 'Text on an accent fill (a primary button)' },
+  { fg: 'bg', bg: 'accent', ink: 10.73, paper: 6.25, note: 'Text on an accent fill (a primary button)' },
   { fg: 'rule', bg: 'bg', ink: 1.47, paper: 1.99, note: 'Structure only: never the only signal of anything' },
 ];
 
