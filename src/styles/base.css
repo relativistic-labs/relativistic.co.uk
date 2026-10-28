@@ -74,7 +74,7 @@
   }
   a,
   button {
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: color-mix(in oklch, var(--color-accent) 18%, transparent);
   }
   :focus-visible {
     outline: var(--focus-ring);
@@ -151,6 +151,7 @@
     color: var(--color-text);
     border: 1px solid var(--color-rule);
     border-radius: var(--radius-1);
+    touch-action: manipulation;
     transition: border-color var(--duration-fast) var(--ease-out);
   }
   .site-header__action:hover {
@@ -356,6 +357,11 @@
   }
   .field__pause[hidden] {
     display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .field__canvas {
+      transition: none;
+    }
   }
   @media (scripting: none) {
     .field {

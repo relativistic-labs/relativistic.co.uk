@@ -12,7 +12,7 @@ const onHome = Astro.url.pathname === '/';
 
 <header class="site-header">
   <div class="wrap site-header__inner">
-    <a class="site-header__home" href="/" aria-label="Relativistic, home" aria-current={onHome ? 'page' : undefined}>
+    <a class="site-header__home" href="/" aria-label="Relativistic, home" translate="no" aria-current={onHome ? 'page' : undefined}>
       <Fragment set:html={lockup} />
     </a>
     <a class="site-header__action" href={onHome ? '#contact' : '/#contact'}>Talk to us</a>
