@@ -1,0 +1,20 @@
+---
+import lockupSource from '../../brand/logo/lockup-on-paper.svg?raw';
+
+// The outlined lockup from brand/logo, recoloured to follow the theme. The link carries the name.
+const lockup = lockupSource
+  .replace(/ width="[^"]*" height="[^"]*"/, '')
+  .replace(/ role="img" aria-label="[^"]*"/, ' aria-hidden="true" focusable="false"')
+  .replace(/<title>.*?<\/title>/, '')
+  .replace(/fill="#[0-9a-f]{6}"/i, 'fill="currentColor"');
+const onHome = Astro.url.pathname === '/';
+---
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="site-header__home" href="/" aria-label="Relativistic, home" aria-current={onHome ? 'page' : undefined}>
+      <Fragment set:html={lockup} />
+    </a>
+    <a class="site-header__action" href={onHome ? '#contact' : '/#contact'}>Talk to us</a>
+  </div>
+</header>

@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config';
+---
+
+<Base
+  title={`Privacy · ${site.name}`}
+  description="No cookies, no tracking, and what happens to an email you send us."
+  path="/privacy/"
+>
+  <article class="page wrap prose">
+    <p class="axis axis--plain" aria-hidden="true"><b>00</b> / Privacy</p>
+    <h1>Privacy</h1>
+    <p>The short version: this site sets no cookies, runs no analytics or tracking scripts, and loads nothing from anyone else. Fonts, images and code all come from this domain.</p>
+
+    <h2>Visiting the site</h2>
+    <p>Like any website, the service that hosts it handles your IP address and browser details to deliver the pages and keep the service secure. We don't use them to identify you, and we don't add anything that follows you around the web.</p>
+    <p>If you press <strong>Pause motion</strong>, your browser remembers that choice in its own local storage, so the animation stays paused next time. It never leaves your device. Nothing is stored until you press it.</p>
+
+    <h2>Emailing us</h2>
+    <p>If you email <a href={`mailto:${site.email}`}>{site.email}</a>, we use your address and message only to reply and to keep a record of the conversation. We don't add you to a mailing list or share your details. Ask us to delete them at any time.</p>
+
+    <h2>Who we are</h2>
+    {
+      site.company ? (
+        <p>
+          {site.company.name}, registered in {site.company.registeredIn}, company number {site.company.number}. Registered office:{' '}
+          {site.company.office}.
+        </p>
+      ) : (
+        <p>{site.name} is being formed. Our company details will appear here once it is incorporated.</p>
+      )
+    }
+  </article>
+</Base>

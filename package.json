@@ -1,0 +1,34 @@
+{
+  "name": "relativistic-site",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.3.0",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build:all-on": "SHOW_TEAM=true SHOW_MODELS=true SHOW_SPONSORSHIP=true astro build",
+    "build:all-off": "SHOW_TEAM=false SHOW_MODELS=false SHOW_SPONSORSHIP=false astro build",
+    "build:review": "DEPLOY_TARGET=cloudflare REVIEW_BUILD=true SHOW_TEAM=true SHOW_MODELS=true SHOW_SPONSORSHIP=true astro build",
+    "build:cloudflare": "DEPLOY_TARGET=cloudflare astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "validate": "html-validate \"dist/**/*.html\"",
+    "budget": "node tests/budget.mjs",
+    "test:e2e": "playwright test",
+    "lhci": "lhci autorun",
+    "deploy:review": "pnpm build:review && wrangler deploy --config wrangler.review.jsonc"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@axe-core/playwright": "4.14.0",
+    "@lhci/cli": "0.15.1",
+    "@playwright/test": "1.63.0",
+    "astro": "7.4.2",
+    "html-validate": "11.17.0",
+    "typescript": "6.0.3",
+    "wrangler": "4.153.0"
+  }
+}

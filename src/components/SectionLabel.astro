@@ -1,0 +1,10 @@
+---
+// A mono label sitting on a hairline, like an axis label: "02 / STORY". Decorative: the heading says it.
+interface Props {
+  number: string;
+  label: string;
+}
+const { number, label } = Astro.props;
+---
+
+<p class="axis" aria-hidden="true"><b>{number}</b> / {label}</p>
