@@ -1,0 +1,16 @@
+---
+// The services schematic: see lib/services-diagram.ts.
+import { diagram } from '../lib/services-diagram';
+---
+
+
+<figure class="services">
+  <Fragment set:html={diagram.wide} />
+  <Fragment set:html={diagram.tall} />
+  <figcaption>Tags show which service delivers each part.</figcaption>
+</figure>
+
+<script>
+  // Commit Mono appears only below the fold on this page; switch it on after the first paint.
+  requestAnimationFrame(() => setTimeout(() => document.documentElement.classList.add('mono-ready')));
+</script>
