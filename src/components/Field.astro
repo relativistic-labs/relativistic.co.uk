@@ -1,14 +1,11 @@
 ---
-import { fontData } from 'astro:assets';
-
-// The background field: decorative, and an enhancement. Without JavaScript or WebGL2 it isn't shown.
-// It is a button so the animation can be paused from a pointer or the keyboard (WCAG 2.2.2).
-// The worker samples the typed line with the page's Commit Mono subset.
-const mono = fontData['--font-commit']?.[0]?.src[0]?.url;
+// The background field, a murmuration: decorative, and an enhancement. Without JavaScript or WebGL2
+// it isn't shown. It is a toggle button so the animation can be paused from a pointer or the keyboard
+// (WCAG 2.2.2). Its name never changes; aria-pressed says whether it is paused, so it's announced once.
 ---
 
-<button class="field" type="button" data-field data-mono={mono} aria-pressed="false" aria-label="Pause background animation">
-  <canvas class="field__canvas"></canvas>
+<button class="field" type="button" data-field aria-pressed="false" aria-label="Pause background animation">
+  <canvas class="field__canvas" aria-hidden="true"></canvas>
 </button>
 
 <script>

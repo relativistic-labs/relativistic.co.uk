@@ -1,16 +1,17 @@
 /**
- * The background field, page side. The field is a button: clicking or tapping it (or Enter or Space
- * on it) pauses and plays the animation, which meets WCAG 2.2.2 without any visible control. This
- * side decides when the field runs and tells the renderer (core.ts) the size and theme; the renderer
- * runs in a worker on an OffscreenCanvas where possible.
+ * The background field, page side. The field is a toggle button with a fixed name ("Pause background
+ * animation") and aria-pressed, so a screen reader announces it once: clicking or tapping it (or
+ * Enter or Space on it) pauses and plays the murmuration, which meets WCAG 2.2.2 without any visible
+ * control. This side decides when the field runs and tells the renderer (core.ts) the size and theme;
+ * the renderer runs in a worker on an OffscreenCanvas where possible.
  *
- * Never competes with the page: idle start, stops off-screen and in hidden tabs, sheds particles if
- * frames are slow, and shows one still frame (the document) for reduced motion.
+ * Never competes with the page: idle start, stops off-screen and in hidden tabs, sheds birds if frames
+ * are slow, and shows one still frame of the flock for reduced motion. If it can't run (no WebGL2, or
+ * the worker fails) it turns off and gives its space back.
  */
 import type { Colour, FromField, Mode, ToField } from './core';
 
 const STORAGE_KEY = 'relativistic-motion';
-const LABEL = { playing: 'Pause background animation', paused: 'Play background animation' };
 const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const darkQuery = matchMedia('(prefers-color-scheme: dark)');
 
@@ -41,12 +42,16 @@ function theme(root: HTMLElement): ToField {
 
 export async function startField(root: HTMLButtonElement): Promise<void> {
   const canvas = root.querySelector('canvas');
+  let worker: Worker | undefined;
   const off = () => {
+    worker?.terminate();
     root.disabled = true;
     root.classList.add('is-off');
   };
   if (!canvas || !('WebGL2RenderingContext' in window)) return off(); // no WebGL2: no field, nothing else lost
 
+  // A test-only switch that shortens the gaps between shapes and the predator, for recordings.
+  const demo = location.search.includes('field-demo');
   let visible = true;
   let slow = false;
   let mode: Mode | null = null;
@@ -60,19 +65,24 @@ export async function startField(root: HTMLButtonElement): Promise<void> {
   const receive = (m: FromField) => {
     if (m.type === 'drawn') root.classList.add('is-drawn');
     else if (m.type === 'slow') (slow = true), update();
-    else if (m.type === 'failed') off();
+    else off();
   };
 
   let send: (m: ToField) => void;
   if ('transferControlToOffscreen' in canvas) {
-    const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module', name: 'field' });
-    const offscreen = canvas.transferControlToOffscreen();
-    worker.postMessage({ canvas: offscreen, mono: root.dataset['mono'] }, [offscreen]);
+    try {
+      worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module', name: 'field' });
+      const offscreen = canvas.transferControlToOffscreen();
+      worker.postMessage({ canvas: offscreen, demo }, [offscreen]);
+    } catch {
+      return off();
+    }
     worker.onmessage = (e: MessageEvent<FromField>) => receive(e.data);
-    send = (m) => worker.postMessage(m);
+    worker.onerror = off; // it failed to load or threw: no field, and its space given back
+    send = (m) => worker!.postMessage(m);
   } else {
     const { createField } = await import('./core');
-    const handle = createField(canvas, root.dataset['mono'], receive);
+    const handle = createField(canvas, demo, receive);
     if (!handle) return off();
     send = handle;
   }
@@ -83,7 +93,6 @@ export async function startField(root: HTMLButtonElement): Promise<void> {
     // Reduced motion: a still frame, so there's nothing to pause.
     root.disabled = still;
     root.setAttribute('aria-pressed', String(paused || still));
-    root.setAttribute('aria-label', paused || still ? LABEL.paused : LABEL.playing);
     const next: Mode = still ? 'still' : visible && !document.hidden && !paused ? 'run' : 'pause';
     if (next === mode) return;
     mode = next;
