@@ -1,12 +1,10 @@
 ---
-import SectionLabel from './SectionLabel.astro';
+import Section from './Section.astro';
 import { contact } from '../content/copy';
-import { sectionNumber, site } from '../site.config';
+import { site } from '../site.config';
 ---
 
-<section id="contact" class="section wrap" aria-labelledby="contact-heading">
-  <SectionLabel number={sectionNumber('contact')} label="Contact" />
-  <h2 id="contact-heading">{contact.heading}</h2>
+<Section id="contact" question={contact.question} heading={contact.heading}>
   <p class="measure">{contact.body}</p>
   <p class="contact__email"><a href={`mailto:${site.email}`}>{site.email}</a></p>
-</section>
+</Section>

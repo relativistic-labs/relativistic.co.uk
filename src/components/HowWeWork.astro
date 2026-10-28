@@ -1,12 +1,10 @@
 ---
-import SectionLabel from './SectionLabel.astro';
+import Section from './Section.astro';
+import Services from './Services.astro';
 import { howWeWork } from '../content/copy';
-import { sectionNumber } from '../site.config';
 ---
 
-<section id="how-we-work" class="section wrap" aria-labelledby="how-heading">
-  <SectionLabel number={sectionNumber('how-we-work')} label="How we work" />
-  <h2 id="how-heading">{howWeWork.heading}</h2>
+<Section id="how-we-work" question={howWeWork.question} heading={howWeWork.heading}>
   <dl class="steps">
     {
       howWeWork.steps.map((s) => (
@@ -18,4 +16,5 @@ import { sectionNumber } from '../site.config';
     }
   </dl>
   <p class="product">{howWeWork.product}</p>
-</section>
+  <Services />
+</Section>

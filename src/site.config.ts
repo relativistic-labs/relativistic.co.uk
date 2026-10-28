@@ -26,27 +26,3 @@ export const show = {
   models: SHOW_MODELS,
   sponsorship: SHOW_SPONSORSHIP,
 } as const;
-
-export interface SectionInfo {
-  id: string;
-  label: string;
-}
-
-/** Sections in page order, numbered after the switches are applied so labels stay sequential. */
-export function sections(): Array<SectionInfo & { number: string }> {
-  const all: Array<SectionInfo & { on: boolean }> = [
-    { id: 'story', label: 'Story', on: true },
-    { id: 'how-we-work', label: 'How we work', on: true },
-    { id: 'team', label: 'Team', on: show.team },
-    { id: 'models', label: 'Models', on: show.models },
-    { id: 'sponsorship', label: 'Sponsorship', on: show.sponsorship },
-    { id: 'contact', label: 'Contact', on: true },
-  ];
-  return all
-    .filter((s) => s.on)
-    .map((s, i) => ({ id: s.id, label: s.label, number: String(i + 2).padStart(2, '0') }));
-}
-
-export function sectionNumber(id: string): string {
-  return sections().find((s) => s.id === id)?.number ?? '';
-}

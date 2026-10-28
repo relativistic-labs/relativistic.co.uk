@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Opening from '../components/Opening.astro';
 import Story from '../components/Story.astro';
 import HowWeWork from '../components/HowWeWork.astro';
+import Trust from '../components/Trust.astro';
 import Founders from '../components/Founders.astro';
 import Models from '../components/Models.astro';
 import Sponsorship from '../components/Sponsorship.astro';
@@ -35,6 +36,7 @@ const jsonLd = {
   <Opening />
   <Story />
   <HowWeWork />
+  <Trust />
   {show.team && <Founders />}
   {show.models && <Models />}
   {show.sponsorship && <Sponsorship />}

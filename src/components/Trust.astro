@@ -1,0 +1,18 @@
+---
+import Section from './Section.astro';
+import { trust } from '../content/copy';
+---
+
+<Section id="trust" question={trust.question} heading={trust.heading}>
+  <p class="inset">{trust.inset}</p>
+  <dl class="summary">
+    {
+      trust.rows.map((r) => (
+        <div>
+          <dt>{r.key}</dt>
+          <dd>{r.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</Section>

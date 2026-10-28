@@ -1,18 +1,22 @@
 ---
-import SectionLabel from './SectionLabel.astro';
+import Section from './Section.astro';
 import { models as copy } from '../content/copy';
-import { getModels, lineupSentence } from '../lib/content';
-import { sectionNumber } from '../site.config';
+import { getProviders } from '../lib/content';
 
-const models = await getModels();
+// Provider names are technical content, so they are set in mono.
+const providers = await getProviders();
 ---
 
-<section id="models" class="section wrap" aria-labelledby="models-heading">
-  <SectionLabel number={sectionNumber('models')} label="Models" />
-  <h2 id="models-heading">{copy.heading}</h2>
-  <div class="prose">
-    <p>{copy.intro}</p>
-    <p>{lineupSentence(models)}</p>
-    <p>{copy.premium}</p>
-  </div>
-</section>
+<Section id="models" question={copy.question} heading={copy.heading}>
+  <p class="measure">
+    {copy.before}{' '}
+    {
+      providers.map((p, i) => (
+        <>
+          <span class="tech">{p}</span>
+          {i < providers.length - 2 ? ', ' : i === providers.length - 2 ? ' or ' : ''}
+        </>
+      ))
+    }. {copy.after}
+  </p>
+</Section>

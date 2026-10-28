@@ -1,12 +1,11 @@
 ---
 import { getImage, Picture } from 'astro:assets';
-import SectionLabel from './SectionLabel.astro';
+import Section from './Section.astro';
 import { team } from '../content/copy';
 import { getFounders } from '../lib/content';
-import { sectionNumber } from '../site.config';
 
-// Card widths: five across from 1100 px, three and two from 640 px, one per row (40%) below.
-const sizes = '(min-width: 1100px) 214px, (min-width: 640px) 30vw, 38vw';
+// Card widths: five across from 900 px (in the 960 px column), three and two from 640 px, one per row (40%) below.
+const sizes = '(min-width: 900px) 174px, (min-width: 640px) 30vw, 40vw';
 const widths = [240, 320, 480, 640];
 const founders = await Promise.all(
   (await getFounders()).map(async (f) => {
@@ -23,10 +22,8 @@ const initials = (name: string) =>
     .join('');
 ---
 
-<section id="team" class="section wrap" aria-labelledby="team-heading" data-team>
-  <SectionLabel number={sectionNumber('team')} label="Team" />
-  <h2 id="team-heading">{team.heading}</h2>
-  <ul class="founders">
+<Section id="team" question={team.question} heading={team.heading}>
+  <ul class="founders" data-team>
     {
       founders.map((f) => (
         <li class="founder">
@@ -35,7 +32,7 @@ const initials = (name: string) =>
               <span class="portrait__monogram" aria-hidden="true">
                 {initials(f.data.name)}
               </span>
-              <p class="portrait__state">Portrait to come</p>
+              <p class="portrait__state tag">Portrait to come</p>
             </div>
           ) : (
             <div class="portrait" data-rendered-srcset={f.rendered}>
@@ -50,7 +47,7 @@ const initials = (name: string) =>
                 loading="lazy"
                 decoding="async"
               />
-              <p class="portrait__state" aria-hidden="true">
+              <p class="portrait__state tag" aria-hidden="true">
                 As observed
               </p>
             </div>
@@ -73,7 +70,7 @@ const initials = (name: string) =>
       ))
     }
   </ul>
-</section>
+</Section>
 
 <script>
   import { initPortraits } from '../scripts/portraits';

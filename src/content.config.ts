@@ -48,12 +48,7 @@ const models = defineCollection({
   loader: file('src/content/models.yaml'),
   schema: z.object({
     order: z.number().int().positive(),
-    model: z.string(),
     provider: z.string(),
-    servedFrom: z.string(),
-    evaluated: z.coerce.date(),
-    tier: z.enum(['included', 'premium']),
-    schools: z.boolean(),
   }),
 });
 
