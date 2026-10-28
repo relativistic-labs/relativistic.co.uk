@@ -1,0 +1,14 @@
+---
+import Field from './Field.astro';
+import { opening } from '../content/copy';
+---
+
+<section class="opening wrap" aria-labelledby="opening-heading">
+  <div class="opening__text">
+    <p class="axis axis--plain" aria-hidden="true"><b>01</b> / Relativistic</p>
+    <h1 id="opening-heading">{opening.headline}</h1>
+    <p class="opening__lede">{opening.lede}</p>
+    <p class="opening__action"><a class="button" href="#contact">{opening.action}</a></p>
+  </div>
+  <Field />
+</section>
