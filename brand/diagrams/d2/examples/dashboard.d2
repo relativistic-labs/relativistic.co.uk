@@ -1,0 +1,31 @@
+# dashboard: the site's plain example ("Ask for it in the morning. Use it that afternoon").
+# A sales director asks an agent for a dashboard; the agent reads only what it was granted; the
+# sales team can open the result and nobody else can. Seven shapes, plain words, no product names.
+# Built from the access template's vocabulary. dashboard-tall.d2 is the phone layout.
+#
+# Engine: ELK, left to right, so it reads like the sentence on the page.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: right
+
+director: Sales director {class: person}
+agent: Agent {class: agent}
+records: "Customer records\nand invoices" {class: resource}
+payroll: Payroll {class: resource}
+dashboard: Dashboard {class: service}
+team: Sales team {class: person}
+others: Anyone else {class: person}
+
+director -> agent: asks {class: flow}
+agent -> records: read {class: grant}
+agent -> payroll: not granted {class: deny}
+agent -> dashboard: builds {class: flow}
+team -> dashboard: opens it {class: flow}
+others -> dashboard: "can't see\nthe records" {class: deny}
