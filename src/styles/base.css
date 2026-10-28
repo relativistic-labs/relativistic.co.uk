@@ -30,10 +30,16 @@
     --focus: #ffdd00;
     --focus-text: #0b0c0c;
 
-    /* The button keeps the darker blue in both themes, so white text passes AA (6.2:1) */
+    /* The button keeps the deep teal in both themes, so white text passes AA (6.25:1) */
     --button: var(--paper-accent);
-    --button-shadow: oklch(0.36 0.15 264);
-    --button-hover: oklch(0.44 0.18 264);
+    --button-shadow: oklch(0.36 0.06 190);
+    --button-hover: oklch(0.42 0.07 190);
+
+    /* Tags: tinted backgrounds that pass AA in both themes (9.7:1 and 10.2:1) */
+    --tag-text: #383f43;
+    --tag-bg: #e5e6e7;
+    --tag-accent-text: #063c39;
+    --tag-accent-bg: #c9ece9;
   }
   @media (min-width: 641px) {
     :root {
@@ -133,7 +139,7 @@
     background: color-mix(in oklch, var(--color-accent) 30%, transparent);
   }
   /* Commit Mono is used only below the fold, so it starts as the system mono and switches after the
-     first paint (Services.astro adds .mono-ready): the font never delays the opening's paint */
+     first paint (Example.astro adds .mono-ready): the font never delays the opening's paint */
   .tech {
     font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 0.9em;
@@ -300,12 +306,12 @@
     line-height: 1.1;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #383f43;
-    background: #e5e6e7;
+    color: var(--tag-text);
+    background: var(--tag-bg);
   }
-  .tag--blue {
-    color: #0c2d4a;
-    background: #bbd4ea;
+  .tag--accent {
+    color: var(--tag-accent-text);
+    background: var(--tag-accent-bg);
   }
 
   /* Inset text: the strongest promises */
@@ -444,47 +450,64 @@
     max-width: var(--measure);
   }
 
-  /* How we work: Start, Run, Grow */
-  .steps {
-    display: grid;
-    gap: var(--space-5);
+  /* Lists: GDS-style, with space between items */
+  .list {
     max-width: var(--measure);
+    padding-left: 1.25em;
   }
-  .steps dt {
-    font-weight: var(--weight-bold);
-  }
-  .steps dd {
-    margin: 0;
-  }
-  .product {
-    max-width: var(--measure);
+  .list li {
+    margin-bottom: var(--space-4);
   }
 
-  /* Services schematic: a wide layout from 720 px, a tall one below */
-  .services {
-    margin: var(--space-7) 0 0;
+  /* Three ways to start: equal columns on wide screens, stacked on phones. No "most popular". */
+  .packages {
+    display: grid;
+    gap: var(--space-6);
+    list-style: none;
+    margin: 0 0 var(--space-6);
+    padding: 0;
   }
-  .services > svg {
+  .packages h3 {
+    margin-bottom: var(--space-2);
+  }
+  .packages p {
+    margin-bottom: var(--space-3);
+  }
+  .packages .packages__for {
+    margin-bottom: var(--space-3);
+  }
+  @media (min-width: 769px) {
+    .packages {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* Diagrams: a wide layout from 720 px, a tall one below, each shown near its natural size */
+  .diagram {
+    margin: var(--space-6) 0 0;
+  }
+  .diagram > svg {
     display: block;
     width: 100%;
     height: auto;
   }
-  .services > .services__tall {
-    max-width: 26rem;
-  }
-  .services > .services__wide {
+  .diagram > .diagram__wide {
     display: none;
+    max-width: 61rem;
+  }
+  .diagram > .diagram__tall {
+    max-width: 28rem;
   }
   @media (min-width: 720px) {
-    .services > .services__tall {
+    .diagram > .diagram__tall {
       display: none;
     }
-    .services > .services__wide {
+    .diagram > .diagram__wide {
       display: block;
     }
   }
   /* D2 draws with the brand's seven palette values; map them to the theme so the diagram follows it */
-  .services {
+  .diagram {
     & .shape {
       shape-rendering: geometricPrecision;
       stroke-linejoin: round;
@@ -530,10 +553,10 @@
     & [stroke='#555b64' i] {
       stroke: var(--color-muted);
     }
-    & [fill='#2858cd' i] {
+    & [fill='#0c6c68' i] {
       fill: var(--color-accent);
     }
-    & [stroke='#2858cd' i] {
+    & [stroke='#0c6c68' i] {
       stroke: var(--color-accent);
     }
     & [fill='#bb4717' i] {
@@ -542,12 +565,6 @@
     & [stroke='#bb4717' i] {
       stroke: var(--color-signal);
     }
-  }
-  .services figcaption {
-    margin-top: var(--space-3);
-    max-width: var(--measure);
-    font-size: var(--type-small);
-    color: var(--color-muted);
   }
 
   /* The team: five equal cards. Five across on wide screens, otherwise three and two.
@@ -595,7 +612,7 @@
   .founder__profile {
     grid-area: profile;
     margin: var(--space-2) 0 0;
-    font-size: var(--type-small);
+    font-size: 1rem; /* 16 px everywhere, phones included */
     line-height: 1.4;
   }
   .founder__links {
@@ -662,8 +679,8 @@
     font-size: 0.75rem;
   }
   .portrait.is-rendered .portrait__state {
-    color: #0c2d4a;
-    background: #bbd4ea;
+    color: var(--tag-accent-text);
+    background: var(--tag-accent-bg);
   }
   .portrait--pending {
     display: grid;
