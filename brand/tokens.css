@@ -115,8 +115,6 @@
   --duration-base: 200ms; /* Most interface transitions */
   --duration-slow: 250ms; /* The longest interface transition allowed */
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1); /* All interface transitions ease out */
-  --field-formation: 9s; /* How long each field formation holds, blend included (brief: 8 to 10 s) */
-  --field-blend: 3.4s; /* The eased blend at the end of each formation */
   --portrait-shift: 600ms; /* The portrait shift: plays once per card (500 to 700 ms), never loops */
 }
 

@@ -84,8 +84,6 @@ const motion = {
   'duration-base': ['200ms', 'Most interface transitions'],
   'duration-slow': ['250ms', 'The longest interface transition allowed'],
   'ease-out': ['cubic-bezier(0.2, 0.8, 0.2, 1)', 'All interface transitions ease out'],
-  'field-formation': ['9s', 'How long each field formation holds, blend included (brief: 8 to 10 s)'],
-  'field-blend': ['3.4s', 'The eased blend at the end of each formation'],
   'portrait-shift': ['600ms', 'The portrait shift: plays once per card (500 to 700 ms), never loops'],
 };
 
@@ -234,15 +232,12 @@ const json = {
   target: { min: '44px' },
   motion: Object.fromEntries(Object.entries(motion).map(([k, [v, use]]) => [k, { value: v, use }])),
   field: {
-    formations: [
-      { number: '001', label: 'UNBOUND', says: 'Agents can do anything, and that is the problem' },
-      { number: '002', label: 'GRANTED', says: 'Access granted, and only what was granted' },
-      { number: '003', label: 'SHARED', says: 'Work shared like a document, with access checked' },
-      { number: '004', label: 'RUNNING', says: 'It keeps going after everyone has logged off' },
-    ],
-    signalShare: 0.01,
-    reducedMotion: 'One still frame of GRANTED',
-    reference: 'field/field.js',
+    kind: 'A murmuration: each bird steers by its seven nearest neighbours in 3D',
+    patterns: ['padlock', 'bar chart', 'document page', 'light cone', 'sphere'],
+    patternEvery: '15–25 s, held loosely for about 3 s',
+    predator: 'Rarely, a small signal-coloured knot the flock parts around',
+    reducedMotion: 'One still frame of the flock in a fold',
+    reference: 'src/scripts/field/flock.ts',
   },
   portrait: {
     aspect: '4:5',
