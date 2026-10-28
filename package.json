@@ -19,7 +19,8 @@
     "budget": "node tests/budget.mjs",
     "test:e2e": "playwright test",
     "lhci": "lhci autorun",
-    "deploy:review": "pnpm build:review && wrangler deploy --config wrangler.review.jsonc"
+    "deploy:review": "pnpm build:review && wrangler deploy --config wrangler.review.jsonc",
+    "links": "node tests/links.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
