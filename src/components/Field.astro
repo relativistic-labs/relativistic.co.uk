@@ -16,7 +16,7 @@
   const root = document.querySelector<HTMLElement>('[data-field]');
   if (root) {
     // After first paint, when the browser is idle. Nothing waits for the field.
-    const start = () => startField(root);
+    const start = () => void startField(root);
     requestAnimationFrame(() =>
       'requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 300),
     );
