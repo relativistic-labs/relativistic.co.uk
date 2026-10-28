@@ -2,9 +2,9 @@ import type { Page } from '@playwright/test';
 
 export const PAGES = ['/', '/privacy/', '/404.html'] as const;
 
-/** Word limits for the rendered <main> (content plan review): core page, and every section on. */
+/** Word limits for the rendered <main>: core page (content plan review), and every section on (round 2: 800). */
 export const WORDS_CORE = 560;
-export const WORDS_ALL_ON = 700;
+export const WORDS_ALL_ON = 800;
 
 /** Count words as a reader would: tokens with at least one letter or digit. */
 export function countWords(text: string): number {

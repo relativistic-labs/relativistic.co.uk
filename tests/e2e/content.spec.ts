@@ -9,7 +9,11 @@ test.describe('without JavaScript', () => {
     const on = await sectionsOn(page);
     const main = page.locator('main');
     await expect(main.locator('h1')).toContainText('Agents can build what your people need');
-    for (const id of ['story', 'how-we-work', 'contact']) await expect(page.locator(`#${id} h2`)).toBeVisible();
+    for (const id of ['story', 'how-we-work', 'trust', 'contact']) await expect(page.locator(`#${id} h2`)).toBeVisible();
+    // Every section after the opening carries the reader's question as a caption.
+    await expect(page.locator('main .question')).toHaveCount(await page.locator('main section.section').count());
+    await expect(page.locator('#trust .summary dt')).toHaveCount(7);
+    await expect(page.locator('#how-we-work figure svg[role="img"]').first()).toBeAttached();
     const mail = page.locator('#contact a[href="mailto:hello@relativistic.co.uk"]');
     await expect(mail).toBeVisible();
     await expect(mail).toHaveText('hello@relativistic.co.uk');
@@ -20,7 +24,7 @@ test.describe('without JavaScript', () => {
       await expect(page.locator('#team a[href*="linkedin.com"]')).toHaveCount(5);
       await expect(page.locator('#team img[alt="Harry Robbins"]')).toBeVisible();
     }
-    if (on.models) await expect(page.locator('#models')).toContainText('GPT-6 Luna');
+    if (on.models) await expect(page.locator('#models .tech', { hasText: 'OpenRouter' })).toBeVisible();
     if (on.sponsorship) await expect(page.locator('#sponsorship a[href="#contact"]')).toBeVisible();
     // The field is an enhancement: with no script it isn't shown at all.
     await expect(page.locator('[data-field]')).toBeHidden();

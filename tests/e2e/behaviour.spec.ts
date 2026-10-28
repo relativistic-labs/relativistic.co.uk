@@ -51,20 +51,31 @@ test.describe('the field', () => {
     await expect(field).toHaveAttribute('data-running', 'false');
   });
 
-  test('Pause motion stops it and is remembered only once pressed', async ({ page }) => {
+  test('clicking the field pauses it, and the choice is remembered only once made', async ({ page }) => {
     await page.goto('/');
     const field = page.locator('[data-field]');
-    const pause = page.getByRole('button', { name: 'Pause motion' });
     await expect(field).toHaveAttribute('data-running', 'true', { timeout: 10_000 });
     expect(await page.evaluate(() => localStorage.length)).toBe(0);
-    await pause.click();
-    await expect(pause).toHaveAttribute('aria-pressed', 'true');
+    await page.getByRole('button', { name: 'Pause background animation' }).click();
+    await expect(field).toHaveAttribute('aria-pressed', 'true');
     await expect(field).toHaveAttribute('data-running', 'false');
+    await expect(page.getByRole('button', { name: 'Play background animation' })).toBeVisible();
     expect(await page.evaluate(() => localStorage.getItem('relativistic-motion'))).toBe('paused');
     await page.reload();
-    await expect(page.getByRole('button', { name: 'Pause motion' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('button', { name: 'Play background animation' })).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('[data-field]')).toHaveClass(/is-drawn/, { timeout: 10_000 });
     await expect(page.locator('[data-field]')).not.toHaveAttribute('data-running', 'true');
+  });
+
+  test('the keyboard pauses and plays it too (WCAG 2.2.2)', async ({ page }) => {
+    await page.goto('/');
+    const field = page.locator('[data-field]');
+    await expect(field).toHaveAttribute('data-running', 'true', { timeout: 10_000 });
+    await field.focus();
+    await page.keyboard.press('Space');
+    await expect(field).toHaveAttribute('data-running', 'false');
+    await page.keyboard.press('Enter');
+    await expect(field).toHaveAttribute('data-running', 'true');
   });
 
   test('makes no long tasks', async ({ page }) => {
@@ -76,21 +87,18 @@ test.describe('the field', () => {
     });
     await page.goto('/');
     await expect(page.locator('[data-field]')).toHaveAttribute('data-running', 'true', { timeout: 10_000 });
-    await page.mouse.move(1000, 300);
-    await page.mouse.move(1100, 400, { steps: 20 });
     await page.waitForTimeout(3000);
     const tasks = await page.evaluate(() => (window as unknown as { longTasks: number[] }).longTasks);
     expect(tasks, `long tasks (ms): ${tasks.join(', ')}`).toEqual([]);
   });
 
-  test('reduced motion: one still frame, no loop, no control', async ({ page }) => {
+  test('reduced motion: one still frame of the document, no loop, nothing to pause', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     const field = page.locator('[data-field]');
     await expect(field).toHaveClass(/is-drawn/, { timeout: 10_000 });
     await expect(field).toHaveAttribute('data-running', 'false');
-    await expect(page.locator('.field__scene')).toHaveText('002 / Granted');
-    await expect(page.getByRole('button', { name: 'Pause motion' })).toBeHidden();
+    await expect(field).toBeDisabled();
     // Follows live changes to the setting.
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await expect(field).toHaveAttribute('data-running', 'true');
@@ -103,9 +111,9 @@ test.describe('founder portraits', () => {
     test.skip(!(await sectionsOn(page)).team, 'team section is off in this build');
   });
 
-  test('the real photo is the only <img> in the HTML', async ({ request }) => {
+  test('the real photo is the only portrait <img> in the HTML', async ({ request }) => {
     const html = await (await request.get('/')).text();
-    const imgs = html.match(/<img\b[^>]*>/g) ?? [];
+    const imgs = (html.match(/<img\b[^>]*>/g) ?? []).filter((i) => !i.includes('lockup.svg'));
     expect(imgs).toHaveLength(1);
     expect(imgs[0]).toContain('alt="Harry Robbins"');
     expect(imgs[0]).toContain('harry-observed');

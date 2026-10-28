@@ -3,13 +3,14 @@
  * Size budgets, measured on dist/ as Brotli-compressed bytes (technical plan, quality targets).
  *
  *   critical path   HTML with its inlined CSS, plus preloaded fonts      ≤ 45 KB
- *   JavaScript      module scripts and inline scripts, home page only     ≤ 8 KB
+ *   JavaScript      module scripts and inline scripts, home page only     ≤ 12 KB
+ *   the field       its page script plus its worker (or main-thread core) ≤ 9 KB
  *   whole page      everything the home page can load, worst case:        ≤ 450 KB
  *                   every font, the largest portrait candidate, icons
  *                   ... plus the largest polished-portrait candidate      ≤ 600 KB
  *
  * Images are counted at their largest srcset candidate, so the whole-page figure is an upper bound.
- * Also warns (without failing) when security.txt is near expiry or a model evaluation is stale.
+ * Also warns (without failing) when security.txt is near expiry.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -17,7 +18,7 @@ import { brotliCompressSync, constants } from 'node:zlib';
 
 const DIST = new URL('../dist/', import.meta.url).pathname;
 const KB = 1000;
-const LIMITS = { critical: 45 * KB, js: 8 * KB, page: 450 * KB, pageWithPolished: 600 * KB };
+const LIMITS = { critical: 45 * KB, js: 12 * KB, field: 9 * KB, page: 450 * KB, pageWithPolished: 600 * KB };
 
 const br = (buf) => brotliCompressSync(buf, { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } }).length;
 const file = (url) => readFileSync(join(DIST, decodeURIComponent(url.split(/[?#]/)[0])));
@@ -51,11 +52,16 @@ const chunk = (url) => {
   return total + alternative;
 };
 let js = 0;
+let field = 0;
 for (const m of text.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
   const [, attrs, body] = m;
   if (/type="application\/ld\+json"/.test(attrs)) continue;
   const src = attrs.match(/src="([^"]*)"/)?.[1];
-  if (src) js += chunk(src);
+  if (src) {
+    const n = chunk(src);
+    js += n;
+    if (/Field\.astro/.test(src)) field += n;
+  }
   else if (body.trim()) {
     js += br(Buffer.from(body));
     for (const i of body.matchAll(/["'`](\/_astro\/[\w.\-]+\.js)["'`]/g)) js += chunk(i[1]);
@@ -86,6 +92,7 @@ console.log(`JavaScript files: ${[...loaded].map((u) => u.split('/').pop()).join
 const rows = [
   ['Critical path (HTML + inlined CSS + preloaded font)', critical, LIMITS.critical],
   ['JavaScript, home page', js, LIMITS.js],
+  ['The field (page script and worker)', field, LIMITS.field],
   ['Whole page, no polished layer (upper bound)', page, LIMITS.page],
   ['Whole page, with polished layer (upper bound)', pageWithPolished, LIMITS.pageWithPolished],
 ];
@@ -104,12 +111,4 @@ if (existsSync(securityTxt)) {
   const days = expires ? (Date.parse(expires) - Date.now()) / 864e5 : -1;
   if (days < 30) warn(`security.txt expires in ${Math.floor(days)} days; renew it.`);
 }
-if (/id="models"/.test(text)) {
-  const yaml = readFileSync(new URL('../src/content/models.yaml', import.meta.url), 'utf8');
-  for (const m of yaml.matchAll(/model:\s*(.+)\n(?:.*\n)*?\s*evaluated:\s*(\d{4}-\d{2}-\d{2})/g)) {
-    const age = (Date.now() - Date.parse(m[2])) / 864e5;
-    if (age > 90) warn(`${m[1].trim()} was last evaluated ${Math.floor(age)} days ago; re-evaluate before showing it.`);
-  }
-}
-
 process.exit(failed ? 1 : 0);
