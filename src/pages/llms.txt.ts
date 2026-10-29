@@ -11,7 +11,7 @@ export const GET: APIRoute = () => {
     '',
     `> ${site.description}`,
     '',
-    opening.lede,
+    opening.lede.join(' '),
     '',
     '## Pages',
     '',

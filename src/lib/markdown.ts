@@ -8,7 +8,7 @@ import { getFounders, getProviders, providersSentence } from './content';
  * tests/e2e/content.spec.ts checks that every piece of text on the page is here too.
  */
 export async function pageMarkdown(): Promise<string> {
-  const out: string[] = [`# ${site.name}`, '', `## ${opening.headline}`, '', opening.lede, ''];
+  const out: string[] = [`# ${site.name}`, '', `## ${opening.headline}`, '', ...opening.lede.flatMap((p) => [p, ''])];
   const section = (question: string, heading: string) => out.push(`*${question}*`, '', `## ${heading}`, '');
 
   section(example.question, example.heading);

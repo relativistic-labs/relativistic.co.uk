@@ -32,7 +32,6 @@ const initials = (name: string) =>
               <span class="portrait__monogram" aria-hidden="true">
                 {initials(f.data.name)}
               </span>
-              <p class="portrait__state tag">Portrait to come</p>
             </div>
           ) : (
             <div class="portrait" data-rendered-srcset={f.rendered}>
@@ -47,9 +46,6 @@ const initials = (name: string) =>
                 loading="lazy"
                 decoding="async"
               />
-              <p class="portrait__state tag" aria-hidden="true">
-                The real photo
-              </p>
             </div>
           )}
           <div class="founder__text">

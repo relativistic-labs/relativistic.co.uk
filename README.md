@@ -20,7 +20,7 @@ Astro 7 runs `astro preview` in the background when it detects a coding agent. U
 
 ## Content and switches
 
-- Copy: `src/content/copy.ts`. Founders: `src/content/founders/*.md` (a profile over 45 words, or a missing portrait, fails the build). Models: `src/content/models.yaml`.
+- Copy: `src/content/copy.ts`. Founders: `src/content/founders/*.md` (a profile over 34 words, or a missing portrait, fails the build). Models: `src/content/models.yaml`.
 - Optional sections are build-time flags, all off by default: `SHOW_TEAM`, `SHOW_MODELS`, `SHOW_SPONSORSHIP`. Each renders nothing when off, and nothing outside it links to it.
 - `/index.md`, `/llms.txt` and `humans.txt` are generated from the same content and follow the same switches.
 - Company details render in the footer once `site.company` is set in `src/site.config.ts`.

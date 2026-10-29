@@ -6,7 +6,7 @@ import { opening } from '../content/copy';
 <section class="opening wrap" aria-labelledby="opening-heading">
   <div class="opening__text">
     <h1 id="opening-heading">{opening.headline}</h1>
-    <p class="opening__lede">{opening.lede}</p>
+    {opening.lede.map((p) => <p class="opening__lede">{p}</p>)}
     <p class="opening__action">
       <a class="button" href="#contact"
         >{opening.action}

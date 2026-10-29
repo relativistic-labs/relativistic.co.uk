@@ -57,7 +57,6 @@ function bands(index: number): HTMLElement {
 
 function prepare(card: HTMLElement, index: number) {
   const real = card.querySelector<HTMLImageElement>('img');
-  const state = card.querySelector('.portrait__state');
   const srcset = card.dataset['renderedSrcset'];
   if (!real || !srcset || reduce.matches) return;
 
@@ -73,17 +72,12 @@ function prepare(card: HTMLElement, index: number) {
       const shift = bands(index);
       card.style.setProperty('--rendered', `url("${rendered.currentSrc}")`);
       card.style.setProperty('--observed', `url("${real.currentSrc}")`);
-      card.insertBefore(rendered, state);
-      card.insertBefore(shift, state);
+      card.append(rendered, shift);
       card.classList.add('is-rendered');
-      if (state) state.textContent = 'Rendered / AI';
 
       const play = () => {
         card.classList.add('is-shifting');
-        setTimeout(() => {
-          card.classList.remove('is-rendered');
-          if (state) state.textContent = 'The real photo';
-        }, DURATION / 2);
+        setTimeout(() => card.classList.remove('is-rendered'), DURATION / 2);
         setTimeout(() => {
           shift.remove();
           rendered.remove();

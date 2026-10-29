@@ -59,16 +59,6 @@ const headline = fontData['--font-instrument']?.[0]?.src[0]?.url;
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
-    {
-      REVIEW_BUILD && (
-        <section class="phase-banner" aria-label="Site status">
-          <p class="wrap">
-            <strong class="tag tag--accent">Preview</strong>
-            <span>This site is a work in progress.</span>
-          </p>
-        </section>
-      )
-    }
     <main id="main" tabindex="-1">
       <slot />
     </main>

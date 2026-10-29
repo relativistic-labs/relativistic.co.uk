@@ -3,12 +3,13 @@ import type { Page } from '@playwright/test';
 export const PAGES = ['/', '/privacy/', '/404.html'] as const;
 
 /**
- * Word limits for the rendered <main> (round 3 brief): 700 for the page with the team on, 560 without it,
+ * Word limits for the rendered <main> (round 3 brief, raised by 20 on 29 October for the vibe-coding lines):
+ * 720 for the page with the team on, 560 without it,
  * counting headings, captions and button labels but not diagram labels. Models and sponsorship are off
  * by default and have their own allowances, so switching them on can't hide an overrun elsewhere.
  */
 export const WORDS_CORE = 560;
-export const WORDS_ALL_ON = 700;
+export const WORDS_ALL_ON = 720;
 export const WORDS_MODELS = 60;
 export const WORDS_SPONSORSHIP = 100;
 

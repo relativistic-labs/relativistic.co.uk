@@ -4,12 +4,12 @@ import type { Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { countWords } from './lib/words';
 
-/** Each founder's profile is at most 32 words (round 3), so five editors can't break the page budget. */
-export const PROFILE_MAX_WORDS = 32;
+/** Each founder's profile is at most 34 words (round 3, raised for Harry's profile), so five editors can't break the page budget. */
+export const PROFILE_MAX_WORDS = 34;
 
 const foundersGlob = glob({ pattern: '*.md', base: './src/content/founders' });
 
-/** glob(), plus a check the schema can't make: the Markdown body (the profile) is 45 words or fewer. */
+/** glob(), plus a check the schema can't make: the Markdown body (the profile) is no longer than PROFILE_MAX_WORDS. */
 const foundersLoader: Loader = {
   name: 'founders',
   load: async (context) => {

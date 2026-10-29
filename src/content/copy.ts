@@ -7,7 +7,10 @@
 
 export const opening = {
   headline: 'Agents can build what your people need. We give them somewhere safe to build it.',
-  lede: 'AI can now build the tools, reports and automations your teams have waited years for, in hours. We’re five senior engineers who have done it inside some of the UK’s largest organisations. We’ll show you where to start, keep you safe and build it with you.',
+  lede: [
+    'Give your whole team the power of vibe coding, safely, with no technical experience needed. Financial reports, sales pitches, apps, documents and more, built in hours.',
+    'We’re five senior engineers who have done this inside some of the UK’s largest organisations. We’ll show you where to start, keep you safe and build it with you.',
+  ],
   action: 'Talk to us',
 } as const;
 
@@ -15,7 +18,7 @@ export const example = {
   question: 'What could our people do?',
   heading: 'Ask for it in the morning. Use it that afternoon.',
   paragraphs: [
-    'Say your sales director wants to know which customers might leave. They describe it in plain words. An agent builds a dashboard from your customer records and invoices, and keeps it up to date. Anyone allowed to see those records can open it. Nobody else can.',
+    'Say your sales director wants to know which customers might leave. They’ve never tried vibe coding, but need no experience: they describe it in plain words. An agent builds a dashboard from your customer records and invoices, and keeps it up to date. Anyone allowed to see those records can open it. Nobody else can.',
     'That’s one request from one person. Imagine everyone in your organisation doing the same.',
   ],
   diagram: {
@@ -79,7 +82,7 @@ export const story = {
   question: 'Why you?',
   heading: 'Our story',
   paragraphs: [
-    'We met building data and AI platforms for HMRC, through Equal Experts. We made AI available to staff safely and cut the time to start from months to hours.',
+    'We met building data and AI platforms for HMRC. We made AI available to staff safely and cut the time to start from months to hours.',
     'Nothing we built was as useful as an agent let loose on a problem. But most people had no safe way to use one.',
     'So we built that safe way, on open-source foundations including Cloudflare OS, so you’re never tied to one supplier.',
   ],

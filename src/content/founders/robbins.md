@@ -9,4 +9,4 @@ links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/harryrobbins/
 ---
-I founded and ran Outlandish for 11 years, then led delivery of an analytics platform used by more than 4,000 analysts.
+I led the delivery of HMRC’s secure AI platform, designed the data mitigation to prevent the next Windrush scandal, and created a project that has secured tens of billions of pounds for British schools.

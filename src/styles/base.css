@@ -203,19 +203,6 @@
     touch-action: manipulation;
   }
 
-  /* Phase banner: review builds only */
-  .phase-banner {
-    border-bottom: 1px solid var(--color-rule);
-  }
-  .phase-banner p {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    margin-block: 0;
-    padding-block: var(--space-3);
-    font-size: var(--type-small);
-  }
-
   /* Sections after the opening: a rule between sections, a caption over the heading */
   /* The rule spans the content column, not the gutters */
   .section {
@@ -669,18 +656,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  .portrait__state {
-    position: absolute;
-    left: var(--space-2);
-    bottom: var(--space-2);
-    z-index: 3;
-    margin: 0;
-    font-size: 0.75rem;
-  }
-  .portrait.is-rendered .portrait__state {
-    color: var(--tag-accent-text);
-    background: var(--tag-accent-bg);
   }
   .portrait--pending {
     display: grid;

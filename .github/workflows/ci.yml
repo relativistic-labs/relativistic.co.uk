@@ -59,7 +59,7 @@ jobs:
         run: pnpm build:cloudflare && pnpm headers
       - name: Review build and its _headers
         run: pnpm build:review && pnpm headers --review
-      - name: Behaviour, review build (phase banner, preview links)
+      - name: Behaviour, review build (preview links)
         run: pnpm exec playwright test --grep @both
       - name: GitHub Pages build has no _headers
         run: pnpm build && pnpm headers --pages

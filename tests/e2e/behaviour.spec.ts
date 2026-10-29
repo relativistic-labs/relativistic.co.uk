@@ -53,11 +53,9 @@ test.describe('founder portraits', () => {
     const card = page.locator('.portrait[data-rendered-srcset]');
     await card.scrollIntoViewIfNeeded();
     await expect(card).toHaveClass(/is-rendered/, { timeout: 10_000 });
-    await expect(card.locator('.portrait__state')).toHaveText('Rendered / AI');
     await expect(card).toHaveClass(/is-observed/, { timeout: 10_000 });
     await expect(card.locator('.shift, .portrait__rendered')).toHaveCount(0);
     await expect(card.locator('img[alt="Harry Robbins"]')).toBeVisible();
-    await expect(card.locator('.portrait__state')).toHaveText('The real photo');
   });
 
   test('reduced motion never requests the polished layer', async ({ page }) => {
@@ -72,11 +70,10 @@ test.describe('founder portraits', () => {
     await expect(page.locator('.portrait__rendered, .shift')).toHaveCount(0);
   });
 
-  test('every other founder is marked PORTRAIT TO COME, with no image', async ({ page }) => {
+  test('every other founder shows initials, with no image and no label', async ({ page }) => {
     await expect(page.locator('.portrait--pending')).toHaveCount(4);
     await expect(page.locator('.portrait--pending img')).toHaveCount(0);
-    for (const label of await page.locator('.portrait--pending .portrait__state').allInnerTexts()) {
-      expect(label).toBe('PORTRAIT TO COME');
-    }
+    await expect(page.locator('.portrait--pending .portrait__monogram')).toHaveCount(4);
+    await expect(page.locator('.portrait p')).toHaveCount(0);
   });
 });
