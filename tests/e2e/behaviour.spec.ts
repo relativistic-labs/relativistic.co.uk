@@ -77,3 +77,77 @@ test.describe('founder portraits', () => {
     await expect(page.locator('.portrait p')).toHaveCount(0);
   });
 });
+
+test.describe('register your interest', () => {
+  test('each package action chooses its option and goes to the form @both', async ({ page }) => {
+    await page.goto('/');
+    for (const [name, index, value] of [
+      ['Request a free trial', 0, 'A free trial of Shared'],
+      ['Request a demo', 0, 'A demo of Managed'],
+      ['Request a demo', 1, 'A demo of Enterprise'],
+    ] as const) {
+      await page.getByRole('link', { name }).nth(index).click();
+      await expect(page.locator('input[name="interest"]:checked')).toHaveAttribute('value', value);
+      await expect(page.locator('#interest-name')).toBeFocused();
+      await expect(page).toHaveURL(/#interest$/);
+    }
+  });
+
+  test('sending writes an email for the visitor to send, and says so', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Register your interest' }).click();
+    // Required fields are checked first: nothing is written yet.
+    await expect(page.getByRole('status')).toBeEmpty();
+    await page.getByLabel('Your name').fill('Ada Lovelace');
+    await page.getByLabel('Work email').fill('ada@example.org');
+    await page.getByLabel('Organisation').fill('Analytical Engines');
+    await page.getByLabel('A demo of Enterprise').check();
+    await page.getByLabel('What would your people build?').fill('Reports, & more');
+    await page.getByRole('button', { name: 'Register your interest' }).click();
+    const status = page.getByRole('status');
+    await expect(status).toContainText('Your email app should now have a message to us');
+    // The email it wrote is there again as a link, in case the app didn't open.
+    const mail = new URL((await status.getByRole('link').getAttribute('href'))!);
+    expect(mail.protocol + mail.pathname).toBe('mailto:hello@relativistic.co.uk');
+    expect(mail.searchParams.get('subject')).toBe('A demo of Enterprise: Analytical Engines');
+    expect(mail.searchParams.get('body')).toContain('Email: ada@example.org');
+    expect(mail.searchParams.get('body')).toContain('Reports, & more');
+  });
+});
+
+test.describe('the workspace sketch', () => {
+  test('types a request and builds its result, while on screen', async ({ page }) => {
+    await page.goto('/');
+    const demo = page.locator('[data-demo]');
+    await demo.scrollIntoViewIfNeeded();
+    await expect(demo).toHaveClass(/is-live/);
+    await expect(page.locator('.demo__typed')).toHaveText(/^Build me/, { timeout: 5000 });
+    await expect(page.locator('.demo__scene.is-shown .b.is-on').first()).toBeAttached({ timeout: 8000 });
+    await expect(page.locator('.demo__reply')).toHaveClass(/is-on/, { timeout: 12_000 });
+  });
+
+  test('pauses and plays from its button (WCAG 2.2.2)', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-demo]').scrollIntoViewIfNeeded();
+    const button = page.getByRole('button', { name: 'Pause', exact: true });
+    await expect(page.locator('.demo__typed')).toHaveText(/^Build/, { timeout: 5000 });
+    await button.click();
+    await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
+    const typed = await page.locator('.demo__typed').textContent();
+    await page.waitForTimeout(800);
+    expect(await page.locator('.demo__typed').textContent()).toBe(typed);
+    await page.getByRole('button', { name: 'Play', exact: true }).click();
+    await expect(page.locator('.demo__typed')).not.toHaveText(typed!, { timeout: 2000 });
+  });
+
+  test('reduced motion: the first request, finished, and nothing to pause', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await page.locator('[data-demo]').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(1000);
+    await expect(page.locator('[data-demo]')).not.toHaveClass(/is-live/);
+    await expect(page.locator('[data-demo-pause]')).toBeHidden();
+    await expect(page.locator('.demo__ask')).toBeVisible();
+    await expect(page.locator('.demo__scene.is-shown')).toHaveCount(1);
+  });
+});

@@ -9,12 +9,19 @@ test.describe('without JavaScript', () => {
     const on = await sectionsOn(page);
     const main = page.locator('main');
     await expect(main.locator('h1')).toContainText('Agents can build what your people need');
-    for (const id of ['example', 'help', 'packages', 'trust', 'story', 'contact']) await expect(page.locator(`#${id} h2`)).toBeVisible();
+    for (const id of ['example', 'help', 'packages', 'trust', 'story', 'demo', 'contact']) await expect(page.locator(`#${id} h2`)).toBeVisible();
     // Every section after the opening carries the reader's question as a caption.
     await expect(page.locator('main .question')).toHaveCount(await page.locator('main section.section').count());
     await expect(page.locator('#trust .summary dt')).toHaveCount(9);
     await expect(page.locator('#packages h3')).toHaveText(['Shared', 'Managed', 'Enterprise']);
     await expect(page.locator('#example figure svg[role="img"]').first()).toBeAttached();
+    // The form still works: browsers hand a mailto: form to the email app.
+    await expect(page.locator('#interest')).toHaveAttribute('action', /^mailto:hello@relativistic\.co\.uk/);
+    await expect(page.locator('#packages a[href="#interest"]')).toHaveText(['Request a free trial', 'Request a demo', 'Request a demo']);
+    // The workspace sketch shows its first request, finished.
+    await expect(page.locator('#demo .demo__ask')).toHaveText('Build me a pitch deck for our new product launch');
+    await expect(page.locator('#demo .demo__scene.is-shown')).toHaveCount(1);
+    await expect(page.locator('[data-demo-pause]')).toBeHidden();
     const mail = page.locator('#contact a[href="mailto:hello@relativistic.co.uk"]');
     await expect(mail).toBeVisible();
     await expect(mail).toHaveText('hello@relativistic.co.uk');
@@ -62,7 +69,7 @@ test('/index.md says what the page says, including the diagram @both', async ({ 
   await page.goto('/');
   const pieces = await page.locator('main').evaluate((m) =>
     [...m.querySelectorAll('h1, h2, h3, p, li, dt, dd, desc')]
-      .filter((e) => !e.closest('.opening__action, .portrait, .founder__links') && !e.querySelector('p, li, h3'))
+      .filter((e) => !e.closest('.opening__action, .packages__action, .portrait, .founder__links, .demo__window, .demo__control, form') && !e.querySelector('p, li, h3'))
       .map((e) => (e.textContent ?? '').replace(/\s+/g, ' ').trim())
       .filter(Boolean),
   );

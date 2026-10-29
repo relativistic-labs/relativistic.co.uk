@@ -13,6 +13,11 @@ import { packages } from '../content/copy';
             <strong class="tag">{p.tag}</strong>
           </p>
           <p>{p.text}</p>
+          <p class="packages__action">
+            <a class="button button--secondary" href="#interest" data-interest={p.interest}>
+              {p.action}
+            </a>
+          </p>
         </li>
       ))
     }

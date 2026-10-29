@@ -1,4 +1,4 @@
-import { contact, example, help, models as modelsCopy, opening, packages, sponsorship, story, team, trust } from '../content/copy';
+import { contact, demo, example, help, models as modelsCopy, opening, packages, sponsorship, story, team, trust } from '../content/copy';
 import { show, site } from '../site.config';
 import { getFounders, getProviders, providersSentence } from './content';
 
@@ -19,7 +19,7 @@ export async function pageMarkdown(): Promise<string> {
   out.push('');
 
   section(packages.question, packages.heading);
-  for (const p of packages.items) out.push(`### ${p.name}`, '', `*${p.tag}*`, '', p.text, '');
+  for (const p of packages.items) out.push(`### ${p.name}`, '', `*${p.tag}*`, '', p.text, '', `[${p.action}](#contact)`, '');
   out.push(packages.money, '');
 
   section(trust.question, trust.heading);
@@ -46,7 +46,11 @@ export async function pageMarkdown(): Promise<string> {
     section(sponsorship.question, sponsorship.heading);
     out.push(sponsorship.body, '', `**${sponsorship.ask}** ${sponsorship.action}.`, '');
   }
+  section(demo.question, demo.heading);
+  out.push(demo.caption, '');
+  for (const s of demo.scenes) out.push(`- “${s.ask}”: ${s.reply}`);
+  out.push('');
   section(contact.question, contact.heading);
-  out.push(contact.body, '', `Email: <${site.email}>`, '');
+  out.push(contact.body, '', `${contact.choice} ${contact.choices.map((c) => c.label).join('; ')}.`, '', `${contact.or} <${site.email}>.`, '');
   return out.join('\n');
 }

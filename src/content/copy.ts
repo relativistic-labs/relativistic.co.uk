@@ -44,17 +44,28 @@ export const help = {
 export const packages = {
   question: 'Where do we start?',
   heading: 'Three ways to start',
+  // Each action leads to the form in the contact section, with its choice already made.
   items: [
-    { name: 'Shared', tag: 'Teams and trials', text: 'A space on our platform. Sign in and start building the same day.' },
+    {
+      name: 'Shared',
+      tag: 'Teams and trials',
+      text: 'A space on our platform. Sign in and start building the same day.',
+      action: 'Request a free trial',
+      interest: 'trial',
+    },
     {
       name: 'Managed',
       tag: 'Small and medium businesses',
       text: 'Your own platform, set up and run for you, and connected to the tools your business already uses.',
+      action: 'Request a demo',
+      interest: 'managed',
     },
     {
       name: 'Enterprise',
       tag: 'Large organisations',
       text: 'Hosted where you need it: on our platform, in your cloud or on your own servers, with your data kept in the UK. Your sign-in, your choice of AI and help through security approval.',
+      action: 'Request a demo',
+      interest: 'enterprise',
     },
   ],
   money: 'Every package has a monthly price, and AI usage stays within a budget you set.',
@@ -93,10 +104,58 @@ export const team = {
   heading: 'The team',
 } as const;
 
+// The sketch of the workspace: four requests, and what each one builds (components/Demo.astro).
+export const demo = {
+  question: 'What does it look like?',
+  heading: 'Ask in plain words. Watch it appear.',
+  caption:
+    'A sketch of the workspace. Someone asks for a pitch deck, a quarterly sales report, charts of delivery performance and a design for a new app feature, and each one appears beside the conversation.',
+  project: 'Our workspace',
+  scenes: [
+    {
+      ask: 'Build me a pitch deck for our new product launch',
+      reply: 'Here’s a six-slide deck in your brand, from the launch brief.',
+      title: 'Launch pitch deck',
+    },
+    {
+      ask: 'Create a quarterly sales report for the board',
+      reply: 'Here’s the Q3 report, from this quarter’s invoices.',
+      title: 'Q3 sales report',
+    },
+    {
+      ask: 'Create a set of visualisations to help me understand our delivery performance',
+      reply: 'Here are four views of the last six months.',
+      title: 'Delivery performance',
+    },
+    {
+      ask: 'I want to design a new feature for our app, so customers can rebook a delivery',
+      reply: 'Here’s a first design: rebooking in three steps.',
+      title: 'Rebook a delivery',
+    },
+  ],
+} as const;
+
+/**
+ * The form writes an email for the visitor to send from their own email app: there's no server, and
+ * nothing is sent or stored until they send it. Without JavaScript it's a mailto: form.
+ */
 export const contact = {
   question: 'How do we start?',
-  heading: 'Talk to us',
+  heading: 'Register your interest',
   body: 'Tell us what you’d like your people to build. One of the five of us will reply.',
+  fields: { name: 'Your name', email: 'Work email', organisation: 'Organisation', build: 'What would your people build?' },
+  optional: '(optional)',
+  choice: 'What would you like?',
+  choices: [
+    { value: 'interest', label: 'To hear when we launch' },
+    { value: 'trial', label: 'A free trial of Shared' },
+    { value: 'managed', label: 'A demo of Managed' },
+    { value: 'enterprise', label: 'A demo of Enterprise' },
+  ],
+  submit: 'Register your interest',
+  hint: 'This opens your email app with a message to us, ready to send.',
+  sent: 'Your email app should now have a message to us, ready to send. If it didn’t open, email us at',
+  or: 'Or email us at',
 } as const;
 
 // Off since round 3 (the choice of models is a row in the safety list); kept for later.

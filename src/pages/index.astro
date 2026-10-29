@@ -9,6 +9,7 @@ import Trust from '../components/Trust.astro';
 import Founders from '../components/Founders.astro';
 import Models from '../components/Models.astro';
 import Sponsorship from '../components/Sponsorship.astro';
+import Demo from '../components/Demo.astro';
 import Contact from '../components/Contact.astro';
 import { getFounders } from '../lib/content';
 import { show, site } from '../site.config';
@@ -44,5 +45,6 @@ const jsonLd = {
   {show.team && <Founders />}
   {show.models && <Models />}
   {show.sponsorship && <Sponsorship />}
+  <Demo />
   <Contact />
 </Base>

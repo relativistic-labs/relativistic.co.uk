@@ -796,3 +796,580 @@
     }
   }
 }
+
+@layer base {
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+}
+
+@layer components {
+  /* Secondary buttons: the package actions, and the sketch's pause */
+  .button--secondary {
+    background: var(--color-raised);
+    color: var(--color-text);
+    font-size: var(--type-s);
+    box-shadow: 0 2px 0 var(--color-muted);
+  }
+  .button--secondary:hover {
+    background: color-mix(in oklab, var(--color-raised), var(--color-text) 10%);
+  }
+  .packages li {
+    display: flex;
+    flex-direction: column;
+  }
+  .packages .packages__action {
+    margin: auto 0 0;
+    padding-top: var(--space-2);
+  }
+
+  /* The register-your-interest form, after GOV.UK's form patterns */
+  .form {
+    max-width: var(--measure);
+    margin: var(--space-6) 0;
+  }
+  .form__field {
+    margin: 0 0 var(--space-5);
+    padding: 0;
+    border: 0;
+  }
+  .form .button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .form legend {
+    padding: 0;
+  }
+  .form label,
+  .form legend {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-weight: var(--weight-bold);
+  }
+  .form__optional {
+    font-weight: var(--weight-regular);
+    color: var(--color-muted);
+  }
+  .form input[type='text'],
+  .form input[type='email'],
+  .form textarea {
+    display: block;
+    width: 100%;
+    max-width: 30rem;
+    min-height: var(--target-min);
+    padding: var(--space-2);
+    border: 2px solid var(--color-text);
+    border-radius: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font: inherit;
+  }
+  .form textarea {
+    max-width: none;
+    resize: vertical;
+  }
+  .form input:focus,
+  .form textarea:focus {
+    outline: 3px solid var(--focus);
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 2px var(--color-text);
+  }
+  .form__radios {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .form__radio {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .form__radio input {
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: 0;
+    accent-color: var(--color-accent);
+  }
+  .form__radio label {
+    margin: 0;
+    font-weight: var(--weight-regular);
+  }
+  .form__hint {
+    color: var(--color-muted);
+  }
+  /* Empty until the form is sent, but always there, so screen readers hear it when it fills */
+  .form__status:empty {
+    padding: 0;
+    border: 0;
+  }
+  .form__status {
+    max-width: var(--measure);
+    padding: var(--space-4);
+    border-left: 8px solid var(--color-accent);
+    background: var(--color-raised);
+  }
+  .contact__or {
+    margin-bottom: 0;
+  }
+
+  /* The workspace sketch: a wireframe of the conversation and the work, in the page's own type */
+  .demo {
+    --demo-fill: color-mix(in oklab, var(--color-text) 13%, transparent);
+    --demo-fill2: color-mix(in oklab, var(--color-text) 6%, transparent);
+    --demo-mid: color-mix(in oklab, var(--color-text) 32%, transparent);
+    --demo-line: color-mix(in oklab, var(--color-text) 26%, transparent);
+    margin: var(--space-6) 0 0;
+    container-type: inline-size;
+  }
+  .demo__window {
+    display: grid;
+    grid-template: 'bar bar' auto 'chat panel' 1fr / minmax(0, 36fr) minmax(0, 64fr);
+    overflow: hidden;
+    border: 1px solid var(--demo-line);
+    border-radius: 12px;
+    background: var(--color-bg);
+    box-shadow: 0 24px 48px -32px color-mix(in oklab, var(--color-text) 45%, transparent);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    user-select: none;
+    /* Far below the fold: drawn only as it nears the screen, so it costs the page's load nothing */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 570px; /* about its height, measured: stacked on a phone */
+  }
+  @media (min-width: 630px) {
+    .demo__window {
+      contain-intrinsic-size: auto 360px; /* side by side, on a tablet */
+    }
+  }
+  @media (min-width: 1024px) {
+    .demo__window {
+      contain-intrinsic-size: auto 485px; /* side by side, full width */
+    }
+  }
+  .demo__window p {
+    margin: 0;
+  }
+  .demo__bar {
+    grid-area: bar;
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.7em 1.2em;
+    border-bottom: 1px solid var(--demo-line);
+  }
+  .demo__logo {
+    width: 1.5em;
+    height: 1.5em;
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+  .demo__project {
+    font-weight: var(--weight-bold);
+  }
+  .demo__icons {
+    display: flex;
+    align-items: center;
+    gap: 0.9em;
+    margin-left: auto;
+  }
+  .demo__icons i {
+    width: 1.1em;
+    height: 1.1em;
+    border: 1.5px solid var(--demo-line);
+    border-radius: 0.3em;
+  }
+  .demo__icons b {
+    display: grid;
+    place-items: center;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    background: var(--demo-fill2);
+    font-size: 0.9em;
+  }
+  .demo__chat {
+    grid-area: chat;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    border-right: 1px solid var(--demo-line);
+  }
+  .demo__head {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    padding: 0.7em 1.1em;
+    border-bottom: 1px solid var(--demo-line);
+    color: var(--color-muted);
+  }
+  .demo__head i {
+    width: 55%;
+    height: 0.55em;
+    border-radius: 1em;
+    background: var(--demo-fill);
+  }
+  .demo__thread {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.8em;
+    overflow: hidden;
+    padding: 1.1em;
+  }
+  .demo__ask {
+    align-self: flex-end;
+    max-width: 90%;
+    padding: 0.75em 0.95em;
+    border-radius: 1.1em;
+    background: var(--demo-fill2);
+  }
+  .demo__thinking {
+    display: none;
+    gap: 0.3em;
+    padding-left: 0.2em;
+  }
+  .demo__thinking.is-on {
+    display: flex;
+  }
+  .demo__thinking i {
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 50%;
+    background: var(--color-accent);
+    animation: demo-dot 0.9s ease-in-out infinite alternate;
+  }
+  .demo__thinking i:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .demo__thinking i:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  .demo__input {
+    margin: 0 0.9em 0.9em;
+    padding: 0.75em 0.9em;
+    border: 1px solid var(--demo-line);
+    border-radius: 1em;
+  }
+  .demo__typed {
+    min-height: 4.05em; /* three lines, so typing never moves the page */
+  }
+  .demo__typed:empty::before {
+    content: attr(data-placeholder);
+    color: var(--color-muted);
+  }
+  .demo__typed.is-typing::after {
+    content: '';
+    display: inline-block;
+    width: 1.5px;
+    height: 1.1em;
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    background: var(--color-accent);
+    animation: demo-caret 1s steps(1) infinite;
+  }
+  .demo__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    margin-top: 0.6em;
+    color: var(--color-muted);
+  }
+  .demo__controls i {
+    width: 40%;
+    height: 0.55em;
+    margin-left: auto;
+    border-radius: 1em;
+    background: var(--demo-fill);
+  }
+  .demo__controls b {
+    display: grid;
+    place-items: center;
+    width: 2em;
+    height: 2em;
+    border-radius: 0.55em;
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+  .demo__panel {
+    grid-area: panel;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .demo__tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    padding: 0.55em 1.1em;
+    border-bottom: 1px solid var(--demo-line);
+  }
+  .demo__title {
+    padding: 0.35em 0.8em;
+    border-radius: 0.6em;
+    background: var(--demo-fill2);
+    font-weight: var(--weight-bold);
+    white-space: nowrap;
+  }
+  .demo__modes {
+    display: flex;
+    gap: 0.15em;
+    margin-left: auto;
+    padding: 0.2em;
+    border: 1px solid var(--demo-line);
+    border-radius: 0.6em;
+    color: var(--color-muted);
+    font-size: 0.92em;
+  }
+  .demo__modes > * {
+    padding: 0.2em 0.6em;
+    border-radius: 0.45em;
+  }
+  .demo__modes b {
+    background: var(--demo-fill2);
+    color: var(--color-text);
+  }
+  .demo__stage {
+    display: grid;
+    padding: 1.1em;
+  }
+  .demo__scene {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s var(--ease-out), visibility 0s 0.4s;
+  }
+  .demo__scene.is-shown {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.4s var(--ease-out);
+  }
+  @container (max-width: 600px) {
+    .demo__window {
+      grid-template: 'bar' auto 'chat' auto 'panel' auto / minmax(0, 1fr);
+    }
+    .demo__chat {
+      border-right: 0;
+      border-bottom: 1px solid var(--demo-line);
+    }
+    .demo__head,
+    .demo__modes,
+    .demo__icons i {
+      display: none;
+    }
+    .demo__thread {
+      height: 11.5em; /* the longest request and its reply, so nothing below moves */
+    }
+  }
+
+  /* Inside the sketch's drawings */
+  .demo svg text {
+    font-family: var(--font-sans);
+    fill: var(--color-text);
+  }
+  .demo .w,
+  .demo .w-a,
+  .demo .tick,
+  .demo .donut {
+    fill: none;
+  }
+  .demo .w {
+    stroke: var(--demo-line);
+    stroke-width: 1.5;
+  }
+  .demo .w-a,
+  .demo .sel {
+    stroke: var(--color-accent);
+    stroke-width: 2;
+  }
+  .demo .f,
+  .demo .cal circle {
+    fill: var(--demo-fill);
+  }
+  .demo .m {
+    fill: var(--demo-mid);
+  }
+  .demo .f2 {
+    fill: var(--demo-fill2);
+  }
+  .demo .a {
+    fill: var(--color-accent);
+  }
+  .demo .a-mid {
+    fill: color-mix(in oklab, var(--color-accent) 50%, transparent);
+  }
+  .demo .a-soft {
+    fill: color-mix(in oklab, var(--color-accent) 20%, transparent);
+  }
+  .demo .a-fill {
+    fill: color-mix(in oklab, var(--color-accent) 10%, transparent);
+  }
+  .demo .heat rect {
+    fill: var(--color-accent);
+  }
+  .demo .heat .h1 {
+    fill-opacity: 0.12;
+  }
+  .demo .heat .h2 {
+    fill-opacity: 0.3;
+  }
+  .demo .heat .h3 {
+    fill-opacity: 0.55;
+  }
+  .demo .heat .h4 {
+    fill-opacity: 0.85;
+  }
+  .demo .tick {
+    stroke: var(--color-accent);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .demo .arrow {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .demo .donut {
+    stroke-width: 14;
+  }
+  .demo .d1 {
+    stroke: var(--color-accent);
+    stroke-dasharray: 0.56 1;
+  }
+  .demo .d2 {
+    stroke: color-mix(in oklab, var(--color-accent) 50%, transparent);
+    stroke-dasharray: 0.26 1;
+    stroke-dashoffset: -0.56;
+  }
+  .demo .d3 {
+    stroke: color-mix(in oklab, var(--color-accent) 20%, transparent);
+    stroke-dasharray: 0.18 1;
+    stroke-dashoffset: -0.82;
+  }
+  .demo .t-xl {
+    font-size: 28px;
+    font-weight: var(--weight-bold);
+    letter-spacing: -0.01em;
+  }
+  .demo .t-l {
+    font-size: 18px;
+    font-weight: var(--weight-bold);
+  }
+  .demo .t-n {
+    font-size: 20px;
+    font-weight: var(--weight-bold);
+  }
+  .demo .t-s {
+    font-size: 11px;
+  }
+  .demo svg .t-s:not(.t-b) {
+    fill: var(--color-muted);
+  }
+  .demo .t-xs {
+    font-size: 9px;
+  }
+  .demo .t-b {
+    font-weight: var(--weight-bold);
+  }
+  .demo svg .t-acc {
+    fill: var(--color-accent);
+  }
+  .demo svg .t-on {
+    fill: var(--color-bg);
+    font-size: 11px;
+    font-weight: var(--weight-bold);
+  }
+  .demo .b-l {
+    stroke-dasharray: 1 1;
+  }
+  .demo .b-x {
+    transform-box: fill-box;
+    transform-origin: 0 50%;
+  }
+  .demo .b-y {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+  .demo__control {
+    margin: var(--space-4) 0 0;
+  }
+  .demo__pause {
+    min-height: var(--target-min);
+    padding: var(--space-2) var(--space-4);
+    border: 2px solid var(--color-text);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font: inherit;
+    font-weight: var(--weight-bold);
+    cursor: pointer;
+  }
+  .demo__pause:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 0;
+    background: var(--focus);
+    color: var(--focus-text);
+  }
+}
+
+/* The sketch, played (scripts/demo.ts adds .is-live). Elements arrive in order; CSS moves them. */
+@layer enhancements {
+  .demo.is-live .b,
+  .demo.is-live .demo__ask,
+  .demo.is-live .demo__reply {
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.5s var(--ease-out),
+      stroke-dashoffset 0.9s var(--ease-out),
+      stroke-dasharray 0.9s var(--ease-out);
+  }
+  .demo.is-live .b:not(.is-on),
+  .demo.is-live .demo__ask:not(.is-on),
+  .demo.is-live .demo__reply:not(.is-on) {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  .demo.is-live .b-y:not(.is-on) {
+    transform: scaleY(0);
+  }
+  .demo.is-live .b-x:not(.is-on) {
+    transform: scaleX(0);
+  }
+  .demo.is-live .b-l:not(.is-on) {
+    transform: none;
+    stroke-dashoffset: 1;
+  }
+  .demo.is-live .donut:not(.is-on) {
+    transform: none;
+    stroke-dasharray: 0 1;
+  }
+  @keyframes demo-dot {
+    to {
+      opacity: 0.25;
+      translate: 0 -2px;
+    }
+  }
+  @keyframes demo-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .demo *,
+    .demo *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}

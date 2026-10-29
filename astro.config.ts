@@ -83,7 +83,8 @@ export default defineConfig({
         // Same-origin fetches only. Nothing on the page fetches; Lighthouse reads robots.txt this way.
         "connect-src 'self'",
         "base-uri 'none'",
-        "form-action 'none'",
+        // The interest form, without JavaScript, hands its fields to the visitor's email app.
+        'form-action mailto:',
       ],
     },
   },
