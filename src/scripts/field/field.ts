@@ -33,7 +33,6 @@ function theme(root: HTMLElement): ToField {
     type: 'theme',
     particle: read('--field-particle'),
     accent: read('--field-glow'),
-    signal: read('--field-signal'),
     glow: darkQuery.matches,
   };
   probe.remove();
@@ -50,7 +49,7 @@ export async function startField(root: HTMLButtonElement): Promise<void> {
   };
   if (!canvas || !('WebGL2RenderingContext' in window)) return off(); // no WebGL2: no field, nothing else lost
 
-  // A test-only switch for recordings: shorter gaps between shapes and the predator, and no shedding.
+  // A test-only switch for recordings: the first picture sooner, and no shedding.
   const demo = location.search.includes('field-demo');
   let visible = true;
   let slow = false;

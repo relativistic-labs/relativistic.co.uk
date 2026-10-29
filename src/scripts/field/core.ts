@@ -14,11 +14,11 @@ export type Colour = [number, number, number];
 export type Mode = 'run' | 'pause' | 'still';
 export type ToField =
   | { type: 'size'; width: number; height: number; dpr: number }
-  | { type: 'theme'; particle: Colour; accent: Colour; signal: Colour; glow: boolean }
+  | { type: 'theme'; particle: Colour; accent: Colour; glow: boolean }
   | { type: 'mode'; mode: Mode };
 export type FromField = { type: 'drawn' } | { type: 'slow' } | { type: 'failed' };
 
-const ALPHA = 0.34; // quiet: dense folds darken, single birds barely show
+const ALPHA = 0.4; // quiet: dense folds and pictures darken, single birds barely show
 const STILL = 0.52; // the reduced-motion still is drawn darker, so it reads as intended
 const WARM = 150; // steps of 1/20 s the flock flies before its first frame (the still): long enough to fold
 
@@ -54,7 +54,7 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
   let slow = 0; // 0: fine; 1: birds halved; 2: birds halved and the last second was slow
   let windowStart = 0;
   let windowFrames = 0;
-  let colours: Record<'particle' | 'accent' | 'signal', Colour> | null = null;
+  let colours: Record<'particle' | 'accent', Colour> | null = null;
   let glow = false;
   let flock: Flock | null = null;
   let still: Float32Array | null = null;
@@ -85,7 +85,7 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
       emit({ type: 'failed' });
       return false;
     }
-    for (const n of 'uCam uSize uDpr uAlpha uGlow uInk uAccent uSignal'.split(' ')) gpu.u[n] = gl!.getUniformLocation(gpu.p, n);
+    for (const n of 'uCam uSize uDpr uAlpha uGlow uInk uAccent'.split(' ')) gpu.u[n] = gl!.getUniformLocation(gpu.p, n);
     return true;
   }
 
@@ -103,7 +103,7 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
 
   function draw(isStill: boolean) {
     if (!gpu || !ready || !colours || !width || !flock) return;
-    const n = isStill ? flock.n : flock.drawn;
+    const n = flock.n;
     const u = gpu.u;
     gl!.viewport(0, 0, canvas.width, canvas.height);
     gl!.clearColor(0, 0, 0, 0);
@@ -119,7 +119,6 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
     gl!.uniform1f(u['uGlow']!, glow ? 1 : 0);
     gl!.uniform3fv(u['uInk']!, colours.particle);
     gl!.uniform3fv(u['uAccent']!, colours.accent);
-    gl!.uniform3fv(u['uSignal']!, colours.signal);
     gl!.drawArraysInstanced(gl!.TRIANGLE_STRIP, 0, 4, n);
     if (!drawn) emit({ type: 'drawn' }), (drawn = true);
   }
@@ -186,14 +185,14 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
     await pause();
     while (!width) await new Promise(frameLater);
     if (!flock) {
-      // About 2,000 birds beside the headline on a desktop and 800 in the band on a phone.
-      flock = createFlock(Math.round(Math.min(2000, Math.max(500, (width * height) / 75))), demo);
+      // About 3,200 birds beside the headline on a desktop and 1,500 in the band on a phone.
+      flock = createFlock(Math.round(Math.min(3600, Math.max(900, (width * height) / 40))), demo);
       // Warm up in a square roost whatever the canvas, so the flock folds the same way on a phone.
       flock.aspect(1);
       flock.reset();
       for (let s = 1; s <= WARM; s++) {
         flock.step(1 / 20);
-        if (!(s % 5)) await pause();
+        if (!(s % 3)) await pause();
       }
       flock.aspect(width / height);
       flock.show();
@@ -227,7 +226,7 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
         if (!running) draw(mode === 'still');
         break;
       case 'theme':
-        colours = { particle: m.particle, accent: m.accent, signal: m.signal };
+        colours = { particle: m.particle, accent: m.accent };
         glow = m.glow;
         if (!running) draw(mode === 'still');
         break;

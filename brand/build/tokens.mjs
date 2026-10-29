@@ -232,10 +232,9 @@ const json = {
   target: { min: '44px' },
   motion: Object.fromEntries(Object.entries(motion).map(([k, [v, use]]) => [k, { value: v, use }])),
   field: {
-    kind: 'A murmuration: each bird steers by its seven nearest neighbours in 3D',
-    patterns: ['padlock', 'bar chart', 'document page', 'light cone', 'sphere'],
-    patternEvery: '15–25 s, held loosely for about 3 s',
-    predator: 'Rarely, a small signal-coloured knot the flock parts around',
+    kind: 'A murmuration: each bird steers by its seven nearest neighbours in 3D, and is drawn as a dot',
+    pictures: ['bar chart (a financial report)', 'screen on a stand (a sales pitch)', 'phone (an app)', 'document page', 'padlock', 'the mark'],
+    pictureEvery: '4.4 s, flight included: about 85% of birds on each picture, the rest leading, lagging or flying free',
     reducedMotion: 'One still frame of the flock in a fold',
     reference: 'src/scripts/field/flock.ts',
   },
