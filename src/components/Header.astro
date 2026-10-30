@@ -1,0 +1,14 @@
+---
+// The outlined lockup from brand/logo, served as public/lockup.svg (a copy that follows
+// prefers-color-scheme) so the page's HTML stays inside the first network round trip.
+const onHome = Astro.url.pathname === '/';
+---
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="site-header__home" href="/" aria-current={onHome ? 'page' : undefined} translate="no">
+      <img src="/lockup.svg" alt="Relativistic, home" width="190" height="26" />
+    </a>
+    <a class="site-header__action" href={onHome ? '#contact' : '/#contact'}>Talk to us</a>
+  </div>
+</header>

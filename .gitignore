@@ -1,0 +1,18 @@
+.env*
+.dev.vars*
+scratch/*
+
+# Local planning documents contain internal commercial discussions.
+# This repository is public; keep these files out of Git as well as Pages.
+/docs/plans/
+
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+.wrangler/
+
+# Test and audit output
+test-results/
+playwright-report/
+.lighthouseci/

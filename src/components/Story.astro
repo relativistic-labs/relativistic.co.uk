@@ -1,0 +1,10 @@
+---
+import Section from './Section.astro';
+import { story } from '../content/copy';
+---
+
+<Section id="story" question={story.question} heading={story.heading}>
+  <div class="prose">
+    {story.paragraphs.map((p) => <p>{p}</p>)}
+  </div>
+</Section>

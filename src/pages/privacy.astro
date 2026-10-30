@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config';
+
+// Completed against the ICO's list of what a privacy notice must say:
+// https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/the-right-to-be-informed/what-privacy-information-should-we-provide/
+// Facts that aren't settled yet are shown as visible [to confirm: …] placeholders.
+const controller = site.company
+  ? `${site.company.name}, registered in ${site.company.registeredIn}, company number ${site.company.number}, registered office ${site.company.office}`
+  : null;
+---
+
+<Base
+  title={`Privacy · ${site.name}`}
+  description="No cookies, no tracking, and what happens to an email you send us."
+  path="/privacy/"
+>
+  <article class="page wrap prose">
+    <h1>Privacy</h1>
+    <p class="opening__lede">
+      This site sets no cookies, runs no analytics or tracking, and loads nothing from anyone else. The only personal
+      information we handle is what you send us by email.
+    </p>
+
+    <h2>Who we are</h2>
+    <p>
+      {
+        controller ? (
+          <>{controller} is the controller of your personal information.</>
+        ) : (
+          <>{site.name} is the controller of your personal information. [to confirm: the company’s registered name, number and office, once it is incorporated]</>
+        )
+      }
+      You can contact us at <a href={`mailto:${site.email}`}>{site.email}</a>.
+    </p>
+
+    <h2>Visiting the site</h2>
+    <p>
+      Like any website, the service that hosts it handles your IP address and browser details to deliver the pages and keep
+      the service secure. We don’t use them to identify you. Hosting: [to confirm: the hosting provider].
+    </p>
+    <p>
+      If you pause the background animation, your browser remembers that choice in its own local storage, so it stays paused
+      next time. It never leaves your device, and nothing is stored until you choose.
+    </p>
+
+    <h2>Emailing us</h2>
+    <p>
+      If you email us, we use your name, address and message to reply and to keep a record of the conversation. Our lawful
+      basis is legitimate interests: answering your enquiry. We don’t add you to a mailing list, sell your details or share
+      them with anyone except the services that carry and store our email: [to confirm: the email provider].
+    </p>
+    <p>
+      The form on the home page sends nothing itself. It writes an email from what you enter, and your own email app
+      sends it only if you choose to.
+    </p>
+    <p>We keep emails for [to confirm: the retention period], then delete them.</p>
+
+    <h2>Your rights</h2>
+    <p>
+      You can ask us for a copy of the information we hold about you, and ask us to correct it, delete it, restrict how we use
+      it or stop using it. Email us and we’ll reply within a month.
+    </p>
+    <p>
+      If you’re unhappy with how we handle your information, you can complain to the Information Commissioner’s Office:
+      <a href="https://ico.org.uk/make-a-complaint/">ico.org.uk/make-a-complaint</a> or 0303 123 1113.
+    </p>
+  </article>
+</Base>

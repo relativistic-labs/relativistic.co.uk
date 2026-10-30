@@ -1,0 +1,28 @@
+---
+import Section from './Section.astro';
+import { example } from '../content/copy';
+import { prepareDiagram } from '../lib/diagram';
+import wide from '../assets/diagrams/dashboard.svg?raw';
+import tall from '../assets/diagrams/dashboard-tall.svg?raw';
+
+// The example's diagram: brand/diagrams/d2/examples/dashboard.d2 and dashboard-tall.d2.
+const opts = { id: 'example-diagram', title: example.diagram.title, description: example.diagram.description };
+const wideSvg = prepareDiagram(wide, { ...opts, layout: 'wide' });
+const tallSvg = prepareDiagram(tall, { ...opts, layout: 'tall' });
+---
+
+<Section id="example" question={example.question} heading={example.heading}>
+  <div class="prose">
+    {example.paragraphs.map((p) => <p>{p}</p>)}
+  </div>
+  <figure class="diagram">
+    <Fragment set:html={wideSvg} />
+    <Fragment set:html={tallSvg} />
+  </figure>
+</Section>
+
+<script>
+  // Commit Mono appears only below the fold on this page; switch it on after the first paint, so it
+  // never delays it.
+  requestAnimationFrame(() => setTimeout(() => document.documentElement.classList.add('mono-ready')));
+</script>

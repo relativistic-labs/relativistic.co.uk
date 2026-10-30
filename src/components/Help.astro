@@ -1,0 +1,16 @@
+---
+import Section from './Section.astro';
+import { help } from '../content/copy';
+---
+
+<Section id="help" question={help.question} heading={help.heading}>
+  <ul class="list">
+    {
+      help.items.map((i) => (
+        <li>
+          <strong>{i.term}</strong> {i.text}
+        </li>
+      ))
+    }
+  </ul>
+</Section>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" width="32" height="40" role="img" aria-label="Note"><style>
+.line{fill:none;stroke:var(--color-text, #151a21);stroke-width:1}
+.box{fill:var(--color-bg, #f9f6f2);stroke:var(--color-text, #151a21);stroke-width:1}
+.raised{fill:var(--color-raised, #efece7);stroke:var(--color-text, #151a21);stroke-width:1}
+.solid{fill:var(--color-text, #151a21);stroke:var(--color-text, #151a21);stroke-width:1}
+.ext{fill:none;stroke:var(--color-muted, #555b64);stroke-width:1;stroke-dasharray:4 4}
+.note{fill:var(--color-bg, #f9f6f2);stroke:var(--color-muted, #555b64);stroke-width:1}
+.flow{fill:none;stroke:var(--color-muted, #555b64);stroke-width:1}
+.flow-head{fill:var(--color-muted, #555b64)}
+.grant{fill:none;stroke:var(--color-accent, #2858cd);stroke-width:1.5}
+.grant-head{fill:var(--color-accent, #2858cd)}
+.deny{fill:none;stroke:var(--color-signal, #bb4717);stroke-width:1.5;stroke-dasharray:4 3}
+.deny-x{fill:none;stroke:var(--color-signal, #bb4717);stroke-width:1.5}
+</style><path class="note" d="M0.5 0.5H23.5L31.5 8.5V39.5H0.5Z"/><path class="note" d="M23.5 0.5V8.5H31.5"/></svg>

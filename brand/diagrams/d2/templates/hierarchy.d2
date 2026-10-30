@@ -1,0 +1,37 @@
+# hierarchy: a tree. Organisation, teams, people; who owns what.
+#
+# Engine: elk. It keeps siblings in the order written and spaces the people's labels evenly.
+# TALA draws a neat shared trunk but crowds the labels under the leaves ("Priya, builder"
+# runs into "Tom, user"); dagre curves its edges and reverses the order.
+# Limit: about 3 levels and 12 shapes. People's labels sit under the glyph: keep them short.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: down
+
+acme: Acme, £1,250 a month {class: service}
+
+ops: Operations, £400 {class: resource}
+fin: Finance, £250 {class: resource}
+sales: Sales, £600 {class: resource}
+
+priya: Priya, builder {class: person}
+tom: Tom, user {class: person}
+ana: Ana, builder {class: person}
+sam: Sam, user {class: person}
+lee: Lee, user {class: person}
+
+acme -> ops {class: flow}
+acme -> fin {class: flow}
+acme -> sales {class: flow}
+ops -> priya {class: flow}
+ops -> tom {class: flow}
+fin -> ana {class: flow}
+sales -> sam {class: flow}
+sales -> lee {class: flow}

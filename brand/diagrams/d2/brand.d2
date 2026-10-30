@@ -1,0 +1,344 @@
+# Relativistic brand style for D2. Import it at the top of every diagram:
+#
+#   ...@brand          (from a file in templates/ or examples/, or any file beside a copy of this one)
+#
+# Then give every shape and edge one of the classes below. render.sh does the rest:
+# fonts, the paper and ink themes, PNGs. See README.md.
+#
+# Rules (design brief, "Diagram style"): square corners, 1 px strokes, one 1.5 px accent path,
+# no shadows, no 3D, no gradients, no sketch mode, labels in mono and sentence case, and colour
+# never the only signal: a grant is a heavier line with an arrow, a denial ends in a bar, an
+# external system is dashed, and every one of them is labelled.
+#
+# Colours. D2 only accepts hex values in styles, so classes use the paper hex values and
+# render.sh adds a prefers-color-scheme: dark stylesheet that maps each one to its ink value.
+# Use only these seven values if you style anything by hand:
+#
+#   token    paper     ink
+#   bg       #ffffff   #0b0f14
+#   raised   #f4f3f1   #13181e
+#   rule     #b4b8bd   #2b3138
+#   text     #151a21   #f2f0ec
+#   muted    #555b64   #a5abb4
+#   accent   #0c6c68   #59d4cd
+#   signal   #bb4717   #f28c5c
+
+vars: {
+  d2-config: {
+    # Theme codes that D2 applies by itself (backgrounds, default strokes, sequence lifelines,
+    # sql_table headers). theme-id and dark-theme-id only pick a starting point: every code
+    # is overridden, so one SVG follows prefers-color-scheme in paper and ink.
+    theme-id: 0
+    dark-theme-id: 200
+    sketch: false
+    pad: 32
+    center: false
+    theme-overrides: {
+      N1: "#151a21"
+      N2: "#555b64"
+      N3: "#555b64"
+      N4: "#b4b8bd"
+      N5: "#b4b8bd"
+      N6: "#f4f3f1"
+      N7: "#ffffff"
+      B1: "#151a21"
+      B2: "#151a21"
+      B3: "#555b64"
+      B4: "#ffffff"
+      B5: "#f4f3f1"
+      B6: "#ffffff"
+      AA2: "#555b64"
+      AA4: "#f4f3f1"
+      AA5: "#f4f3f1"
+      AB4: "#f4f3f1"
+      AB5: "#f4f3f1"
+    }
+    dark-theme-overrides: {
+      N1: "#f2f0ec"
+      N2: "#a5abb4"
+      N3: "#a5abb4"
+      N4: "#2b3138"
+      N5: "#2b3138"
+      N6: "#13181e"
+      N7: "#0b0f14"
+      B1: "#f2f0ec"
+      B2: "#f2f0ec"
+      B3: "#a5abb4"
+      B4: "#0b0f14"
+      B5: "#13181e"
+      B6: "#0b0f14"
+      AA2: "#a5abb4"
+      AA4: "#13181e"
+      AA5: "#13181e"
+      AB4: "#13181e"
+      AB5: "#13181e"
+    }
+  }
+}
+
+# Every label is set in Commit Mono and every edge bends at a right angle, including shapes and
+# edges with no class. (Give edges a class as well: the classes also put the page colour
+# behind edge labels.) A glob is the only way to reach unclassed elements from an import, and D2
+# lets a glob beat a class, so the globs set only these three things. To set one label in
+# Instrument Sans, give that element style.font: default directly.
+***.style.font: mono
+(*** -> ***)[*].style: {font: mono; italic: false; border-radius: 0}
+(*** <- ***)[*].style: {font: mono; italic: false; border-radius: 0}
+(*** <-> ***)[*].style: {font: mono; italic: false; border-radius: 0}
+(*** -- ***)[*].style: {font: mono; italic: false; border-radius: 0}
+
+classes: {
+  # ---------------------------------------------------------------- shapes
+
+  # An organisation or account boundary. A container: put things inside it.
+  frame: {
+    style: {
+      fill: transparent
+      stroke: "#151a21"
+      stroke-width: 1
+      border-radius: 0
+      font-size: 16
+      font-color: "#151a21"
+      bold: false
+      shadow: false
+      3d: false
+      multiple: false
+    }
+    label.near: top-left
+  }
+
+  # The agent. A solid box, so it is the first thing you see without needing colour.
+  agent: {
+    shape: rectangle
+    style: {
+      fill: "#151a21"
+      stroke: "#151a21"
+      stroke-width: 1
+      border-radius: 0
+      font-size: 16
+      font-color: "#ffffff"
+      bold: true
+      shadow: false
+      3d: false
+      multiple: false
+    }
+  }
+
+  # Something the agent, an app or a person uses: documents, a CRM, a finance system.
+  resource: {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#151a21"
+      stroke-width: 1
+      border-radius: 0
+      font-size: 16
+      font-color: "#151a21"
+      bold: false
+      shadow: false
+      3d: false
+      multiple: false
+    }
+  }
+
+  # Outside the boundary: the internet, a SaaS vendor, someone else's system. Dashed and muted.
+  external: {
+    shape: rectangle
+    style: {
+      fill: transparent
+      stroke: "#555b64"
+      stroke-width: 1
+      stroke-dash: 4
+      border-radius: 0
+      font-size: 16
+      font-color: "#555b64"
+      bold: false
+      shadow: false
+      3d: false
+      multiple: false
+    }
+  }
+
+  # A person. Use it for whoever the agent acts for, or whoever opens the work.
+  person: {
+    shape: person
+    width: 40
+    height: 52
+    style: {
+      fill: "#f4f3f1"
+      stroke: "#151a21"
+      stroke-width: 1
+      font-size: 16
+      font-color: "#151a21"
+      bold: false
+      shadow: false
+      multiple: false
+    }
+  }
+
+  # A running thing: an app, a gateway, a worker, a workspace. Raised fill, square corners.
+  service: {
+    shape: rectangle
+    style: {
+      fill: "#f4f3f1"
+      stroke: "#151a21"
+      stroke-width: 1
+      border-radius: 0
+      font-size: 16
+      font-color: "#151a21"
+      bold: false
+      shadow: false
+      3d: false
+      multiple: false
+    }
+  }
+
+  # Where data lives: a database, a bucket, a document store.
+  store: {
+    shape: cylinder
+    style: {
+      fill: "#f4f3f1"
+      stroke: "#151a21"
+      stroke-width: 1
+      font-size: 16
+      font-color: "#151a21"
+      bold: false
+      shadow: false
+      multiple: false
+    }
+  }
+
+  # An aside. Muted text in a dog-eared page; keep it to a line or two.
+  note: {
+    shape: page
+    style: {
+      fill: "#ffffff"
+      stroke: "#555b64"
+      stroke-width: 1
+      font-size: 14
+      font-color: "#555b64"
+      bold: false
+      shadow: false
+      multiple: false
+    }
+  }
+
+  # A database table, for data models. Give the shape this class and list its columns.
+  # (For sql_table, D2 uses fill for the header, border and rules, and stroke for the body.)
+  table: {
+    shape: sql_table
+    style: {
+      fill: "#151a21"
+      stroke: "#ffffff"
+      stroke-width: 1
+      font-size: 16
+      font-color: "#ffffff"
+      bold: false
+      shadow: false
+    }
+  }
+
+  # Grid cells, for comparisons and timelines. head for the top row and the first column,
+  # cell for the rest. Put them in a container with grid-columns set and grid-gap: 0.
+  head: {
+    shape: rectangle
+    style: {
+      fill: "#f4f3f1"
+      stroke: "#b4b8bd"
+      stroke-width: 1
+      border-radius: 0
+      font-size: 16
+      font-color: "#151a21"
+      bold: false
+      shadow: false
+      3d: false
+      multiple: false
+    }
+  }
+  cell: {
+    shape: rectangle
+    style: {
+      fill: "#ffffff"
+      stroke: "#b4b8bd"
+      stroke-width: 1
+      border-radius: 0
+      font-size: 16
+      font-color: "#151a21"
+      bold: false
+      shadow: false
+      3d: false
+      multiple: false
+    }
+  }
+
+  # ---------------------------------------------------------------- edges
+
+  # A neutral connection. Most edges are this.
+  flow: {
+    style: {
+      fill: "#ffffff"
+      stroke: "#555b64"
+      stroke-width: 1
+      border-radius: 0
+      font-size: 14
+      font-color: "#555b64"
+      bold: false
+      italic: false
+      animated: false
+    }
+    target-arrowhead.shape: triangle
+  }
+
+  # Access given explicitly. Accent, 1.5 px, an arrow, and always a label saying what was granted.
+  # (D2 takes whole pixels only, so accent and signal edges say 2 here and render.sh draws
+  # them at 1.5.)
+  grant: {
+    style: {
+      fill: "#ffffff"
+      stroke: "#0c6c68"
+      stroke-width: 2
+      border-radius: 0
+      font-size: 14
+      font-color: "#0c6c68"
+      bold: false
+      italic: false
+      animated: false
+    }
+    target-arrowhead.shape: triangle
+  }
+
+  # Access refused. Signal colour, 1.5 px, dashed, and it ends in a cross instead of an arrow:
+  # it stops. Always label it ("not granted", "no internet"). (The bar-shaped arrowheads,
+  # cf-one and cf-one-required, are crow's-foot notation and would read as cardinality.)
+  deny: {
+    style: {
+      fill: "#ffffff"
+      stroke: "#bb4717"
+      stroke-width: 2
+      stroke-dash: 3
+      border-radius: 0
+      font-size: 14
+      font-color: "#bb4717"
+      bold: false
+      italic: false
+      animated: false
+    }
+    target-arrowhead.shape: cross
+  }
+
+  # The one path that matters in a diagram that is not about access. Use it once.
+  # For an edge only. (Edge classes set fill, which D2 draws behind the label so a border
+  # passing under it never runs through the text; on a shape it would fill the shape.)
+  emphasis: {
+    style: {
+      fill: "#ffffff"
+      stroke: "#0c6c68"
+      stroke-width: 2
+      border-radius: 0
+      font-size: 14
+      font-color: "#0c6c68"
+      bold: false
+      italic: false
+    }
+  }
+}

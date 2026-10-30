@@ -1,0 +1,17 @@
+# Model providers named in "You choose the models" (SHOW_MODELS). Each is supported by Cloudflare
+# AI Gateway (developers.cloudflare.com/ai-gateway/usage/providers/, checked 28 October 2026).
+- id: openrouter
+  order: 1
+  provider: OpenRouter
+- id: baseten
+  order: 2
+  provider: Baseten
+- id: anthropic
+  order: 3
+  provider: Anthropic
+- id: openai
+  order: 4
+  provider: OpenAI
+- id: gemini
+  order: 5
+  provider: Gemini

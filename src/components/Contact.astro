@@ -1,0 +1,56 @@
+---
+import Section from './Section.astro';
+import { contact } from '../content/copy';
+import { site } from '../site.config';
+
+// The form needs no server: with JavaScript it writes an email for the visitor's own email app to send
+// (scripts/interest.ts); without it, it's a mailto: form, which browsers hand to the email app.
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent(contact.heading)}`;
+const f = contact.fields;
+---
+
+<Section id="contact" question={contact.question} heading={contact.heading}>
+  <p class="measure">{contact.body}</p>
+  <form id="interest" class="form" action={mailto} method="post" enctype="text/plain" data-interest-form data-email={site.email}>
+    <div class="form__field">
+      <label for="interest-name">{f.name}</label>
+      <input id="interest-name" name="name" type="text" autocomplete="name" required spellcheck="false" />
+    </div>
+    <div class="form__field">
+      <label for="interest-email">{f.email}</label>
+      <input id="interest-email" name="email" type="email" autocomplete="email" required spellcheck="false" />
+    </div>
+    <div class="form__field">
+      <label for="interest-organisation">{f.organisation} <span class="form__optional">{contact.optional}</span></label>
+      <input id="interest-organisation" name="organisation" type="text" autocomplete="organization" />
+    </div>
+    <fieldset class="form__field">
+      <legend>{contact.choice}</legend>
+      <div class="form__radios">
+        {
+          contact.choices.map((c, i) => (
+            <div class="form__radio">
+              <input id={`interest-${c.value}`} type="radio" name="interest" value={c.label} checked={i === 0} />
+              <label for={`interest-${c.value}`}>{c.label}</label>
+            </div>
+          ))
+        }
+      </div>
+    </fieldset>
+    <div class="form__field">
+      <label for="interest-build">{f.build} <span class="form__optional">{contact.optional}</span></label>
+      <textarea id="interest-build" name="build" rows="4"></textarea>
+    </div>
+    <p class="form__hint" id="interest-hint">{contact.hint}</p>
+    <button class="button" type="submit" aria-describedby="interest-hint">{contact.submit}</button>
+  </form>
+  <p class="form__status" role="status" data-interest-status data-sent={contact.sent}></p>
+  <p class="contact__or">{contact.or}</p>
+  <p class="contact__email"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+</Section>
+
+<script>
+  import { initInterest } from '../scripts/interest';
+
+  initInterest();
+</script>

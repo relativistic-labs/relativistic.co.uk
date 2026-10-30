@@ -1,0 +1,4 @@
+# Search engines and AI assistants answering questions may read this site.
+# Whether to allow AI training is still to be decided (technical plan, decision 4).
+User-agent: *
+Allow: /

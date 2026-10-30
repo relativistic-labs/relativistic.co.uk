@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 16" width="96" height="16" role="img" aria-label="Flow"><style>
+.line{fill:none;stroke:var(--color-text, #151a21);stroke-width:1}
+.box{fill:var(--color-bg, #f9f6f2);stroke:var(--color-text, #151a21);stroke-width:1}
+.raised{fill:var(--color-raised, #efece7);stroke:var(--color-text, #151a21);stroke-width:1}
+.solid{fill:var(--color-text, #151a21);stroke:var(--color-text, #151a21);stroke-width:1}
+.ext{fill:none;stroke:var(--color-muted, #555b64);stroke-width:1;stroke-dasharray:4 4}
+.note{fill:var(--color-bg, #f9f6f2);stroke:var(--color-muted, #555b64);stroke-width:1}
+.flow{fill:none;stroke:var(--color-muted, #555b64);stroke-width:1}
+.flow-head{fill:var(--color-muted, #555b64)}
+.grant{fill:none;stroke:var(--color-accent, #2858cd);stroke-width:1.5}
+.grant-head{fill:var(--color-accent, #2858cd)}
+.deny{fill:none;stroke:var(--color-signal, #bb4717);stroke-width:1.5;stroke-dasharray:4 3}
+.deny-x{fill:none;stroke:var(--color-signal, #bb4717);stroke-width:1.5}
+</style><path class="flow" d="M2 8.5H84"/><path class="flow-head" d="M84 3.5L94 8.5L84 13.5Z"/></svg>

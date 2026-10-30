@@ -1,0 +1,16 @@
+---
+// A section after the opening: a rule above, the reader's question as a caption, then the heading.
+interface Props {
+  id: string;
+  question: string;
+  heading: string;
+  headingClass?: string;
+}
+const { id, question, heading, headingClass } = Astro.props;
+---
+
+<section id={id} class="section wrap" aria-labelledby={`${id}-heading`}>
+  <p class="question">{question}</p>
+  <h2 id={`${id}-heading`} class={headingClass}>{heading}</h2>
+  <slot />
+</section>

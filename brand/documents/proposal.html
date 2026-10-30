@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en-GB" data-theme="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Proposal title] · Relativistic</title>
+<!--
+  Relativistic proposal template. A4, paper theme. Edit the text, then print to PDF from
+  Chrome (Save as PDF, "Background graphics" on, margins "Default"). The running header,
+  footer and page numbers come from the @page rules below: change the header text there.
+  Text in [square brackets] is a placeholder. Company details stay as placeholders until
+  the company is incorporated; UK trading disclosure rules require them on business documents.
+-->
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../tokens.css">
+<style>
+  @page {
+    size: A4;
+    margin: 24mm 20mm 26mm 24mm;
+    background: #f9f6f2;   /* the whole sheet in paper; untick "Background graphics" to print on plain white */
+    @top-left { content: "Relativistic · [Proposal title]"; font: 9pt/1.2 "Commit Mono", monospace; letter-spacing: 0.06em; text-transform: uppercase; color: #555b64; vertical-align: bottom; padding-bottom: 6mm; }
+    @top-right { content: counter(page, decimal-leading-zero) " / " counter(pages, decimal-leading-zero); font: 9pt/1.2 "Commit Mono", monospace; color: #555b64; vertical-align: bottom; padding-bottom: 6mm; }
+    @bottom-left { content: "[Relativistic Ltd] · Registered in England and Wales, no. [00000000] · Registered office: [address] · relativistic.co.uk"; font: 9pt/1.4 "Instrument Sans", sans-serif; color: #555b64; vertical-align: top; padding-top: 6mm; }
+  }
+  @page :first { @top-left { content: none; } @top-right { content: none; } }
+
+  * { box-sizing: border-box; }
+  html { background: var(--paper-raised); }
+  body { margin: 0; color: var(--color-text); font-family: var(--font-sans); font-size: 10.5pt; line-height: 1.55; font-kerning: normal; }
+  .doc { max-width: 210mm; margin: 0 auto; background: var(--paper-bg); padding: 24mm 20mm 26mm 24mm; }
+  .label { font-family: var(--font-mono); font-size: 9pt; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); }
+  .label b { color: var(--color-accent); font-weight: 400; }
+  h1, h2, h3 { font-weight: 600; letter-spacing: var(--tracking-heading); line-height: 1.2; break-after: avoid; }
+  h1 { font-size: 34pt; font-stretch: var(--stretch-display); letter-spacing: var(--tracking-display); line-height: 1.06; margin: 0 0 8mm; max-width: 15ch; text-wrap: balance; }
+  h2 { font-size: 17pt; margin: 0 0 4mm; }
+  h3 { font-size: 12pt; margin: 6mm 0 2mm; }
+  p, ul, ol { margin: 0 0 3.5mm; max-width: 68ch; }
+  ul, ol { padding-left: 5mm; }
+  a { color: var(--color-accent); }
+  strong { font-weight: 600; }
+
+  /* Cover */
+  .cover { min-height: 247mm; display: grid; grid-template-rows: auto 1fr auto; break-after: page; position: relative; }
+  .cover .lockup { height: 9mm; width: auto; display: block; }
+  .cover .main { align-self: center; }
+  .cover .field { position: absolute; right: -14mm; bottom: 38mm; width: 92mm; height: 92mm; }
+  .meta { display: grid; grid-template-columns: 34mm 1fr; gap: 2mm 6mm; border-top: var(--rule); padding-top: 5mm; font-size: 10pt; }
+  .meta dt { font-family: var(--font-mono); font-size: 9pt; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); padding-top: 0.6mm; }
+  .meta dd { margin: 0; }
+
+  /* Sections: a hairline with a mono label sitting on it, like an axis */
+  section { margin-top: 12mm; }
+  section:first-of-type { margin-top: 0; }
+  .axis { display: flex; align-items: center; gap: 4mm; margin-bottom: 4mm; }
+  .axis::after { content: ""; flex: 1; border-top: var(--rule); }
+  .lede { font-size: 13pt; line-height: 1.45; color: var(--color-text); max-width: 56ch; }
+
+  table { width: 100%; border-collapse: collapse; margin: 4mm 0 6mm; font-size: 10pt; break-inside: avoid; }
+  th { text-align: left; font-family: var(--font-mono); font-size: 9pt; font-weight: 400; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); padding: 0 4mm 2mm 0; border-bottom: 1px solid var(--color-text); }
+  td { padding: 2.5mm 4mm 2.5mm 0; border-bottom: var(--rule); vertical-align: top; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; padding-right: 0; }
+  tfoot td { border-bottom: 0; border-top: 1px solid var(--color-text); font-weight: 600; }
+
+  figure { margin: 6mm 0; break-inside: avoid; }
+  figure img { width: 100%; height: auto; display: block; }
+  figcaption { margin-top: 2mm; font-size: 9pt; color: var(--color-muted); font-family: var(--font-mono); }
+
+  .note { background: var(--paper-raised); padding: 4mm 5mm; border-top: 1.5px solid var(--color-accent); margin: 5mm 0; break-inside: avoid; }
+  .sign { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; margin-top: 10mm; break-inside: avoid; }
+  .sign div { border-top: 1px solid var(--color-text); padding-top: 2mm; font-size: 10pt; }
+  .sign span { display: block; color: var(--color-muted); font-size: 9pt; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: var(--tracking-label); }
+  .screen-footer { margin-top: 14mm; padding-top: 3mm; border-top: var(--rule); font-size: 9pt; color: var(--color-muted); }
+
+  @media screen { .doc { margin: 10mm auto; box-shadow: 0 0 0 1px var(--paper-rule); } }
+  @media print {
+    html { background: none; }
+    .doc { max-width: none; padding: 0; margin: 0; }
+    .screen-footer { display: none; }
+    .cover { min-height: 245mm; }
+    * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<article class="doc">
+
+  <div class="cover">
+    <img class="lockup" src="../logo/lockup-on-paper.svg" alt="Relativistic">
+    <div class="main">
+      <div class="label"><b>Proposal</b> / [Client name]</div>
+      <h1 style="margin-top:6mm">[Proposal title: what you will have at the end]</h1>
+      <dl class="meta">
+        <dt>Prepared for</dt><dd>[Name, role, organisation]</dd>
+        <dt>Prepared by</dt><dd>[Founder name], Relativistic</dd>
+        <dt>Date</dt><dd>[1 November 2026]</dd>
+        <dt>Reference</dt><dd>[REL-2026-001] · version [1.0]</dd>
+      </dl>
+    </div>
+    <span></span>
+    <img class="field" src="../field/stills/002-granted-paper@2x.png" alt="">
+  </div>
+
+  <section>
+    <div class="axis"><span class="label"><b>01</b> / Summary</span></div>
+    <h2>[One sentence on what changes for the client]</h2>
+    <p class="lede">[Two or three sentences: the situation, what we propose, and what it will be like when it is done. Write for the person who signs, not the person who reads every page.]</p>
+    <p>[Body text. Instrument Sans at 10.5 pt with a line height of 1.55. Keep paragraphs short and specific: real names, real systems, real numbers.]</p>
+  </section>
+
+  <section>
+    <div class="axis"><span class="label"><b>02</b> / Scope</span></div>
+    <h2>What we will deliver</h2>
+    <h3>Start: a first deployment</h3>
+    <p>Cloudflare OS in your own account, connected to your sign-in and the systems that matter, with the first agents and apps your teams asked for.</p>
+    <ul>
+      <li>[Deliverable, with what "done" means]</li>
+      <li>[Deliverable, with what "done" means]</li>
+      <li>[Deliverable, with what "done" means]</li>
+    </ul>
+    <figure>
+      <img src="../diagrams/example-paper.svg" alt="Inside the Acme frame, an agent acts for Priya. It has a grant to read the CRM. Its request to payroll was not granted and stops with a cross.">
+      <figcaption>Figure 1. An agent reaches only what it was granted.</figcaption>
+    </figure>
+    <div class="note"><strong>[Assumption or dependency.]</strong> [What we need from you, and by when.]</div>
+  </section>
+
+  <section>
+    <div class="axis"><span class="label"><b>03</b> / Fees</span></div>
+    <h2>Fees and timing</h2>
+    <table>
+      <thead><tr><th>Stage</th><th>What it includes</th><th class="num">Weeks</th><th class="num">Fee (£, ex VAT)</th></tr></thead>
+      <tbody>
+        <tr><td>[Start]</td><td>[Fixed-scope first deployment]</td><td class="num">[4]</td><td class="num">[00,000]</td></tr>
+        <tr><td>[Run]</td><td>[Support across the stack, per month]</td><td class="num">[ongoing]</td><td class="num">[0,000]</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="3">[Total for the first stage]</td><td class="num">[00,000]</td></tr></tfoot>
+    </table>
+  </section>
+
+  <section>
+    <div class="axis"><span class="label"><b>04</b> / Agreement</span></div>
+    <h2>Next steps</h2>
+    <ol>
+      <li>[Step, owner, date]</li>
+      <li>[Step, owner, date]</li>
+    </ol>
+    <div class="sign">
+      <div><span>For [client]</span>[Name, role, date]</div>
+      <div><span>For Relativistic</span>[Name, role, date]</div>
+    </div>
+  </section>
+
+  <p class="screen-footer">[Relativistic Ltd] · Registered in England and Wales, no. [00000000] · Registered office: [address] · relativistic.co.uk</p>
+</article>
+</body>
+</html>

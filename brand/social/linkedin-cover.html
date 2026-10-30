@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-GB" data-theme="ink">
+<head>
+<meta charset="utf-8">
+<title>LinkedIn cover source (1128 × 191) · Relativistic brand</title>
+<!--
+  Source for brand/social/linkedin-cover.png, rendered at 1128 × 191 (and 2256 × 382 for sharp screens).
+  LinkedIn places the company logo over the bottom-left of the cover on desktop, and crops the
+  sides on mobile, so the four formations sit right of centre and nothing important touches the edges.
+-->
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1128px; height: 191px; overflow: hidden; }
+  body { background: var(--ink-bg); color: var(--ink-text); font-family: var(--font-mono); position: relative; }
+  .axis { position: absolute; left: 0; right: 0; top: 150px; border-top: 1px solid var(--ink-rule); z-index: 1; }
+  .row { position: absolute; left: 372px; right: 44px; top: 0; bottom: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .cell { position: relative; }
+  .cell canvas { position: absolute; left: 0; top: 0; width: 100%; height: 191px; }
+  .tick { z-index: 1; position: absolute; left: 50%; top: 146px; height: 9px; border-left: 1px solid var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="axis"></div>
+<div class="row" id="row"></div>
+<script src="../field/field.js"></script>
+<script>
+  var row = document.getElementById('row');
+  RelativisticField.FORMATIONS.forEach(function (f) {
+    var cell = document.createElement('div');
+    cell.className = 'cell' + (f.id === 'granted' ? ' on' : '');
+    cell.innerHTML = '<canvas aria-hidden="true"></canvas><i class="tick"></i>';
+    row.appendChild(cell);
+    var field = RelativisticField.create(cell.querySelector('canvas'), { theme: 'ink', interactive: false, count: 1100, sizeScale: 0.6, scale: { unbound: 0.19, granted: 0.33, shared: 0.315, running: 0.315 }[f.id], originY: f.id === 'granted' ? 0.34 : 0.4 });
+    field.still(f.id, 6);
+  });
+  document.fonts.ready.then(function () { document.body.dataset.ready = 'true'; });
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+# dashboard-tall: the phone layout of dashboard.d2, under 400 px wide at 1x. Same story, top to
+# bottom: the director asks, the agent reads what it was granted and builds the dashboard, the
+# sales team can open it and nobody else can. An invisible edge (opacity 0) gives the dashboard
+# its own row.
+#
+# Engine: ELK, top to bottom.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: down
+
+director: Sales director {class: person}
+agent: Agent {class: agent}
+records: "Customer\nrecords and\ninvoices" {class: resource}
+payroll: Payroll {class: resource}
+dashboard: Dashboard {class: service}
+team: Sales team {class: person}
+others: Anyone else {class: person}
+
+director -> agent: asks {class: flow}
+agent -> records: read {class: grant}
+agent -> payroll: "not\ngranted" {class: deny}
+payroll -> dashboard {style.opacity: 0}
+agent -> dashboard: builds {class: flow}
+dashboard -> team: opens it {class: flow}
+dashboard -> others: "can't see\nthe records" {class: deny}

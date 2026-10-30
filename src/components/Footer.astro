@@ -1,0 +1,26 @@
+---
+import { site } from '../site.config';
+
+const year = new Date().getFullYear();
+const c = site.company;
+---
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <p class="site-footer__company">
+      {
+        c ? (
+          <>
+            {c.name}. Registered in {c.registeredIn}, company number {c.number}. Registered office: {c.office}.
+          </>
+        ) : (
+          <>© {year} {site.name}</>
+        )
+      }
+    </p>
+    <ul class="site-footer__links">
+      <li><a href="/privacy/">Privacy</a></li>
+      <li><a href={site.github} rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+</footer>

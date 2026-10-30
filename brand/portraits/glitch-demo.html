@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portrait shift demo · Relativistic brand</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); font-size: var(--text-body); line-height: var(--leading-body); }
+  main { max-width: var(--page-max); margin: 0 auto; padding: var(--space-8) var(--page-margin) var(--space-9); }
+  .label { font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); }
+  .label b { color: var(--color-accent); font-weight: 400; }
+  h1 { font-size: var(--text-step-4); font-weight: 600; font-stretch: var(--stretch-display); letter-spacing: var(--tracking-display); line-height: 1.1; margin: var(--space-3) 0 var(--space-4); }
+  h2 { font-size: var(--text-step-2); font-weight: 600; letter-spacing: var(--tracking-heading); margin: 0 0 var(--space-4); }
+  p { max-width: var(--measure); margin: 0 0 var(--space-4); }
+  .muted { color: var(--color-muted); }
+  section { margin-top: var(--space-8); padding-top: var(--space-5); border-top: var(--rule); }
+
+  /* Founder card: equal cards, same crop (4:5), same elements in the same places. */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-5); }
+  .portrait { margin: 0; }
+  .portrait-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--color-raised); border-radius: var(--radius-0); }
+  .portrait-frame img, .portrait-frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .portrait-state { position: absolute; left: var(--space-2); bottom: var(--space-2); padding: 2px 6px; background: var(--ink-bg); color: var(--ink-text); font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .portrait.is-rendered .portrait-state { color: var(--ink-accent); }
+  .portrait figcaption { margin-top: var(--space-3); }
+  .portrait .name { font-weight: 600; letter-spacing: var(--tracking-heading); }
+  .portrait .role { color: var(--color-muted); font-size: var(--text-small); }
+
+  .frames { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-2); }
+  .frames .portrait-state { font-size: 12px; }
+  button { font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; min-height: var(--target-min); padding: 0 var(--space-4); color: var(--color-text); background: transparent; border: 1px solid var(--color-rule); border-radius: var(--radius-1); cursor: pointer; touch-action: manipulation; transition: border-color var(--duration-fast) var(--ease-out); }
+  button:hover { border-color: var(--color-muted); }
+  button:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+  ul.rules { padding-left: 1.2em; max-width: var(--measure); }
+  ul.rules li { margin-bottom: var(--space-2); }
+</style>
+</head>
+<body>
+<main>
+  <div class="label"><b>Brand</b> / Portraits</div>
+  <h1>The portrait shift</h1>
+  <p>Each founder card first shows an AI edit of the founder looking sharp and businesslike, labelled <span class="label">Rendered / AI</span>. Once, as the card comes into view, it shifts to the real photograph, labelled <span class="label">As observed</span>. The real photograph is the point.</p>
+  <p class="muted">The images here are placeholders: two styles of the same silhouette. No real or AI-generated faces.</p>
+
+  <section aria-labelledby="demo">
+    <h2 id="demo">Demo</h2>
+    <div class="cards" id="cards">
+      <figure class="portrait" data-rendered="placeholder-rendered.svg">
+        <div class="portrait-frame">
+          <img src="placeholder-observed.svg" alt="Placeholder portrait of a founder" width="480" height="600">
+          <span class="portrait-state" aria-hidden="true">As observed</span>
+        </div>
+        <figcaption><div class="name">[Founder name]</div><div class="role">[Role, six words or fewer]</div></figcaption>
+      </figure>
+      <figure class="portrait" data-rendered="placeholder-rendered.svg">
+        <div class="portrait-frame">
+          <img src="placeholder-observed.svg" alt="Placeholder portrait of a founder" width="480" height="600">
+          <span class="portrait-state" aria-hidden="true">As observed</span>
+        </div>
+        <figcaption><div class="name">[Founder name]</div><div class="role">[Role, six words or fewer]</div></figcaption>
+      </figure>
+      <figure class="portrait" data-rendered="placeholder-rendered.svg">
+        <div class="portrait-frame">
+          <img src="placeholder-observed.svg" alt="Placeholder portrait of a founder" width="480" height="600">
+          <span class="portrait-state" aria-hidden="true">As observed</span>
+        </div>
+        <figcaption><div class="name">[Founder name]</div><div class="role">[Role, six words or fewer]</div></figcaption>
+      </figure>
+    </div>
+    <p style="margin-top:var(--space-5)"><button type="button" id="replay">Play again</button> <span class="muted">Review only. On the site it plays once per card and never repeats.</span></p>
+  </section>
+
+  <section aria-labelledby="frames">
+    <h2 id="frames">Frame by frame</h2>
+    <p class="muted">Six moments of the 600 ms shift: bands cut on the 45° grid slide along their own diagonal, splitting into blueshift (accent) ahead and redshift (signal) behind, and swap from the rendered image to the observed one at staggered moments.</p>
+    <div class="frames">
+      <figure class="portrait" data-rendered="placeholder-rendered.svg" data-frame="0"><div class="portrait-frame"><img src="placeholder-observed.svg" alt="" width="480" height="600"><span class="portrait-state" aria-hidden="true">0 ms</span></div></figure>
+      <figure class="portrait" data-rendered="placeholder-rendered.svg" data-frame="0.2"><div class="portrait-frame"><img src="placeholder-observed.svg" alt="" width="480" height="600"><span class="portrait-state" aria-hidden="true"></span></div></figure>
+      <figure class="portrait" data-rendered="placeholder-rendered.svg" data-frame="0.38"><div class="portrait-frame"><img src="placeholder-observed.svg" alt="" width="480" height="600"><span class="portrait-state" aria-hidden="true"></span></div></figure>
+      <figure class="portrait" data-rendered="placeholder-rendered.svg" data-frame="0.52"><div class="portrait-frame"><img src="placeholder-observed.svg" alt="" width="480" height="600"><span class="portrait-state" aria-hidden="true"></span></div></figure>
+      <figure class="portrait" data-rendered="placeholder-rendered.svg" data-frame="0.7"><div class="portrait-frame"><img src="placeholder-observed.svg" alt="" width="480" height="600"><span class="portrait-state" aria-hidden="true"></span></div></figure>
+      <figure class="portrait" data-rendered="placeholder-rendered.svg" data-frame="1"><div class="portrait-frame"><img src="placeholder-observed.svg" alt="" width="480" height="600"><span class="portrait-state" aria-hidden="true"></span></div></figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="rules">
+    <h2 id="rules">Rules</h2>
+    <ul class="rules">
+      <li><strong>The real photo is the default.</strong> It is the only image in the HTML. Social cards, LinkedIn, press, no-JS readers, screen readers and anyone with reduced motion get the real photo, still. The rendered version is added by script, only when motion is allowed.</li>
+      <li><strong>Once per card, never looping.</strong> About 600 ms (500 to 700), when the card is mostly in view. No replay on hover or scroll.</li>
+      <li><strong>No flashing.</strong> Each band moves once, so there is no flicker, and the accent and signal copies are added so overall brightness holds. Well under three flashes a second, and never a full-frame luminance change.</li>
+      <li><strong>A Doppler shift, not a VHS glitch.</strong> Bands on the 45° grid, a split in accent (blueshift) and signal (redshift). No scanlines, no RGB noise, no tearing.</li>
+      <li><strong>The label tells the truth.</strong> It reads <span class="label">Rendered / AI</span> while the edit is on screen and <span class="label">As observed</span> after.</li>
+      <li><strong>The two images align pixel for pixel.</strong> The AI version is an edit of the real photo: same pose, crop, background, light and eye line. See <a href="../photography.md">photography.md</a>.</li>
+    </ul>
+  </section>
+</main>
+<script src="glitch.js"></script>
+<script>
+  RelativisticGlitch.init(document);
+  document.getElementById('replay').addEventListener('click', function () {
+    document.querySelectorAll('#cards .portrait').forEach(function (card) {
+      if (!card._relGlitch) return;
+      card._relGlitch.reset();
+      setTimeout(card._relGlitch.play, 400);
+    });
+  });
+  document.body.dataset.ready = 'true';
+</script>
+</body>
+</html>

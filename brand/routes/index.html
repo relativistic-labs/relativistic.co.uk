@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Symbol routes · Relativistic brand</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--font-sans); font-size: var(--text-body); line-height: var(--leading-body); background: var(--paper-bg); color: var(--paper-text); color-scheme: light; }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 48px 48px 96px; }
+  .label { font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--color-muted); }
+  .rule-label { display: flex; align-items: center; gap: 16px; margin: 64px 0 24px; }
+  .rule-label::after { content: ""; flex: 1; border-top: var(--rule); }
+  h1 { font-weight: 600; font-stretch: var(--stretch-display); font-size: 48px; line-height: 1.1; letter-spacing: var(--tracking-display); margin: 8px 0 12px; }
+  h2 { font-weight: 600; font-size: 28px; letter-spacing: var(--tracking-heading); margin: 0 0 4px; line-height: 1.2; }
+  p { margin: 0 0 12px; max-width: var(--measure); }
+  .lede { color: var(--color-muted); font-size: 18px; }
+
+  .route { display: grid; grid-template-columns: 300px 1fr; gap: 32px; padding: 32px 0; border-top: var(--rule); }
+  .route.chosen { }
+  .verdict { list-style: none; margin: 16px 0 0; padding: 0; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; }
+  .verdict li { display: grid; grid-template-columns: 24px 1fr; }
+  .verdict .pass::before { content: "+"; }
+  .verdict .fail::before { content: "×"; color: var(--paper-signal); font-weight: 700; }
+  .verdict .warn::before { content: "~"; }
+  .verdict li::before { font-weight: 700; }
+  .badge { display: inline-block; font-family: var(--font-mono); font-size: 12px; letter-spacing: var(--tracking-label); text-transform: uppercase; padding: 2px 8px; border: 1px solid currentColor; border-radius: var(--radius-1); margin-left: 8px; vertical-align: 4px; }
+  .badge.yes { color: var(--paper-accent); }
+
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .tile { padding: 24px; display: flex; align-items: flex-end; gap: 28px; border-radius: var(--radius-1); min-height: 210px; position: relative; }
+  .tile .label { position: absolute; top: 12px; left: 16px; }
+  .tile.ink { background: var(--ink-bg); color: var(--ink-text); }
+  .tile.ink .label { color: var(--ink-muted); }
+  .tile.paper { background: var(--paper-raised); color: var(--paper-text); }
+  .tile svg { display: block; }
+  .size { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .size span { font-family: var(--font-mono); font-size: 12px; opacity: .8; }
+  canvas.px { width: 96px; height: 96px; image-rendering: pixelated; display: block; }
+
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .tabbar { padding: 8px 8px 0; border-radius: var(--radius-1); }
+  .tabbar.light { background: #dfe3e8; }
+  .tabbar.dark { background: #202124; }
+  .tab { display: inline-flex; align-items: center; gap: 8px; width: 220px; height: 34px; padding: 0 12px; border-radius: 8px 8px 0 0; font: 12px/1 system-ui, sans-serif; }
+  .tabbar.light .tab { background: #fff; color: #1f1f1f; }
+  .tabbar.dark .tab { background: #35363a; color: #e8eaed; }
+  .tab.other { background: transparent !important; opacity: .75; }
+  .tab img { width: 16px; height: 16px; display: block; }
+
+  .decision { margin-top: 48px; padding: 32px; background: var(--paper-raised); border-top: 2px solid var(--paper-accent); }
+  .decision h2 { margin-bottom: 12px; }
+  .decision ol { margin: 0; padding-left: 20px; max-width: 80ch; }
+  .decision li { margin-bottom: 6px; }
+
+  /* Sample hero */
+  .hero { position: relative; display: grid; grid-template-columns: 7fr 5fr; min-height: 760px; padding: 0 64px; border-radius: var(--radius-1); overflow: hidden; background: var(--color-bg); color: var(--color-text); margin-top: 16px; }
+  .hero header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; height: 96px; border-bottom: var(--rule); }
+  .lockup { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 26px; letter-spacing: -0.03em; font-stretch: 100%; }
+  .lockup svg { width: 30px; height: 30px; }
+  .cta { display: inline-flex; align-items: center; min-height: var(--target-min); padding: 0 20px; background: var(--color-accent); color: var(--color-bg); font-weight: 600; text-decoration: none; border-radius: var(--radius-1); }
+  .ghost { color: var(--color-text); text-decoration: underline; text-decoration-color: var(--color-accent); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .hero-copy { align-self: center; padding: 48px 0 96px; }
+  .hero .hl { font-weight: 600; font-size: 64px; line-height: var(--leading-tight); letter-spacing: var(--tracking-display); font-stretch: var(--stretch-display); margin: 24px 0 28px; max-width: 19ch; text-wrap: balance; }
+  .hero .support { font-size: 20px; color: var(--color-muted); max-width: 46ch; margin-bottom: 36px; }
+  .hero .actions { display: flex; gap: 28px; align-items: center; }
+  .hero .eyebrow { color: var(--color-muted); }
+  .hero .eyebrow b { color: var(--color-accent); font-weight: 400; }
+  .hero .field { position: relative; }
+  .hero canvas.fld { position: absolute; inset: 0 -64px 0 -40px; width: calc(100% + 104px); height: 100%; }
+  .scene { position: absolute; right: 64px; bottom: 28px; }
+  .scene b { color: var(--color-accent); font-weight: 400; }
+  .hero footer { position: absolute; left: 64px; right: 64px; bottom: 0; height: 76px; border-top: var(--rule); display: flex; align-items: center; }
+
+  .palette { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; margin-top: 16px; border: var(--rule); }
+  .sw { padding: 12px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; font-family: var(--font-mono); font-size: 12px; }
+  .specimen { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 24px; }
+  .specimen .big { font-size: 64px; font-weight: 600; letter-spacing: -0.025em; line-height: 1; font-stretch: 92%; }
+  .specimen .mono { font-family: var(--font-mono); font-size: 15px; line-height: 1.7; }
+  @media (max-width: 900px) {
+    .wrap { padding: 24px 20px 64px; }
+    .route, .tiles, .tabs, .specimen { grid-template-columns: minmax(0, 1fr); }
+    .tile { flex-wrap: wrap; }
+    .hero { grid-template-columns: minmax(0, 1fr); padding: 0 20px; }
+    .hero .hl { font-size: 40px; }
+    .hero .field { min-height: 320px; }
+    .hero canvas.fld { inset: 0; width: 100%; }
+    .palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tab { width: auto; flex: 1 1 0; min-width: 0; }
+    .tabbar { display: flex; overflow: hidden; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="label">Relativistic brand · board 01 · 28 October 2026</div>
+  <h1>Symbol routes</h1>
+  <p class="lede">Three routes from the design brief, drawn on a 16-unit, 45° grid and shown at 16, 32 and 128 px on ink and paper. The pixel view is the 16 px render enlarged six times. Below the routes: the palette and type applied to a sample hero.</p>
+
+  <div class="rule-label"><span class="label">01 / Routes</span></div>
+  <div id="routes"></div>
+
+  <section class="decision" aria-labelledby="decision">
+    <h2 id="decision">Decision: route A, the worldline r</h2>
+    <ol>
+      <li><strong>It passes every test in the brief.</strong> Built only from verticals, horizontals and one 45° stroke; every vertex sits on the 16-unit grid, so the stem and the notch are pixel-sharp at 16 and 32 px. One colour, no outline.</li>
+      <li><strong>It survives 16 px.</strong> The 3 px notch between the stem and the arm stays open in the tab, so it still reads as an r, in both themes.</li>
+      <li><strong>It carries the idea without explaining it.</strong> The stem is a worldline (time running upward); the arm is a light ray leaving it at exactly 45°. The arm's flat cut ends in a point, as the brief allows.</li>
+      <li><strong>It evolves what exists.</strong> The holding page's r and 45° arrow become one shape, so the change looks deliberate rather than a restart.</li>
+      <li><strong>B fails silhouette.</strong> A 90° cone is twice as wide as it is tall; at 16 px it is a dropdown chevron, which in a browser tab reads as interface, not a company.</li>
+      <li><strong>C fails at small sizes.</strong> The frame takes most of the pixels and the diagonal reads as a strike-through or an edit icon. "Contained" comes across as "forbidden".</li>
+    </ol>
+  </section>
+
+  <div class="rule-label"><span class="label">02 / Sample hero, ink</span></div>
+  <section class="hero theme-ink" aria-label="Sample hero, ink theme">
+    <header>
+      <span class="lockup"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M3 2H6V5L9 2H13L6 9V14H3Z"/></svg>relativistic</span>
+      <a class="ghost" href="#decision">Talk to us</a>
+    </header>
+    <div class="hero-copy">
+      <div class="label eyebrow"><b>01</b> / Cloudflare OS, set up for your organisation</div>
+      <p class="hl">Agents can build what your people need. We give them somewhere safe to run&nbsp;it.</p>
+      <p class="support">We're five senior engineers and consultants who have put AI to work inside some of the UK's largest organisations. Now we help organisations give their people agents that can do real work on real systems.</p>
+      <div class="actions"><a class="cta" href="#decision">Talk to us</a><a class="ghost" href="#decision">How we work</a></div>
+    </div>
+    <div class="field"><canvas class="fld" data-theme="ink" aria-hidden="true"></canvas></div>
+    <div class="scene label" aria-hidden="true"><b>002</b> / GRANTED</div>
+    <footer><span class="label">02 / Story</span></footer>
+  </section>
+
+  <div class="rule-label"><span class="label">03 / Sample hero, paper</span></div>
+  <section class="hero theme-paper" aria-label="Sample hero, paper theme" style="min-height:680px">
+    <header>
+      <span class="lockup"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M3 2H6V5L9 2H13L6 9V14H3Z"/></svg>relativistic</span>
+      <a class="ghost" href="#decision">Talk to us</a>
+    </header>
+    <div class="hero-copy">
+      <div class="label eyebrow"><b>01</b> / Cloudflare OS, set up for your organisation</div>
+      <p class="hl">Agents can build what your people need. We give them somewhere safe to run&nbsp;it.</p>
+      <div class="actions"><a class="cta" href="#decision">Talk to us</a><a class="ghost" href="#decision">How we work</a></div>
+    </div>
+    <div class="field"><canvas class="fld" data-theme="paper" aria-hidden="true"></canvas></div>
+    <div class="scene label" aria-hidden="true"><b>002</b> / GRANTED</div>
+  </section>
+
+  <div class="rule-label"><span class="label">04 / Palette and type</span></div>
+  <div class="palette" id="palette"></div>
+  <div class="specimen">
+    <div>
+      <div class="label">Instrument Sans · 600 · wdth 92 · −0.025 em</div>
+      <div class="big">Somewhere safe to run it.</div>
+      <p style="margin-top:16px">Instrument Sans 400 at 18 px for body text. Every agent starts with access to nothing and must be granted each resource it uses.</p>
+    </div>
+    <div>
+      <div class="label">Commit Mono · 400 · labels at 12 px, +0.06 em</div>
+      <div class="mono">001 / UNBOUND · 002 / GRANTED<br>grant: crm.read → agent/finance-assistant<br>denied: payroll.write (outside the cone)<br>0123456789 £ € → ←</div>
+    </div>
+  </div>
+</div>
+
+<script src="../field/field.js"></script>
+<script>
+  // Symbol routes, all on a 16-unit grid (viewBox 0 0 16 16).
+  var ROUTES = [
+    { id: 'A', name: 'A. Worldline r', chosen: true, d: 'M3 2H6V5L9 2H13L6 9V14H3Z',
+      text: 'A vertical stem whose shoulder is a straight 45° stroke, cut flat at the x-height so it ends in a point.',
+      verdict: [['pass', 'On the 45° grid; every vertex is a whole unit'], ['pass', 'Reads as an r at 16 px; the notch stays open'], ['pass', 'One colour, solid, no outline'], ['pass', 'Distinct silhouette in both themes'], ['pass', 'Nothing like a cloud; no orange']] },
+    { id: 'B', name: 'B. Cone', d: 'M1 4.5H5.243L8 7.257L10.757 4.5H15L8 11.5Z',
+      text: 'Two 45° strokes opening upward from a single point, the apex being the event.',
+      verdict: [['pass', 'On the 45° grid'], ['fail', 'At 16 px it is a dropdown chevron'], ['warn', 'Half the square is empty: small in a tab'], ['fail', 'Reads as a V or a tick, not as ours'], ['pass', 'Nothing like a cloud; no orange']] },
+    { id: 'C', name: 'C. Frame', d: 'M2 2H14V14H2ZM4 4V12H12V4ZM5 9.586L9.586 5H11V6.414L6.414 11H5Z',
+      text: 'A square reference frame with a 45° worldline that stays inside it.',
+      verdict: [['pass', 'On the 45° grid'], ['fail', 'At 16 px the frame swallows the line'], ['fail', 'Reads as strike-through, or an edit icon'], ['warn', '"Contained" reads as "forbidden"'], ['pass', 'Nothing like a cloud; no orange']] }
+  ];
+  var INK = { bg: '#0b0f14', fg: '#f2f0ec' }, PAPER = { bg: '#efece7', fg: '#151a21' };
+
+  function svg(d, size, fill) {
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 16 16" aria-hidden="true"><path fill="' + fill + '" fill-rule="evenodd" d="' + d + '"/></svg>';
+  }
+  function dataUrl(d, fill, bg) {
+    return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">' + (bg ? '<rect width="16" height="16" fill="' + bg + '"/>' : '') + '<path fill="' + fill + '" fill-rule="evenodd" d="' + d + '"/></svg>');
+  }
+  function pixelCanvas(d, theme) {
+    var c = document.createElement('canvas'); c.width = c.height = 16; c.className = 'px';
+    var img = new Image(); img.onload = function () { c.getContext('2d').drawImage(img, 0, 0, 16, 16); };
+    img.src = dataUrl(d, theme.fg, theme.bg);
+    return c;
+  }
+  var host = document.getElementById('routes');
+  ROUTES.forEach(function (r) {
+    var el = document.createElement('section');
+    el.className = 'route' + (r.chosen ? ' chosen' : '');
+    el.setAttribute('aria-labelledby', 'route-' + r.id);
+    el.innerHTML = '<div><h2 id="route-' + r.id + '">' + r.name + (r.chosen ? '<span class="badge yes">Chosen</span>' : '') + '</h2><p>' + r.text + '</p><ul class="verdict">' +
+      r.verdict.map(function (v) { return '<li class="' + v[0] + '"><span>' + v[1] + '</span></li>'; }).join('') + '</ul></div>' +
+      '<div><div class="tiles"></div><div class="tabs"></div></div>';
+    var tiles = el.querySelector('.tiles');
+    [['ink', INK], ['paper', PAPER]].forEach(function (pair) {
+      var t = document.createElement('div'); t.className = 'tile ' + pair[0];
+      t.innerHTML = '<span class="label">' + pair[0] + '</span>' + [16, 32, 128].map(function (s) { return '<div class="size">' + svg(r.d, s, pair[1].fg) + '<span>' + s + '</span></div>'; }).join('');
+      var px = document.createElement('div'); px.className = 'size'; px.append(pixelCanvas(r.d, pair[1])); px.insertAdjacentHTML('beforeend', '<span>16, ×6</span>'); t.append(px);
+      tiles.append(t);
+    });
+    var tabs = el.querySelector('.tabs');
+    [['light', '#151a21'], ['dark', '#f2f0ec']].forEach(function (pair) {
+      var bar = document.createElement('div'); bar.className = 'tabbar ' + pair[0];
+      bar.innerHTML = '<span class="tab"><img alt="" src="' + dataUrl(r.d, pair[1]) + '">Relativistic</span><span class="tab other">Inbox (3)</span>';
+      tabs.append(bar);
+    });
+    host.append(el);
+  });
+
+  // Palette strip with WCAG contrast against the page background of each theme.
+  var swatches = [
+    ['bg', '#0b0f14', '#f9f6f2', '', ''], ['raised', '#13181e', '#efece7', '', ''], ['rule', '#2b3138', '#d4d1ca', '1.47', '1.42'],
+    ['text', '#f2f0ec', '#151a21', '16.9', '16.3'], ['muted', '#a5abb4', '#555b64', '8.4', '6.3'], ['accent', '#42a3fd', '#2858cd', '7.2', '5.8'], ['signal', '#f28c5c', '#bb4717', '8.0', '4.9']
+  ];
+  var pal = document.getElementById('palette');
+  swatches.forEach(function (s) {
+    var col = document.createElement('div');
+    col.innerHTML = '<div class="sw" style="background:' + s[1] + ';color:' + (s[0] === 'text' || s[0] === 'muted' || s[0] === 'accent' || s[0] === 'signal' ? '#0b0f14' : '#f2f0ec') + '"><span>' + s[0] + '</span><span>' + s[1] + (s[3] ? ' · ' + s[3] + ':1' : '') + '</span></div>' +
+      '<div class="sw" style="background:' + s[2] + ';color:' + (s[0] === 'bg' || s[0] === 'raised' || s[0] === 'rule' ? '#151a21' : '#f9f6f2') + '"><span>' + s[0] + '</span><span>' + s[2] + (s[4] ? ' · ' + s[4] + ':1' : '') + '</span></div>';
+    pal.append(col);
+  });
+
+  // The sample heroes use the reference field, fixed on GRANTED.
+  document.querySelectorAll('canvas.fld').forEach(function (c) {
+    var f = RelativisticField.create(c, { theme: c.dataset.theme, interactive: false, scale: 0.36, originY: 0.56 });
+    f.still('granted', 6);
+  });
+</script>
+</body>
+</html>

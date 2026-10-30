@@ -1,0 +1,41 @@
+/*
+ * Relativistic fonts: self-hosted, no third-party requests. Licences: OFL-*.txt in this folder.
+ *
+ * Instrument Sans (variable)
+ *   instrument-sans-wdth-wght.woff2   wght 400–700, wdth 75–100   57 KB  used here: needed for --stretch-display
+ *   instrument-sans-wght.woff2        wght 400–700, normal width  30 KB  lighter alternative for the site's critical path
+ *   instrument-sans-wght-italic.woff2 wght 400–700, italic        31 KB
+ * Commit Mono (static, Latin subset)
+ *   commit-mono-400.woff2, commit-mono-700.woff2                  20 KB each
+ *
+ * Paths are relative to this file. The site loads the same files through Astro's Fonts API.
+ */
+@font-face {
+  font-family: "Instrument Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-stretch: 75% 100%;
+  font-display: swap;
+  src: url("instrument-sans-wdth-wght.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Instrument Sans";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("instrument-sans-wght-italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Commit Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("commit-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Commit Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("commit-mono-700.woff2") format("woff2");
+}

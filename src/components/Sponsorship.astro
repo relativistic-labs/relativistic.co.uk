@@ -1,0 +1,11 @@
+---
+import Section from './Section.astro';
+import { sponsorship } from '../content/copy';
+---
+
+<Section id="sponsorship" question={sponsorship.question} heading={sponsorship.heading} headingClass="measure">
+  <div class="prose">
+    <p>{sponsorship.body}</p>
+    <p><strong>{sponsorship.ask}</strong> <a href="#contact">{sponsorship.action}</a>.</p>
+  </div>
+</Section>

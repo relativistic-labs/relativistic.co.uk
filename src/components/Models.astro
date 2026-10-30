@@ -1,0 +1,14 @@
+---
+import Section from './Section.astro';
+import { models as copy } from '../content/copy';
+import { getProviders } from '../lib/content';
+
+// Off since round 3 (the choice of models is a row in the safety list); kept for later.
+// Model names are technical content, so they are set in mono. One line, so no stray spaces.
+const providers = await getProviders();
+const sep = (i: number) => (i < providers.length - 2 ? ', ' : i === providers.length - 2 ? ' or ' : '');
+---
+
+<Section id="models" question={copy.question} heading={copy.heading}>
+  <p class="measure">{copy.before} {providers.map((p, i) => [<span class="tech">{p}</span>, sep(i)])}. {copy.after}</p>
+</Section>

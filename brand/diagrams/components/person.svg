@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 28" width="24" height="28" role="img" aria-label="Person"><style>
+.line{fill:none;stroke:var(--color-text, #151a21);stroke-width:1}
+.box{fill:var(--color-bg, #f9f6f2);stroke:var(--color-text, #151a21);stroke-width:1}
+.raised{fill:var(--color-raised, #efece7);stroke:var(--color-text, #151a21);stroke-width:1}
+.solid{fill:var(--color-text, #151a21);stroke:var(--color-text, #151a21);stroke-width:1}
+.ext{fill:none;stroke:var(--color-muted, #555b64);stroke-width:1;stroke-dasharray:4 4}
+.note{fill:var(--color-bg, #f9f6f2);stroke:var(--color-muted, #555b64);stroke-width:1}
+.flow{fill:none;stroke:var(--color-muted, #555b64);stroke-width:1}
+.flow-head{fill:var(--color-muted, #555b64)}
+.grant{fill:none;stroke:var(--color-accent, #2858cd);stroke-width:1.5}
+.grant-head{fill:var(--color-accent, #2858cd)}
+.deny{fill:none;stroke:var(--color-signal, #bb4717);stroke-width:1.5;stroke-dasharray:4 3}
+.deny-x{fill:none;stroke:var(--color-signal, #bb4717);stroke-width:1.5}
+</style><circle class="raised" cx="12" cy="8" r="6.5"/><path class="raised" d="M1.5 27.5V24C1.5 19 6 15.5 12 15.5S22.5 19 22.5 24V27.5Z"/></svg>

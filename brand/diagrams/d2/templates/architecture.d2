@@ -1,0 +1,50 @@
+# architecture: what runs where. Nested containers for accounts and environments, with the
+# systems outside the boundary dashed around it.
+#
+# Engine: tala. It packs nested containers tightly with every edge orthogonal, and here it
+# keeps the identity provider and staff above the account and the externals around it with
+# no crossings. ELK spreads the same diagram to 2300 px wide (left to right) or into a tall
+# column of parallel edges (top down); dagre curves through container borders.
+# TALA can route an edge through a container's title: if it does, try other seeds
+# (d2 --tala-seeds=1,2,3,...) and pin the cleanest with vars.d2-config.data.tala-seeds.
+# Limit: about 10 shapes in up to two levels of nesting, and about 8 edges.
+
+...@../brand
+
+vars: {
+  d2-config: {
+    layout-engine: tala
+  }
+}
+
+direction: down
+
+staff: Staff {class: person}
+
+account: Your Cloudflare account {
+  class: frame
+
+  access: Cloudflare Access {class: service}
+
+  workspace: Cloudflare OS workspace {
+    class: frame
+    agents: Agents {class: agent}
+    apps: Private apps {class: service}
+  }
+
+  gateway: AI Gateway {class: service}
+  data: D1 and R2 {class: store}
+}
+
+idp: Entra ID {class: external}
+saas: SharePoint, Xero {class: external}
+models: Model providers {class: external}
+
+staff -> account.access: sign in {class: flow}
+idp -> account.access: single sign-on {class: flow}
+account.access -> account.workspace.apps {class: flow}
+account.workspace.agents -> account.workspace.apps: build {class: flow}
+account.workspace.agents -> account.gateway: every model call {class: emphasis}
+account.gateway -> models: budgeted {class: flow}
+account.workspace.agents -> account.data: read and write {class: flow}
+account.workspace.agents -> saas: granted connectors {class: flow}
