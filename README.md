@@ -41,11 +41,11 @@ Astro 7 runs `astro preview` in the background when it detects a coding agent. U
 
 ## Publishing
 
-**GitHub Pages (now).** Pushes to `main` build the site and upload `dist/` only (`.github/workflows/pages.yml`). Optional sections follow the repository variables `SHOW_TEAM`, `SHOW_MODELS` and `SHOW_SPONSORSHIP`.
+**Cloudflare Workers (production).** `pnpm deploy:production` builds with `pnpm build:cloudflare`, which writes `dist/_headers` with the security headers, and deploys `wrangler.jsonc`: a static-assets Worker with no script, in the Relativistic Cloudflare account, on the custom domain `relativistic.co.uk`. Optional sections follow `SHOW_TEAM`, `SHOW_MODELS` and `SHOW_SPONSORSHIP` in the environment, all off by default. `pnpm dev:workers` runs it locally.
 
-**Cloudflare Workers (next).** `wrangler.jsonc` is a static-assets Worker with no script. `pnpm build:cloudflare` writes `dist/_headers` with the security headers, then `pnpm dev:workers` runs it locally. It is not deployed: the custom domain comes with the DNS move.
+**GitHub Pages (fallback).** Pushes to `main` still build the site and upload `dist/` only (`.github/workflows/pages.yml`), with the optional sections following the repository variables of the same names. DNS no longer points there.
 
-**Review build.** `pnpm deploy:review` builds with every section on and deploys `wrangler.review.jsonc` (`relativistic-site-review`) to its `workers.dev` URL only. Review builds send `X-Robots-Tag: noindex` on every path and a robots `noindex` meta tag on every page. Put Cloudflare Access in front of it from the dashboard.
+**Review build.** `pnpm deploy:review` builds with every section on and deploys `wrangler.review.jsonc` (`relativistic-site-review`, also in the Relativistic account) to https://relativistic-site-review.relativistic-labs.workers.dev only. Review builds send `X-Robots-Tag: noindex` on every path and a robots `noindex` meta tag on every page. Put Cloudflare Access in front of it from the dashboard.
 
 ## Keep out of Git
 
