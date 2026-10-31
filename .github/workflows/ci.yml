@@ -34,7 +34,7 @@ jobs:
       - name: Links and anchors, every section off
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
-          args: --offline --include-fragments --no-progress --root-dir ${{ github.workspace }}/dist 'dist/**/*.html'
+          args: --offline --include-fragments --index-files index.html --no-progress --root-dir ${{ github.workspace }}/dist 'dist/**/*.html'
       - name: Size budgets, every section off
         run: pnpm budget
       - name: Behaviour, every section off
@@ -47,7 +47,7 @@ jobs:
       - name: Links and anchors, every section on
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
-          args: --offline --include-fragments --no-progress --root-dir ${{ github.workspace }}/dist 'dist/**/*.html'
+          args: --offline --include-fragments --index-files index.html --no-progress --root-dir ${{ github.workspace }}/dist 'dist/**/*.html'
       - name: Size budgets, every section on
         run: pnpm budget
       - name: Behaviour, every section on
