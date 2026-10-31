@@ -1,0 +1,319 @@
+---
+// The murmuration's tuning panel: in the lab build only (FIELD_LAB=true), never in production.
+// Presets and sliders over FlockParams; every change goes to the running field at once, and into
+// the address, so a link (or the copied line) carries the exact settings.
+---
+
+<details class="lab" open>
+  <summary>Murmuration lab</summary>
+  <div class="lab__body">
+    <div class="lab__presets" data-lab-presets></div>
+    <p class="lab__note" data-lab-note></p>
+    <div data-lab-sliders></div>
+    <label class="lab__check"><input type="checkbox" data-lab-big /> Fill the screen</label>
+    <div class="lab__out">
+      <code data-lab-out></code>
+      <div class="lab__actions">
+        <button type="button" data-lab-copy>Copy settings</button>
+        <button type="button" data-lab-share hidden>Share settings</button>
+      </div>
+    </div>
+  </div>
+</details>
+
+<script>
+  import { FLOCK_DEFAULTS, type FlockParams } from '../scripts/field/flock';
+  import { PRESETS } from '../scripts/field/presets';
+
+  type Key = keyof FlockParams;
+  const GROUPS: [string, [Key, string, number, number, number][]][] = [
+    [
+      'Timing (seconds)',
+      [
+        ['gather', 'Gather: setting off to the picture holding', 0.3, 4, 0.1],
+        ['hold', 'Hold: the picture still', 0, 5, 0.1],
+        ['fly', 'Fly: free with the flock between pictures', 0, 4, 0.1],
+        ['spread', 'Spread: first bird leaving to the last', 0, 3, 0.05],
+        ['wave', 'Wave: 0 random order, 1 peels from one side', 0, 1, 0.05],
+      ],
+    ],
+    [
+      'Flight',
+      [
+        ['speed', 'Top speed to a picture', 10, 100, 1],
+        ['arrive', 'Braking distance (bigger, softer landing)', 1, 20, 0.5],
+        ['agility', 'Acceleration (lower, lazier take-off)', 20, 400, 5],
+        ['swirl', 'Curve on the way in', 0, 2, 0.05],
+        ['turn', 'Wheel between pictures (share of a turn)', 0, 0.5, 0.01],
+        ['bind', 'How quickly birds commit to, and leave, a picture', 0.5, 12, 0.25],
+        ['cruise', 'Speed in the flock', 2, 15, 0.5],
+        ['pickup', 'Back to flock speed after leaving', 0.2, 6, 0.1],
+      ],
+    ],
+    [
+      'Picture',
+      [
+        ['sway', 'Ripple across a held picture', 0, 2, 0.05],
+        ['free', 'Birds left in the flock (%)', 0, 40, 1],
+        ['dark', 'How much darker birds on a picture are', 0, 1, 0.05],
+      ],
+    ],
+  ];
+
+  const field = document.querySelector<HTMLButtonElement>('[data-field]')!;
+  const query = new URLSearchParams(location.search);
+  let preset = query.get('field') ?? 'settle';
+  if (!(preset in PRESETS)) preset = 'settle';
+  const params: FlockParams = { ...FLOCK_DEFAULTS, ...PRESETS[preset]!.params };
+  for (const key of Object.keys(FLOCK_DEFAULTS) as Key[]) {
+    const v = Number(query.get(key));
+    if (query.has(key) && Number.isFinite(v)) params[key] = v;
+  }
+  // Read by startField when it starts, after this has run.
+  field.dataset['params'] = JSON.stringify(params);
+
+  const presets = document.querySelector('[data-lab-presets]')!;
+  const note = document.querySelector('[data-lab-note]')!;
+  const sliders = document.querySelector('[data-lab-sliders]')!;
+  const out = document.querySelector('[data-lab-out]')!;
+  const inputs = new Map<Key, [HTMLInputElement, HTMLOutputElement]>();
+
+  for (const [title, rows] of GROUPS) {
+    const set = document.createElement('fieldset');
+    const legend = document.createElement('legend');
+    legend.textContent = title;
+    set.append(legend);
+    for (const [key, text, min, max, step] of rows) {
+      const label = document.createElement('label');
+      const name = document.createElement('span');
+      name.textContent = text;
+      const value = document.createElement('output');
+      const input = document.createElement('input');
+      Object.assign(input, { type: 'range', min, max, step });
+      input.addEventListener('input', () => {
+        params[key] = Number(input.value);
+        changed();
+      });
+      label.append(name, value, input);
+      set.append(label);
+      inputs.set(key, [input, value]);
+    }
+    sliders.append(set);
+  }
+
+  for (const [id, p] of Object.entries(PRESETS)) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = p.label;
+    b.dataset['preset'] = id;
+    b.addEventListener('click', () => {
+      preset = id;
+      Object.assign(params, FLOCK_DEFAULTS, p.params);
+      changed();
+    });
+    presets.append(b);
+  }
+
+  /** Show the params, put them in the address, and send them to the field. */
+  function changed() {
+    for (const [key, [input, value]] of inputs) {
+      input.value = String(params[key]);
+      value.textContent = String(params[key]);
+    }
+    for (const b of presets.querySelectorAll<HTMLButtonElement>('button')) b.setAttribute('aria-pressed', String(b.dataset['preset'] === preset));
+    note.textContent = PRESETS[preset]!.note;
+    const base = { ...FLOCK_DEFAULTS, ...PRESETS[preset]!.params };
+    const q = new URLSearchParams({ field: preset });
+    for (const key of Object.keys(params) as Key[]) if (params[key] !== base[key]) q.set(key, String(params[key]));
+    history.replaceState(null, '', `?${q}`);
+    out.textContent = (Object.keys(params) as Key[]).map((k) => `${k} ${params[k]}`).join(', ');
+    field.dataset['params'] = JSON.stringify(params);
+    field.dispatchEvent(new CustomEvent('field:params', { detail: { ...params } }));
+  }
+
+  const copy = document.querySelector<HTMLButtonElement>('[data-lab-copy]')!;
+  copy.addEventListener('click', () => {
+    navigator.clipboard?.writeText(`${location.href}\n${out.textContent}`).then(
+      () => (copy.textContent = 'Copied'),
+      () => (copy.textContent = 'Copy blocked: use Share'),
+    );
+    setTimeout(() => (copy.textContent = 'Copy settings'), 2000);
+  });
+  // Phones: send the settings straight from the share sheet.
+  const share = document.querySelector<HTMLButtonElement>('[data-lab-share]')!;
+  if ('share' in navigator) {
+    share.hidden = false;
+    share.addEventListener('click', () => void navigator.share({ title: 'Murmuration settings', text: out.textContent ?? '', url: location.href }).catch(() => {}));
+  }
+  // The flock large, above the panel. On by default on phones, where the band is small; set before
+  // the field starts, so it sizes its flock for the large view.
+  const big = document.querySelector<HTMLInputElement>('[data-lab-big]')!;
+  const fill = () => field.classList.toggle('field--big', big.checked);
+  big.checked = matchMedia('(max-width: 899px)').matches;
+  big.addEventListener('change', fill);
+  fill();
+  changed();
+</script>
+
+<style is:global>
+  .lab {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    z-index: 100;
+    width: min(360px, calc(100vw - 24px));
+    max-height: calc(100svh - 24px);
+    overflow: auto;
+    border: 1px solid color-mix(in oklab, currentColor 25%, transparent);
+    border-radius: 8px;
+    background: var(--color-bg, Canvas);
+    color: var(--color-text, CanvasText);
+    font: 13px/1.35 var(--font-commit, ui-monospace, monospace);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
+  }
+  .lab summary {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .lab__body {
+    padding: 0 12px 12px;
+  }
+  .lab__presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .lab button {
+    padding: 4px 8px;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  .lab button[aria-pressed='true'] {
+    background: #0c6c68;
+    border-color: #0c6c68;
+    color: #fff;
+  }
+  .lab__note {
+    margin: 8px 0;
+    opacity: 0.8;
+  }
+  .lab fieldset {
+    margin: 8px 0;
+    padding: 4px 8px 8px;
+    border: 1px solid color-mix(in oklab, currentColor 20%, transparent);
+    border-radius: 6px;
+  }
+  .lab legend {
+    font-weight: 700;
+  }
+  .lab label {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 8px;
+    margin-top: 6px;
+  }
+  .lab label input[type='range'] {
+    grid-column: 1 / -1;
+    width: 100%;
+    accent-color: #0c6c68;
+  }
+  .lab output {
+    font-weight: 700;
+  }
+  .lab .lab__check {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .lab__out {
+    display: grid;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .lab__actions {
+    display: flex;
+    gap: 6px;
+  }
+  .lab__actions button {
+    flex: 1;
+  }
+  .lab__out code {
+    font-size: 11px;
+    word-break: break-word;
+    opacity: 0.8;
+  }
+  .field.field--big {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    width: auto;
+    height: auto;
+    aspect-ratio: auto;
+    background: var(--color-bg, Canvas);
+  }
+  /* Beside the panel, where there's room */
+  @media (min-width: 900px) {
+    .field.field--big {
+      right: 384px;
+    }
+  }
+  /* Phones: the panel is a sheet along the bottom, and the large flock fills the screen above it
+     (all of it, when the sheet is closed). Bigger touch targets for the sliders and buttons. */
+  @media (max-width: 899px) {
+    .lab {
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: auto;
+      max-height: 48svh;
+      border-width: 1px 0 0;
+      border-radius: 12px 12px 0 0;
+      padding-bottom: env(safe-area-inset-bottom);
+      overscroll-behavior: contain;
+    }
+    .lab summary {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 12px 16px;
+      background: var(--color-bg, Canvas);
+    }
+    .lab__body {
+      padding: 0 16px 16px;
+    }
+    .lab__presets {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .lab button {
+      flex: none;
+      min-height: 40px;
+      padding: 8px 12px;
+    }
+    .lab__actions button {
+      flex: 1;
+    }
+    .lab label input[type='range'] {
+      height: 32px;
+    }
+    .lab .lab__check input {
+      width: 22px;
+      height: 22px;
+    }
+    .lab fieldset {
+      margin-inline: 0;
+    }
+    .field.field--big {
+      bottom: 48svh;
+    }
+    body:has(.lab:not([open])) .field.field--big {
+      bottom: 0;
+    }
+  }
+</style>

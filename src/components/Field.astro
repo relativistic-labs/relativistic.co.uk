@@ -2,11 +2,15 @@
 // The background field, a murmuration: decorative, and an enhancement. Without JavaScript or WebGL2
 // it isn't shown. It is a toggle button so the animation can be paused from a pointer or the keyboard
 // (WCAG 2.2.2). Its name never changes; aria-pressed says whether it is paused, so it's announced once.
+// The lab build (FIELD_LAB=true) adds a tuning panel.
+import { FIELD_LAB } from 'astro:env/server';
+import FieldLab from './FieldLab.astro';
 ---
 
 <button class="field" type="button" data-field aria-pressed="false" aria-label="Pause background animation">
   <canvas class="field__canvas" aria-hidden="true"></canvas>
 </button>
+{FIELD_LAB && <FieldLab />}
 
 <script>
   import { startField } from '../scripts/field/field';

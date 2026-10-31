@@ -8,14 +8,15 @@
  */
 import vert from './birds.vert.glsl';
 import frag from './birds.frag.glsl';
-import { createFlock, DISTANCE, PITCH, type Flock } from './flock';
+import { createFlock, DISTANCE, PITCH, type Flock, type FlockParams } from './flock';
 
 export type Colour = [number, number, number];
 export type Mode = 'run' | 'pause' | 'still';
 export type ToField =
   | { type: 'size'; width: number; height: number; dpr: number }
   | { type: 'theme'; particle: Colour; accent: Colour; glow: boolean }
-  | { type: 'mode'; mode: Mode };
+  | { type: 'mode'; mode: Mode }
+  | { type: 'params'; params: Partial<FlockParams> };
 export type FromField = { type: 'drawn' } | { type: 'slow' } | { type: 'failed' };
 
 const ALPHA = 0.4; // quiet: dense folds and pictures darken, single birds barely show
@@ -57,6 +58,7 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
   let colours: Record<'particle' | 'accent', Colour> | null = null;
   let glow = false;
   let flock: Flock | null = null;
+  let params: Partial<FlockParams> = {};
   let still: Float32Array | null = null;
   let gpu: { p: WebGLProgram; u: Record<string, WebGLUniformLocation | null> } | null = null;
   let parallel: KHR_parallel_shader_compile | null = null;
@@ -186,7 +188,7 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
     while (!width) await new Promise(frameLater);
     if (!flock) {
       // About 3,200 birds beside the headline on a desktop and 1,500 in the band on a phone.
-      flock = createFlock(Math.round(Math.min(3600, Math.max(900, (width * height) / 40))), demo);
+      flock = createFlock(Math.round(Math.min(3600, Math.max(900, (width * height) / 40))), demo, params);
       // Warm up in a square roost whatever the canvas, so the flock folds the same way on a phone.
       flock.aspect(1);
       flock.reset();
@@ -232,6 +234,10 @@ export function createField(canvas: HTMLCanvasElement | OffscreenCanvas, demo: b
         break;
       case 'mode':
         apply(m.mode);
+        break;
+      case 'params':
+        params = { ...params, ...m.params };
+        flock?.tune(m.params);
         break;
     }
   };

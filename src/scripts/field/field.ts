@@ -49,8 +49,9 @@ export async function startField(root: HTMLButtonElement): Promise<void> {
   };
   if (!canvas || !('WebGL2RenderingContext' in window)) return off(); // no WebGL2: no field, nothing else lost
 
-  // A test-only switch for recordings: the first picture sooner, and no shedding.
-  const demo = location.search.includes('field-demo');
+  // A test-only switch for recordings, and on in the lab build (data-params): the first picture
+  // sooner, and no shedding.
+  const demo = location.search.includes('field-demo') || 'params' in root.dataset;
   let visible = true;
   let slow = false;
   let mode: Mode | null = null;
@@ -108,6 +109,9 @@ export async function startField(root: HTMLButtonElement): Promise<void> {
     update();
   }).observe(canvas);
   send(theme(root));
+  // Tuning (the lab build only): params as data-params at start, then as field:params events.
+  if (root.dataset['params']) send({ type: 'params', params: JSON.parse(root.dataset['params']) });
+  root.addEventListener('field:params', (e) => send({ type: 'params', params: (e as CustomEvent).detail }));
   darkQuery.addEventListener('change', () => send(theme(root)));
   document.addEventListener('visibilitychange', update);
   motionQuery.addEventListener('change', update);

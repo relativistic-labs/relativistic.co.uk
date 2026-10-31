@@ -7,11 +7,14 @@
  * pull it wants, so it sweeps rather than snaps), keeps roughly level and is drawn back towards the
  * roost at the centre of the view, after Hemelrijk and Hildenbrandt's StarDisplay.
  *
- * Every few seconds the flock builds a picture (shapes.ts). Each bird is given a point on it and
- * flies there, curving in, then holds it loosely while a ripple runs across the picture; a few
- * birds stay in the flock for each picture. Every bird keeps its own time, so most fly together
- * while a few lead the way into the next picture and a few are still leaving the last: the flock
- * streams from one picture to the next, and round again.
+ * Every few seconds the flock builds a picture (shapes.ts). Each picture has three beats: the
+ * gather, when birds dash to their points, curving in, and brake as they reach them; the hold, when
+ * the picture settles and a ripple runs across it; and the flight, when birds fly free with the
+ * flock before gathering into the next (none, and they stream straight from one to the next). A
+ * few birds stay in the flock for each picture. Birds don't all leave together: each leaves a
+ * little later than the first, at random or as a wave that peels the picture away from one side,
+ * and keeps that place in the queue into the next picture. The timings and the feel of the flight
+ * are FlockParams, so they can be tuned while it runs.
  *
  * Neighbours come from a uniform grid of hashed cells, rebuilt each frame; each bird refreshes its
  * list every third frame, staggered. All state is preallocated: nothing is allocated per frame. The
@@ -24,7 +27,6 @@ export const PITCH = 0.8; // the camera looks up at the flock, radians
 export const DISTANCE = 70; // camera to roost, world units
 
 // World units are about one bird spacing. Rates are per second.
-const V0 = 5; // cruise speed
 const RS = 1.6; // separation radius
 const WS = 10; // separation
 const WA = 8; // alignment
@@ -35,25 +37,36 @@ const WN = 0.3; // wander
 const WD = 0.25; // a shared, slowly turning heading
 const TAU = 0.2; // banking lag
 const AMAX = 9; // most sideways pull a bank can give
-const KS = 1.1; // return to cruise speed
 const ROOSTX = 0.45; // the roost, an ellipsoid, as a share of the flock's half-length
 const ROOSTY = 0.25;
 const ROOSTZ = 0.55;
 const VIEW = 1.45; // half the view's height, as a share of the flock's half-length
 const H = 1.4; // grid cell
 const HB = 4096; // grid buckets
-const SLOT = 4.4; // seconds a picture lasts, flight included
-const FREE = 8; // per cent of birds that stay in the flock for each picture
-const AHEAD = 0.09; // share of birds that lead, and the share that lag
-const VMAX = 30; // flying between pictures
-const ARRIVE = 7; // within this distance of its point a bird slows as it nears it
+
+/** The pictures' timing and the feel of the flight. Seconds, and world units per second. */
+export const FLOCK_DEFAULTS = {
+  gather: 2.2, // from a bird setting off for a picture to the picture holding
+  hold: 2.2, // the picture holds
+  fly: 0, // flying free with the flock between pictures
+  spread: 1.4, // from the first bird leaving a picture to the last
+  wave: 0, // 0: the order birds leave in is random; 1: the picture peels away from one side
+  speed: 30, // fastest a bird flies to its point
+  arrive: 7, // within this distance of its point a bird brakes
+  agility: 140, // the most it accelerates towards its point
+  swirl: 0.7, // how far birds curve on the way, turning with the flock
+  turn: 0.12, // how far round the flock wheels between pictures, as a share of a turn
+  sway: 0.8, // the ripple across a picture: how far each point circles
+  free: 8, // per cent of birds that stay in the flock for each picture
+  cruise: 5, // speed in the flock
+  pickup: 1.1, // how quickly a bird returns to cruise speed
+  bind: 3, // how quickly a bird gives itself to a picture, or leaves it
+  dark: 0.8, // birds on a picture are drawn darker
+};
+export type FlockParams = typeof FLOCK_DEFAULTS;
+
 const KV = 12; // how quickly a bird takes the velocity it wants
-const ACC = 140; // the most it accelerates towards its point
-const SWIRL = 0.7; // how far birds curve on the way, turning with the flock
-const TURN = 0.12; // how far round the flock wheels between pictures, as a share of a turn
-const SWAY = 0.8; // the ripple across a picture: how far each point circles, and how fast
-const WAVE = 1.6;
-const DARK = 0.8; // birds on a picture are drawn darker
+const WAVE = 1.6; // how fast the ripple runs
 
 function prng(seed: number) {
   let a = seed >>> 0;
@@ -65,7 +78,8 @@ function prng(seed: number) {
   };
 }
 
-export function createFlock(max: number, demo: boolean) {
+export function createFlock(max: number, demo: boolean, params: Partial<FlockParams> = {}) {
+  const P: FlockParams = { ...FLOCK_DEFAULTS, ...params };
   const S = new Float32Array(max * 8); // x y z shade | vx vy vz (unused)
   const B = new Float32Array(max * 3); // the sideways pull a bank gives
   const NB = new Int32Array(max * K);
@@ -74,7 +88,7 @@ export function createFlock(max: number, demo: boolean) {
   const LAST = new Int32Array(K);
   const T = new Float32Array(max * 9); // each bird's point on three pictures (last, this, next), camera space
   const TT = new Float32Array(max * 3);
-  const O = new Float32Array(max); // how far ahead of the flock's time a bird keeps, seconds
+  const L = new Float32Array(max * 3); // when each bird leaves each of those pictures, after the first, seconds
   const W = new Float32Array(max); // how bound a bird is to its picture, 0 to 1
   const PH = new Float32Array(max);
   const VAR = new Float32Array(max);
@@ -101,6 +115,7 @@ export function createFlock(max: number, demo: boolean) {
     aspect,
     reset,
     show,
+    tune,
     /** Halve the birds, when frames are slow. */
     shed() {
       f.n = Math.max(300, f.n >> 1);
@@ -137,12 +152,9 @@ export function createFlock(max: number, demo: boolean) {
       S[o] = x * size;
       S[o + 1] = y * size * 0.3;
       S[o + 2] = z * size * 0.6;
-      S[o + 4] = Math.cos(a) * V0;
+      S[o + 4] = Math.cos(a) * P.cruise;
       S[o + 5] = y * 0.4;
-      S[o + 6] = Math.sin(a) * V0;
-      // Most birds keep the flock's time, within a quarter of a second; a few lead, a few lag.
-      const r = rand();
-      O[i] = r < AHEAD ? 0.6 + rand() * 0.8 : r < 2 * AHEAD ? -0.6 - rand() * 0.8 : (rand() - 0.5) * 0.5;
+      S[o + 6] = Math.sin(a) * P.cruise;
       W[i] = 0;
       PH[i] = rand() * 6.283;
       VAR[i] = 0.6 + rand() * 0.8;
@@ -163,7 +175,18 @@ export function createFlock(max: number, demo: boolean) {
     for (let i = 0; i < f.n; i++) (S[i * 8]! -= x / f.n), (S[i * 8 + 2]! -= z / f.n);
     wd = WD;
     t0 = f.t + (demo ? 0.8 : 2);
+    // The queue into the first picture: random.
+    for (let i = 0; i < max; i++) L[2 * max + i] = rand() * P.spread;
     give(0);
+  }
+
+  /** New params, as it runs. The picture showing and how far through it the flock is are kept. */
+  function tune(next: Partial<FlockParams>) {
+    const slot = P.gather + P.hold + P.fly;
+    Object.assign(P, next);
+    if (!Number.isFinite(t0)) return;
+    const u = (f.t - t0) / slot;
+    if (u > 0) t0 = f.t - u * (P.gather + P.hold + P.fly);
   }
 
   /** Camera space from world space, as the vertex shader does it. */
@@ -192,13 +215,20 @@ export function createFlock(max: number, demo: boolean) {
     order(IT, (i) => TT[i * 3]!, (i) => TT[i * 3 + 1]!);
     order(IB, (i) => S[i * 8]! * persp(i), (i) => camY(S[i * 8 + 1]!, S[i * 8 + 2]!) * persp(i));
     const base = (k % 3) * max * 3;
-    const turn = Math.round(n * TURN) * (k & 1 ? 1 : -1) + n;
+    const turn = Math.round(n * P.turn) * (k & 1 ? 1 : -1) + n;
+    // The order birds will leave this picture in: along a line that turns from picture to picture.
+    const ux = Math.cos(k * 2.4);
+    const uy = Math.sin(k * 2.4);
+    const reach = Math.hypot(s.w * ux, uy) / 2;
     for (let r = 0; r < n; r++) {
-      const b = base + IB[r]! * 3;
+      const i = IB[r]!;
+      const b = base + i * 3;
       const p = IT[(r + turn) % n]! * 3;
       T[b] = TT[p]! * scale;
       T[b + 1] = TT[p + 1]! * scale;
       T[b + 2] = TT[p + 2]! * scale;
+      const along = Math.min(1, Math.max(0, ((TT[p]! * ux + TT[p + 1]! * uy) / reach + 1) / 2));
+      L[(k % 3) * max + i] = P.spread * (P.wave * along + (1 - P.wave) * rand());
     }
   }
 
@@ -281,8 +311,13 @@ export function createFlock(max: number, demo: boolean) {
     const n = f.n;
     const t = (f.t += dt);
     const u = t - t0;
-    // Half way through each picture, every bird is on it: give out the points on the next.
-    if (u - Math.floor(u / SLOT) * SLOT >= SLOT / 2 && Math.floor(u / SLOT) + 1 > assigned) give(Math.floor(u / SLOT) + 1);
+    const slot = P.gather + P.hold + P.fly;
+    // As the first bird can leave a picture, give out the points on the next.
+    const now = Math.floor(u / slot);
+    if (now > assigned) give(now);
+    const start = now * slot;
+    const lp = ((now + 2) % 3) * max;
+    const lc = (now % 3) * max;
 
     // The grid: bucket every bird by its cell (a counting sort).
     START.fill(0);
@@ -301,9 +336,10 @@ export function createFlock(max: number, demo: boolean) {
     all = false;
     frame++;
 
-    const dcos = Math.cos(t * 0.13) * V0;
-    const dsin = Math.sin(t * 0.13) * V0;
-    const ease = Math.min(1, dt * 3);
+    const dcos = Math.cos(t * 0.13) * P.cruise;
+    const dsin = Math.sin(t * 0.13) * P.cruise;
+    const ease = Math.min(1, dt * P.bind);
+    const sway = P.sway;
     for (let i = 0; i < n; i++) {
       const o = i * 8;
       const px = S[o]!;
@@ -368,10 +404,14 @@ export function createFlock(max: number, demo: boolean) {
       fx += wd * (dcos - vx);
       fz += wd * (dsin - vz);
 
-      // Which picture this bird is on, by its own time, and whether it stays in the flock for it.
-      const tau = u + O[i]!;
-      const k = Math.floor(tau / SLOT);
-      const on = tau >= 0 && ((Math.imul(i, 40503) ^ Math.imul(k, 2654435761)) >>> 0) % 100 >= FREE;
+      // Which picture this bird is on, if any, by its place in the queue, and whether it stays in the
+      // flock for it. It reaches for this picture as late after the start as it left the last.
+      let k = -1;
+      if (now >= 0) {
+        if (u >= start + L[lp + i]!) k = u < start + P.gather + P.hold + L[lc + i]! ? now : -1;
+        else if (now > 0 && u < start - P.fly + L[lp + i]!) k = now - 1;
+      }
+      const on = k >= 0 && ((Math.imul(i, 40503) ^ Math.imul(k, 2654435761)) >>> 0) % 100 >= P.free;
       const w = (W[i]! += ((on ? 1 : 0) - W[i]!) * ease);
       if (w > 0) {
         const s = 1 - 0.85 * w;
@@ -385,10 +425,10 @@ export function createFlock(max: number, demo: boolean) {
         const j = (k % 3) * max * 3 + i * 3;
         const gx = T[j]!;
         const wave = WAVE * t - 0.3 * gx;
-        const qx = gx + Math.cos(wave) * SWAY + Math.cos(PH[i]! + t * 2.1) * 0.15;
-        const qy = T[j + 1]! + Math.sin(wave) * SWAY * 0.3 + Math.sin(PH[i]! * 1.3 + t * 1.7) * 0.15;
+        const qx = gx + Math.cos(wave) * sway + Math.cos(PH[i]! + t * 2.1) * 0.15;
+        const qy = T[j + 1]! + Math.sin(wave) * sway * 0.3 + Math.sin(PH[i]! * 1.3 + t * 1.7) * 0.15;
         const qz = T[j + 2]!;
-        const wy = Math.cos(wave) * SWAY * 0.3 * WAVE; // the point's own velocity, camera space
+        const wy = Math.cos(wave) * sway * 0.3 * WAVE; // the point's own velocity, camera space
         // The velocity it wants: towards its point, slowing within reach of it, and curving on the way
         // (turned in the picture's plane) until it is close, so it settles rather than circling, plus
         // the point's own.
@@ -396,14 +436,14 @@ export function createFlock(max: number, demo: boolean) {
         const ky = qy * cos + qz * sin - py;
         const kz = -qy * sin + qz * cos - pz;
         const d = Math.sqrt(kx * kx + ky * ky + kz * kz) + 1e-3;
-        const sd = (VMAX * Math.min(1, d / ARRIVE)) / d;
+        const sd = (P.speed * Math.min(1, d / P.arrive)) / d;
         // Outwards, so the path bows round the centre.
-        const sw = -SWIRL * VAR[i]! * (k & 1 ? 1 : -1) * Math.min(1, Math.max(0, d / ARRIVE - 1));
-        let sx = KV * (sd * (kx + sw * (sin * kz - cos * ky)) - Math.sin(wave) * SWAY * WAVE - vx);
+        const sw = -P.swirl * VAR[i]! * (k & 1 ? 1 : -1) * Math.min(1, Math.max(0, d / P.arrive - 1));
+        let sx = KV * (sd * (kx + sw * (sin * kz - cos * ky)) - Math.sin(wave) * sway * WAVE - vx);
         let sy = KV * (sd * (ky + sw * cos * kx) + wy * cos - vy);
         let sz = KV * (sd * (kz - sw * sin * kx) - wy * sin - vz);
         const g = Math.sqrt(sx * sx + sy * sy + sz * sz);
-        if (g > ACC) (sx *= ACC / g), (sy *= ACC / g), (sz *= ACC / g);
+        if (g > P.agility) (sx *= P.agility / g), (sy *= P.agility / g), (sz *= P.agility / g);
         fx += w * sx;
         fy += w * sy;
         fz += w * sz;
@@ -437,7 +477,7 @@ export function createFlock(max: number, demo: boolean) {
       B[b] = bx;
       B[b + 1] = by;
       B[b + 2] = bz;
-      const acc = (V0 - sp) * KS * (1 - w) + ff * (0.25 + 0.75 * w);
+      const acc = (P.cruise - sp) * P.pickup * (1 - w) + ff * (0.25 + 0.75 * w);
       vx += (bx + hx * acc) * dt;
       vy += (by + hy * acc) * dt;
       vz += (bz + hz * acc) * dt;
@@ -445,7 +485,7 @@ export function createFlock(max: number, demo: boolean) {
       S[o + 1] = py + vy * dt;
       S[o + 2] = pz + vz * dt;
       // Shade: a banking bird shows more wing, so reads darker; so does a bird on a picture.
-      S[o + 3] = Math.min(1, (bm / most) * 0.7 * (1 - w) + DARK * w);
+      S[o + 3] = Math.min(1, (bm / most) * 0.7 * (1 - w) + P.dark * w);
       S[o + 4] = vx;
       S[o + 5] = vy;
       S[o + 6] = vz;

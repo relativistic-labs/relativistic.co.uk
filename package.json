@@ -20,6 +20,8 @@
     "test:e2e": "playwright test",
     "lhci": "lhci autorun",
     "deploy:review": "pnpm build:review && wrangler deploy --config wrangler.review.jsonc",
+    "build:lab": "DEPLOY_TARGET=cloudflare REVIEW_BUILD=true FIELD_LAB=true astro build",
+    "deploy:lab": "pnpm build:lab && wrangler deploy --config wrangler.lab.jsonc",
     "deploy:production": "pnpm build:cloudflare && wrangler deploy --config wrangler.jsonc",
     "links": "node tests/links.mjs",
     "dev:workers": "wrangler dev --config wrangler.jsonc --port 8787 --ip 127.0.0.1",

@@ -1,0 +1,15 @@
+// The murmuration lab: the site as production builds it, plus a panel to tune the field
+// (FIELD_LAB=true), noindexed like the review build. workers.dev only. Build with `pnpm build:lab`.
+// At relativistic-field-lab.relativistic-labs.workers.dev.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "relativistic-field-lab",
+  "account_id": "acceb873d28d2928b0d4941a52951072",
+  "compatibility_date": "2026-10-28",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": true,
+  "preview_urls": false
+}
