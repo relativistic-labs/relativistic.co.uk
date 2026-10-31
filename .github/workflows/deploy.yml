@@ -1,7 +1,7 @@
 # Deploy to Cloudflare Workers, only after CI has passed on main, so a failing build can't be published.
 # Anyone with write access can also run it by hand from main (Actions > Deploy > Run workflow), to
 # redeploy production or to update the review build. Optional sections in production follow the
-# repository variables SHOW_TEAM, SHOW_MODELS and SHOW_SPONSORSHIP, as for Pages.
+# variables SHOW_TEAM, SHOW_MODELS and SHOW_SPONSORSHIP (true or false) in the cloudflare-prod environment.
 #
 # The token in the cloudflare-prod environment is Workers Editor on the site Workers only: it can
 # upload versions but can't create Workers or touch routes. The custom domain belongs to ../infra.
