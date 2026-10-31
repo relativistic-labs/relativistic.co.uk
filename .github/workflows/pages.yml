@@ -18,8 +18,13 @@ concurrency:
   cancel-in-progress: true
 jobs:
   deploy:
-    # Only a successful CI run on main (or a manual run) deploys.
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    # Only a successful CI run on a push to main in this repository (or a manual run) deploys: a fork's
+    # pull request from a branch named main also matches `branches: [main]`.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     environment:
       name: github-pages
