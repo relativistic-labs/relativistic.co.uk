@@ -31,11 +31,11 @@
     "@astrojs/check": "0.9.12",
     "@axe-core/playwright": "4.14.0",
     "@lhci/cli": "0.15.1",
-    "@playwright/test": "1.63.0",
-    "@types/node": "24.19.2",
-    "astro": "7.4.2",
+    "@playwright/test": "1.64.1",
+    "@types/node": "26.6.6",
+    "astro": "7.4.4",
     "html-validate": "11.17.0",
-    "typescript": "6.0.3",
-    "wrangler": "4.153.0"
+    "typescript": "7.0.2",
+    "wrangler": "4.155.0"
   }
 }
