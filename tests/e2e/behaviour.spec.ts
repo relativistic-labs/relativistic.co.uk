@@ -93,8 +93,9 @@ test.describe('register your interest', () => {
     }
   });
 
-  test('sending writes an email for the visitor to send, and says so', async ({ page }) => {
+  test('on GitHub Pages, sending writes an email for the visitor to send, and says so', async ({ page }) => {
     await page.goto('/');
+    test.skip((await page.locator('#interest').getAttribute('data-send')) === 'worker', 'a Cloudflare build sends through the Worker');
     await page.getByRole('button', { name: 'Register your interest' }).click();
     // Required fields are checked first: nothing is written yet.
     await expect(page.getByRole('status')).toBeEmpty();
@@ -112,6 +113,42 @@ test.describe('register your interest', () => {
     expect(mail.searchParams.get('subject')).toBe('A demo of Enterprise: Analytical Engines');
     expect(mail.searchParams.get('body')).toContain('Email: ada@example.org');
     expect(mail.searchParams.get('body')).toContain('Reports, & more');
+  });
+
+  // The Worker itself is tested in worker/index.test.ts; here it's stood in for, to test the page.
+  test.describe('on Cloudflare, through the Worker', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/');
+      test.skip((await page.locator('#interest').getAttribute('data-send')) !== 'worker', 'a GitHub Pages build has no Worker');
+      await page.getByLabel('Your name').fill('Ada Lovelace');
+      await page.getByLabel('Work email').fill('ada@example.org');
+      await page.getByLabel('A demo of Enterprise').check();
+    });
+
+    test('sends the form, says it arrived and clears it @both', async ({ page }) => {
+      let body = '';
+      await page.route('**/interest', async (route) => {
+        body = route.request().postData() ?? '';
+        await route.fulfill({ json: { ok: true } });
+      });
+      await page.getByRole('button', { name: 'Register your interest' }).click();
+      await expect(page.getByRole('status')).toHaveText('We’ve got your details. One of the five of us will reply soon.');
+      const sent = new URLSearchParams(body);
+      expect(sent.get('name')).toBe('Ada Lovelace');
+      expect(sent.get('interest')).toBe('A demo of Enterprise');
+      expect(sent.get('website')).toBe('');
+      await expect(page.getByLabel('Your name')).toHaveValue('');
+    });
+
+    test('a failure says so, keeps what they typed and offers the email address @both', async ({ page }) => {
+      await page.route('**/interest', (route) => route.fulfill({ status: 502, json: { ok: false } }));
+      await page.getByRole('button', { name: 'Register your interest' }).click();
+      const status = page.getByRole('status');
+      await expect(status).toContainText('Sorry, something went wrong on our side.');
+      await expect(status.getByRole('link', { name: 'hello@relativistic.co.uk' })).toHaveAttribute('href', 'mailto:hello@relativistic.co.uk');
+      await expect(page.getByLabel('Your name')).toHaveValue('Ada Lovelace');
+      await expect(page.getByRole('button', { name: 'Register your interest' })).toBeEnabled();
+    });
   });
 });
 

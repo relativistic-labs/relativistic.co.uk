@@ -15,8 +15,11 @@ test.describe('without JavaScript', () => {
     await expect(page.locator('#trust .summary dt')).toHaveCount(9);
     await expect(page.locator('#packages h3')).toHaveText(['Shared', 'Managed', 'Enterprise']);
     await expect(page.locator('#example figure svg[role="img"]').first()).toBeAttached();
-    // The form still works: browsers hand a mailto: form to the email app.
-    await expect(page.locator('#interest')).toHaveAttribute('action', /^mailto:hello@relativistic\.co\.uk/);
+    // The form still works: on Cloudflare it posts to the Worker, and on GitHub Pages browsers hand
+    // a mailto: form to the email app.
+    const form = page.locator('#interest');
+    const worker = (await form.getAttribute('data-send')) === 'worker';
+    await expect(form).toHaveAttribute('action', worker ? '/interest' : /^mailto:hello@relativistic\.co\.uk/);
     await expect(page.locator('#packages a[href="#interest"]')).toHaveText(['Request a free trial', 'Request a demo', 'Request a demo']);
     // The workspace sketch shows its first request, finished.
     await expect(page.locator('#demo .demo__ask')).toHaveText('Build me a pitch deck for our new product launch');
@@ -36,6 +39,24 @@ test.describe('without JavaScript', () => {
     if (on.sponsorship) await expect(page.locator('#sponsorship a[href="#contact"]')).toBeVisible();
     // The field is an enhancement: with no script it isn't shown at all.
     await expect(page.locator('[data-field]')).toBeHidden();
+  });
+
+  // The page's own policy (form-action in the CSP) must let the form post to the Worker: a browser
+  // drops a blocked post without a word. The Worker is stood in for here.
+  test('on Cloudflare, the form posts to the Worker and lands on the sent page @both', async ({ page }) => {
+    await page.goto('/');
+    test.skip((await page.locator('#interest').getAttribute('data-send')) !== 'worker', 'a GitHub Pages build hands the form to the email app');
+    let body = '';
+    await page.route('**/interest', async (route) => {
+      body = route.request().postData() ?? '';
+      await route.fulfill({ status: 303, headers: { Location: '/interest/sent/' } });
+    });
+    await page.getByLabel('Your name').fill('Ada Lovelace');
+    await page.getByLabel('Work email').fill('ada@example.org');
+    await page.getByRole('button', { name: 'Register your interest' }).click();
+    await expect(page).toHaveURL(/\/interest\/sent\/$/);
+    await expect(page.locator('h1')).toHaveText('Thank you');
+    expect(new URLSearchParams(body).get('name')).toBe('Ada Lovelace');
   });
 });
 

@@ -1,28 +1,42 @@
 ---
 import Section from './Section.astro';
 import { contact } from '../content/copy';
+import { DEPLOY_TARGET } from 'astro:env/server';
 import { site } from '../site.config';
 
-// The form needs no server: with JavaScript it writes an email for the visitor's own email app to send
-// (scripts/interest.ts); without it, it's a mailto: form, which browsers hand to the email app.
+// On Cloudflare the form posts to the site's Worker (worker/index.ts), which emails the team; with
+// JavaScript it sends without leaving the page (scripts/interest.ts). GitHub Pages has no server, so
+// there it writes an email for the visitor's own email app to send, or without JavaScript it's a
+// mailto: form, which browsers hand to the email app.
+const worker = DEPLOY_TARGET === 'cloudflare';
 const mailto = `mailto:${site.email}?subject=${encodeURIComponent(contact.heading)}`;
 const f = contact.fields;
 ---
 
 <Section id="contact" question={contact.question} heading={contact.heading}>
   <p class="measure">{contact.body}</p>
-  <form id="interest" class="form" action={mailto} method="post" enctype="text/plain" data-interest-form data-email={site.email}>
+  {/* No text/plain on the Worker's form: it reads an ordinary url-encoded post. */}
+  <form
+    id="interest"
+    class="form"
+    action={worker ? '/interest' : mailto}
+    method="post"
+    enctype={worker ? undefined : 'text/plain'}
+    data-interest-form
+    data-send={worker ? 'worker' : 'mailto'}
+    data-email={site.email}
+  >
     <div class="form__field">
       <label for="interest-name">{f.name}</label>
-      <input id="interest-name" name="name" type="text" autocomplete="name" required spellcheck="false" />
+      <input id="interest-name" name="name" type="text" autocomplete="name" required maxlength="200" spellcheck="false" />
     </div>
     <div class="form__field">
       <label for="interest-email">{f.email}</label>
-      <input id="interest-email" name="email" type="email" autocomplete="email" required spellcheck="false" />
+      <input id="interest-email" name="email" type="email" autocomplete="email" required maxlength="254" spellcheck="false" />
     </div>
     <div class="form__field">
       <label for="interest-organisation">{f.organisation} <span class="form__optional">{contact.optional}</span></label>
-      <input id="interest-organisation" name="organisation" type="text" autocomplete="organization" />
+      <input id="interest-organisation" name="organisation" type="text" autocomplete="organization" maxlength="200" />
     </div>
     <fieldset class="form__field">
       <legend>{contact.choice}</legend>
@@ -39,12 +53,29 @@ const f = contact.fields;
     </fieldset>
     <div class="form__field">
       <label for="interest-build">{f.build} <span class="form__optional">{contact.optional}</span></label>
-      <textarea id="interest-build" name="build" rows="4"></textarea>
+      <textarea id="interest-build" name="build" rows="4" maxlength="5000"></textarea>
     </div>
-    <p class="form__hint" id="interest-hint">{contact.hint}</p>
-    <button class="button" type="submit" aria-describedby="interest-hint">{contact.submit}</button>
+    {
+      worker ? (
+        // A field for bots only: people never see it, and anything sent with it filled in is dropped.
+        <div class="form__trap" aria-hidden="true">
+          <label for="interest-website">Leave this empty</label>
+          <input id="interest-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+      ) : (
+        <p class="form__hint" id="interest-hint">{contact.hint}</p>
+      )
+    }
+    <button class="button" type="submit" aria-describedby={worker ? undefined : 'interest-hint'}>{contact.submit}</button>
   </form>
-  <p class="form__status" role="status" data-interest-status data-sent={contact.sent}></p>
+  <p
+    class="form__status"
+    role="status"
+    data-interest-status
+    data-sent={contact.sent}
+    data-sending={contact.sending}
+    data-received={contact.received.body}
+    data-failed={contact.failed.body}></p>
   <p class="contact__or">{contact.or}</p>
   <p class="contact__email"><a href={`mailto:${site.email}`}>{site.email}</a></p>
 </Section>

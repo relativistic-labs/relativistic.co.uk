@@ -1,0 +1,14 @@
+---
+// Where the Worker sends a visitor without JavaScript when their details couldn't be sent.
+import Base from '../../layouts/Base.astro';
+import { contact } from '../../content/copy';
+import { site } from '../../site.config';
+---
+
+<Base title={`${contact.failed.heading} · ${site.name}`} description={contact.failed.heading} path="/interest/failed/" noindex>
+  <article class="page wrap prose">
+    <h1>{contact.failed.heading}</h1>
+    <p>{contact.failed.body} <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    <p><a class="button" href="/#contact">{contact.back}</a></p>
+  </article>
+</Base>

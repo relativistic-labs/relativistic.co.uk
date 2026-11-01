@@ -136,8 +136,9 @@ export const demo = {
 } as const;
 
 /**
- * The form writes an email for the visitor to send from their own email app: there's no server, and
- * nothing is sent or stored until they send it. Without JavaScript it's a mailto: form.
+ * On Cloudflare the form sends straight to the team, through the site's Worker; with JavaScript it
+ * stays on the page, and without it the browser moves to /interest/sent/ or /interest/failed/.
+ * On GitHub Pages there's no server, so it writes an email for the visitor's own email app to send.
  */
 export const contact = {
   question: 'How do we start?',
@@ -155,6 +156,17 @@ export const contact = {
   submit: 'Register your interest',
   hint: 'This opens your email app with a message to us, ready to send.',
   sent: 'Your email app should now have a message to us, ready to send. If it didn’t open, email us at',
+  // Sending through the Worker.
+  sending: 'Sending…',
+  received: {
+    heading: 'Thank you',
+    body: 'We’ve got your details. One of the five of us will reply soon.',
+  },
+  failed: {
+    heading: 'That didn’t send',
+    body: 'Sorry, something went wrong on our side. Please try again, or email us at',
+  },
+  back: 'Back to the home page',
   or: 'Or email us at',
 } as const;
 

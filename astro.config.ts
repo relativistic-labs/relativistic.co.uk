@@ -28,6 +28,9 @@ export default defineConfig({
       SHOW_SPONSORSHIP: envField.boolean({ context: 'server', access: 'public', default: false }),
       // Review deployments must never be indexed: adds a robots meta tag here and X-Robots-Tag in _headers.
       REVIEW_BUILD: envField.boolean({ context: 'server', access: 'public', default: false }),
+      // Where the build is going. On Cloudflare the interest form posts to the site's Worker
+      // (worker/index.ts); on GitHub Pages, which has no server, it stays a mailto: form.
+      DEPLOY_TARGET: envField.enum({ context: 'server', access: 'public', values: ['pages', 'cloudflare'], default: 'pages' }),
       // Where a preview build is served, so /llms.txt points agents there rather than at production.
       PREVIEW_URL: envField.string({ context: 'server', access: 'public', optional: true }),
     },
@@ -80,11 +83,12 @@ export default defineConfig({
         "default-src 'none'",
         "img-src 'self'",
         "font-src 'self'",
-        // Same-origin fetches only. Nothing on the page fetches; Lighthouse reads robots.txt this way.
+        // Same-origin fetches only: the interest form on Cloudflare, and Lighthouse reading robots.txt.
         "connect-src 'self'",
         "base-uri 'none'",
-        // The interest form, without JavaScript, hands its fields to the visitor's email app.
-        'form-action mailto:',
+        // The interest form without JavaScript: on Cloudflare it posts to the site's own Worker; on
+        // GitHub Pages it hands its fields to the visitor's email app.
+        process.env['DEPLOY_TARGET'] === 'cloudflare' ? "form-action 'self'" : 'form-action mailto:',
       ],
     },
   },

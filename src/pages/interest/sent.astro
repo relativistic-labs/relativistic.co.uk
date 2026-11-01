@@ -1,0 +1,15 @@
+---
+// Where the Worker sends a visitor without JavaScript once their details are on their way to us.
+// With JavaScript the form says the same thing without leaving the page.
+import Base from '../../layouts/Base.astro';
+import { contact } from '../../content/copy';
+import { site } from '../../site.config';
+---
+
+<Base title={`${contact.received.heading} · ${site.name}`} description={contact.received.body} path="/interest/sent/" noindex>
+  <article class="page wrap prose">
+    <h1>{contact.received.heading}</h1>
+    <p>{contact.received.body}</p>
+    <p><a class="button" href="/">{contact.back}</a></p>
+  </article>
+</Base>

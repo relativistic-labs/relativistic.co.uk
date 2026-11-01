@@ -1,17 +1,29 @@
-// Review build: the same static-assets Worker shape as production, with every section switched on,
-// on its workers.dev URL only. Build with `pnpm build:review`, which adds `X-Robots-Tag: noindex`
-// to every path in _headers and a robots noindex meta tag to every page. No routes, no custom domain.
-// Access control (Cloudflare Access) is added from the dashboard. Lives in the Relativistic account,
-// alongside production, at relativistic-site-review.relativistic-labs.workers.dev.
+// Review build: the same Worker as production, with every section switched on, on its workers.dev URL
+// only. Its interest form emails the team too, with the subject marked as from the review build.
+// Build with `pnpm build:review`, which adds `X-Robots-Tag: noindex` to every path in _headers and a
+// robots noindex meta tag to every page. No routes, no custom domain. Cloudflare Access is in front of
+// it (infra repository). Lives in the Relativistic account, alongside production, at
+// relativistic-site-review.relativistic-labs.workers.dev.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "relativistic-site-review",
   "account_id": "acceb873d28d2928b0d4941a52951072",
   "compatibility_date": "2026-10-28",
+  // Runs only for what isn't a file: the interest form's POST /interest, and would-be 404s.
+  "main": "./worker/index.ts",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // A browser's own form post is a navigation, which the assets layer would otherwise answer
+    // first, with 405 Method Not Allowed.
+    "run_worker_first": ["/interest"]
   },
+  // The interest form goes to the team through relativistic-mail, which holds the team list
+  // (infra repository, email-worker/). Deploy that first if its Team entrypoint changes.
+  "services": [{ "binding": "MAIL", "service": "relativistic-mail", "entrypoint": "Team" }],
+  // Five sends a minute per visitor address. The namespace is per account: keep it unique.
+  "ratelimits": [{ "name": "INTEREST_LIMIT", "namespace_id": "1002", "simple": { "limit": 5, "period": 60 } }],
   "workers_dev": true,
   "preview_urls": false
 }

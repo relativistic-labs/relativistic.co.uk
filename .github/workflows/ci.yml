@@ -26,6 +26,8 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Types and content schemas
         run: pnpm check
+      - name: The Worker's types and tests
+        run: pnpm check:worker && pnpm test:worker
 
       - name: Build, every section off
         run: pnpm build:all-off

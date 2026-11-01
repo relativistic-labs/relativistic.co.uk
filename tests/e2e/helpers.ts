@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-export const PAGES = ['/', '/privacy/', '/404.html'] as const;
+export const PAGES = ['/', '/privacy/', '/404.html', '/interest/sent/', '/interest/failed/'] as const;
 
 /**
  * Word limits for the rendered <main>, counting headings, captions, form labels and button labels but

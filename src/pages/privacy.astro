@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { DEPLOY_TARGET } from 'astro:env/server';
 import { site } from '../site.config';
 
 // Completed against the ICO's list of what a privacy notice must say:
@@ -44,16 +45,25 @@ const controller = site.company
       next time. It never leaves your device, and nothing is stored until you choose.
     </p>
 
-    <h2>Emailing us</h2>
+    <h2>Emailing us, and the form</h2>
     <p>
       If you email us, we use your name, address and message to reply and to keep a record of the conversation. Our lawful
       basis is legitimate interests: answering your enquiry. We don’t add you to a mailing list, sell your details or share
       them with anyone except the services that carry and store our email: [to confirm: the email provider].
     </p>
-    <p>
-      The form on the home page sends nothing itself. It writes an email from what you enter, and your own email app
-      sends it only if you choose to.
-    </p>
+    {
+      DEPLOY_TARGET === 'cloudflare' ? (
+        <p>
+          The form on the home page sends what you enter to us as an email, and we treat it the same way. It reaches us
+          through the service that hosts this site, which also carries our email.
+        </p>
+      ) : (
+        <p>
+          The form on the home page sends nothing itself. It writes an email from what you enter, and your own email app
+          sends it only if you choose to.
+        </p>
+      )
+    }
     <p>We keep emails for [to confirm: the retention period], then delete them.</p>
 
     <h2>Your rights</h2>

@@ -905,6 +905,14 @@
   .form__hint {
     color: var(--color-muted);
   }
+  /* The bot trap: off screen rather than display: none, which some bots know to skip */
+  .form__trap {
+    position: absolute;
+    left: -100vw;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
   /* Empty until the form is sent, but always there, so screen readers hear it when it fills */
   .form__status:empty {
     padding: 0;
