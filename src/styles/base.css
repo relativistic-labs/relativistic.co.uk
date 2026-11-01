@@ -922,6 +922,29 @@
     border-left: 8px solid var(--color-accent);
     background: var(--color-raised);
   }
+  /* Takes the form's place once it's sent */
+  .form__done {
+    max-width: var(--measure);
+    margin: var(--space-6) 0;
+    padding: var(--space-5);
+    border-left: 4px solid var(--color-accent);
+    background: var(--color-raised);
+  }
+  .form__done h3 {
+    margin-top: 0;
+  }
+  /* Focused by the script so it's read out, not for the reader to act on: no focus highlight */
+  .form__done h3:focus,
+  .form__done h3:focus-visible {
+    outline: none;
+    background: none;
+    color: inherit;
+    box-shadow: none;
+  }
+  .form__done .button {
+    font-family: inherit;
+    cursor: pointer;
+  }
   .contact__or {
     margin-bottom: 0;
   }

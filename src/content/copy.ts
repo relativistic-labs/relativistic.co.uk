@@ -158,10 +158,12 @@ export const contact = {
   sent: 'Your email app should now have a message to us, ready to send. If it didn’t open, email us at',
   // Sending through the Worker.
   sending: 'Sending…',
+  // Replaces the form once it's sent, and is the page a browser without JavaScript lands on.
   received: {
-    heading: 'Thank you',
-    body: 'We’ve got your details. One of the five of us will reply soon.',
+    heading: 'Message sent',
+    body: 'Thank you. We’ve got your details, and one of the five of us will reply soon.',
   },
+  again: 'Send another message',
   failed: {
     heading: 'That didn’t send',
     body: 'Sorry, something went wrong on our side. Please try again, or email us at',

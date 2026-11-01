@@ -55,7 +55,7 @@ test.describe('without JavaScript', () => {
     await page.getByLabel('Work email').fill('ada@example.org');
     await page.getByRole('button', { name: 'Register your interest' }).click();
     await expect(page).toHaveURL(/\/interest\/sent\/$/);
-    await expect(page.locator('h1')).toHaveText('Thank you');
+    await expect(page.locator('h1')).toHaveText('Message sent');
     expect(new URLSearchParams(body).get('name')).toBe('Ada Lovelace');
   });
 });
@@ -90,7 +90,7 @@ test('/index.md says what the page says, including the diagram @both', async ({ 
   await page.goto('/');
   const pieces = await page.locator('main').evaluate((m) =>
     [...m.querySelectorAll('h1, h2, h3, p, li, dt, dd, desc')]
-      .filter((e) => !e.closest('.opening__action, .packages__action, .portrait, .founder__links, .demo__window, .demo__control, form') && !e.querySelector('p, li, h3'))
+      .filter((e) => !e.closest('.opening__action, .packages__action, .portrait, .founder__links, .demo__window, .demo__control, form, .form__done') && !e.querySelector('p, li, h3'))
       .map((e) => (e.textContent ?? '').replace(/\s+/g, ' ').trim())
       .filter(Boolean),
   );

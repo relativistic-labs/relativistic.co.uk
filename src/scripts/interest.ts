@@ -3,7 +3,8 @@
  * choose their option before the page moves to the form.
  *
  * On Cloudflare (data-send="worker") sending posts the form to the site's Worker, which emails the
- * team, and the page says whether it arrived. On GitHub Pages (data-send="mailto") there's no server:
+ * team. Once it arrives, a "Message sent" panel takes the form's place until they choose to send
+ * another; if it fails, the form stays, with what they typed, and says so. On GitHub Pages (data-send="mailto") there's no server:
  * sending writes an email, with everything the visitor entered, for their own email app to send.
  */
 export function initInterest(): void {
@@ -28,15 +29,22 @@ export function initInterest(): void {
     return link;
   };
 
+  const done = document.querySelector<HTMLElement>('[data-interest-done]');
+  done?.querySelector('[data-interest-again]')?.addEventListener('click', () => {
+    done.hidden = true;
+    form.hidden = false;
+    form.querySelector('input')?.focus();
+  });
+
   // The browser has already checked the required fields when this fires.
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (form.dataset['send'] === 'worker') void send(form, status, emailLink);
+    if (form.dataset['send'] === 'worker' && done) void send(form, status, done, emailLink);
     else writeEmail(form, status, email, emailLink);
   });
 }
 
-async function send(form: HTMLFormElement, status: HTMLElement, emailLink: () => HTMLAnchorElement): Promise<void> {
+async function send(form: HTMLFormElement, status: HTMLElement, done: HTMLElement, emailLink: () => HTMLAnchorElement): Promise<void> {
   const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
   if (button.disabled) return;
   button.disabled = true;
@@ -55,7 +63,12 @@ async function send(form: HTMLFormElement, status: HTMLElement, emailLink: () =>
   button.disabled = false;
   if (sent) {
     form.reset();
-    status.textContent = status.dataset['received']!;
+    status.textContent = '';
+    form.hidden = true;
+    done.hidden = false;
+    // The whole message in the middle of the screen, and the heading focused so screen readers read it.
+    done.scrollIntoView({ block: 'center' });
+    done.querySelector<HTMLElement>('h3')!.focus({ preventScroll: true });
   } else {
     // Everything they typed is still in the form, so trying again costs nothing.
     status.replaceChildren(`${status.dataset['failed']} `, emailLink(), '.');

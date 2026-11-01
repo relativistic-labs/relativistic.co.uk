@@ -68,13 +68,22 @@ const f = contact.fields;
     }
     <button class="button" type="submit" aria-describedby={worker ? undefined : 'interest-hint'}>{contact.submit}</button>
   </form>
+  {
+    worker && (
+      // Takes the form's place once it's sent, so nobody misses it, and takes the focus so it's read out.
+      <div class="form__done" data-interest-done hidden>
+        <h3 tabindex="-1">{contact.received.heading}</h3>
+        <p>{contact.received.body}</p>
+        <button class="button button--secondary" type="button" data-interest-again>{contact.again}</button>
+      </div>
+    )
+  }
   <p
     class="form__status"
     role="status"
     data-interest-status
     data-sent={contact.sent}
     data-sending={contact.sending}
-    data-received={contact.received.body}
     data-failed={contact.failed.body}></p>
   <p class="contact__or">{contact.or}</p>
   <p class="contact__email"><a href={`mailto:${site.email}`}>{site.email}</a></p>

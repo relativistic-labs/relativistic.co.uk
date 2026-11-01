@@ -125,19 +125,28 @@ test.describe('register your interest', () => {
       await page.getByLabel('A demo of Enterprise').check();
     });
 
-    test('sends the form, says it arrived and clears it @both', async ({ page }) => {
+    test('sends the form, swaps it for a message, and brings it back to send another @both', async ({ page }) => {
       let body = '';
       await page.route('**/interest', async (route) => {
         body = route.request().postData() ?? '';
         await route.fulfill({ json: { ok: true } });
       });
       await page.getByRole('button', { name: 'Register your interest' }).click();
-      await expect(page.getByRole('status')).toHaveText('We’ve got your details. One of the five of us will reply soon.');
       const sent = new URLSearchParams(body);
       expect(sent.get('name')).toBe('Ada Lovelace');
       expect(sent.get('interest')).toBe('A demo of Enterprise');
       expect(sent.get('website')).toBe('');
+      // The form is gone, and the message takes its place, with the focus.
+      const heading = page.getByRole('heading', { name: 'Message sent' });
+      await expect(heading).toBeFocused();
+      await expect(heading).toBeInViewport();
+      await expect(page.locator('#interest')).toBeHidden();
+      await expect(page.getByText('Thank you. We’ve got your details')).toBeVisible();
+      await page.getByRole('button', { name: 'Send another message' }).click();
+      await expect(page.locator('#interest')).toBeVisible();
+      await expect(heading).toBeHidden();
       await expect(page.getByLabel('Your name')).toHaveValue('');
+      await expect(page.getByLabel('Your name')).toBeFocused();
     });
 
     test('a failure says so, keeps what they typed and offers the email address @both', async ({ page }) => {
