@@ -1,7 +1,8 @@
 /* Relativistic site styles. Colour and motion come from brand/tokens.css.
-   Type and components follow GOV.UK Design System patterns (reimplemented, not its identity):
+   Type and layout borrow from GOV.UK Design System patterns (reimplemented, not its identity):
    bold headings, a 19 px body, captions over headings, a 640 px measure, underlined links,
-   the yellow focus state, a pressed-shadow button, summary lists, inset text and tags.
+   the yellow focus state, summary lists and inset text. The controls are toned down from GOV.UK's:
+   flat buttons and nearly square corners, sentence-case tags and lighter field borders.
    Rules mark real structure only. */
 @layer tokens, base, layout, components, enhancements;
 
@@ -32,7 +33,7 @@
 
     /* The button keeps the deep teal in both themes, so white text passes AA (6.25:1) */
     --button: var(--paper-accent);
-    --button-shadow: oklch(0.36 0.06 190);
+    --button-pressed: oklch(0.36 0.06 190);
     --button-hover: oklch(0.42 0.07 190);
 
     /* Tags: tinted backgrounds that pass AA in both themes (9.7:1 and 10.2:1) */
@@ -173,9 +174,9 @@
     transform: none;
   }
 
-  /* Header: wordmark and Talk to us, with one solid accent bar beneath: the bold structural mark */
+  /* Header: wordmark and Talk to us, with a thin accent rule beneath */
   .site-header {
-    border-bottom: 8px solid var(--color-accent);
+    border-bottom: 3px solid var(--color-accent);
   }
   .site-header__inner {
     display: flex;
@@ -251,7 +252,7 @@
 }
 
 @layer components {
-  /* Button: square, bold, solid fill, a darker shadow that presses on :active. Start-button arrow. */
+  /* Button: flat solid fill, nearly square corners, semibold */
   .button {
     display: inline-flex;
     align-items: center;
@@ -260,41 +261,36 @@
     padding: var(--space-3) var(--space-5);
     background: var(--button);
     color: #ffffff;
-    font-size: var(--type-m);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-s);
+    font-weight: var(--weight-semibold);
     line-height: 1;
     text-decoration: none;
     border: 2px solid transparent;
-    border-radius: 0;
-    box-shadow: 0 2px 0 var(--button-shadow);
+    border-radius: var(--radius-1);
     touch-action: manipulation;
+    transition: background-color var(--duration-fast);
   }
   .button:hover {
     background: var(--button-hover);
   }
   .button:active {
-    translate: 0 2px;
-    box-shadow: none;
+    background: var(--button-pressed);
   }
   .button:focus-visible {
     border-color: var(--focus);
     box-shadow: 0 2px 0 var(--focus-text);
   }
-  .button svg {
-    flex: none;
-  }
 
-  /* Tags: small, bold, uppercase, on a tinted background */
+  /* Tags: small, sentence case, on a tinted background */
   .tag {
     display: inline-block;
-    padding: 0.3em 0.5em 0.25em;
+    padding: 0.25em 0.5em;
     font-size: var(--type-small);
-    font-weight: var(--weight-bold);
-    line-height: 1.1;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-weight: var(--weight-medium);
+    line-height: 1.2;
     color: var(--tag-text);
     background: var(--tag-bg);
+    border-radius: var(--radius-1);
   }
   .tag--accent {
     color: var(--tag-accent-text);
@@ -814,12 +810,14 @@
 @layer components {
   /* Secondary buttons: the package actions, and the sketch's pause */
   .button--secondary {
-    background: var(--color-raised);
+    background: transparent;
     color: var(--color-text);
-    font-size: var(--type-s);
-    box-shadow: 0 2px 0 var(--color-muted);
+    border: 1.5px solid var(--color-muted);
   }
   .button--secondary:hover {
+    background: var(--color-raised);
+  }
+  .button--secondary:active {
     background: color-mix(in oklab, var(--color-raised), var(--color-text) 10%);
   }
   .packages li {
@@ -831,7 +829,7 @@
     padding-top: var(--space-2);
   }
 
-  /* The register-your-interest form, after GOV.UK's form patterns */
+  /* The register-your-interest form, after GOV.UK's form patterns, with lighter borders */
   .form {
     max-width: var(--measure);
     margin: var(--space-6) 0;
@@ -852,7 +850,7 @@
   .form legend {
     display: block;
     margin-bottom: var(--space-2);
-    font-weight: var(--weight-bold);
+    font-weight: var(--weight-semibold);
   }
   .form__optional {
     font-weight: var(--weight-regular);
@@ -866,8 +864,8 @@
     max-width: 30rem;
     min-height: var(--target-min);
     padding: var(--space-2);
-    border: 2px solid var(--color-text);
-    border-radius: 0;
+    border: 1.5px solid var(--color-muted);
+    border-radius: var(--radius-1);
     background: var(--color-bg);
     color: var(--color-text);
     font: inherit;
