@@ -40,12 +40,14 @@ test.describe('founder portraits', () => {
     test.skip(!(await sectionsOn(page)).team, 'team section is off in this build');
   });
 
-  test('the real photo is the only portrait <img> in the HTML', async ({ request }) => {
+  test('the real photos are the only portrait <img>s in the HTML', async ({ request }) => {
     const html = await (await request.get('/')).text();
     const imgs = (html.match(/<img\b[^>]*>/g) ?? []).filter((i) => !i.includes('lockup.svg'));
-    expect(imgs).toHaveLength(1);
-    expect(imgs[0]).toContain('alt="Harry Robbins"');
-    expect(imgs[0]).toContain('harry-observed');
+    expect(imgs).toHaveLength(2);
+    expect(imgs[0]).toContain('alt="Ian George"');
+    expect(imgs[0]).toContain('ian-observed');
+    expect(imgs[1]).toContain('alt="Harry Robbins"');
+    expect(imgs[1]).toContain('harry-observed');
     expect(html).not.toMatch(/<(img|source)\b[^>]*harry-rendered/);
   });
 
@@ -71,9 +73,9 @@ test.describe('founder portraits', () => {
   });
 
   test('every other founder shows initials, with no image and no label', async ({ page }) => {
-    await expect(page.locator('.portrait--pending')).toHaveCount(4);
+    await expect(page.locator('.portrait--pending')).toHaveCount(3);
     await expect(page.locator('.portrait--pending img')).toHaveCount(0);
-    await expect(page.locator('.portrait--pending .portrait__monogram')).toHaveCount(4);
+    await expect(page.locator('.portrait--pending .portrait__monogram')).toHaveCount(3);
     await expect(page.locator('.portrait p')).toHaveCount(0);
   });
 });

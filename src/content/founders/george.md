@@ -2,9 +2,9 @@
 name: Ian George
 role: Platform engineering
 order: 2
-portrait: to-come
+portrait: ../../assets/founders/ian-observed.jpg
 links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/iegeorge/
 ---
-I’ve built software and platforms for startups, banks, large corporates and central government, most recently as platform tech lead on a government AI team, and before that for a mission-led AI startup.
+I’ve built software and platforms with startups, banks, corporates and central government, most recently as platform tech lead on a government AI team, and before that with a mission-led AI startup.
