@@ -3,6 +3,7 @@ name: Ian George
 role: Platform engineering
 order: 2
 portrait: ../../assets/founders/ian-observed.jpg
+portraitRendered: ../../assets/founders/ian-rendered.jpg
 links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/iegeorge/

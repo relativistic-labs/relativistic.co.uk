@@ -115,7 +115,7 @@
   --duration-base: 200ms; /* Most interface transitions */
   --duration-slow: 250ms; /* The longest interface transition allowed */
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1); /* All interface transitions ease out */
-  --portrait-shift: 600ms; /* The portrait shift: plays once per card (500 to 700 ms), never loops */
+  --portrait-shift: 600ms; /* The portrait shift: 500 to 700 ms per shift */
 }
 
 /* Forced themes */

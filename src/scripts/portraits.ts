@@ -1,14 +1,21 @@
 /**
  * Rendered, then observed. The real photo is the card's only <img> in the HTML; this adds the
  * AI-polished layer on top (aria-hidden), only when JavaScript runs and motion is allowed, then
- * plays the Doppler shift once when the card comes into view. The animation itself is CSS
- * (styles/base.css, "The portrait shift"); band timings match brand/portraits/glitch.js.
+ * plays the Doppler shift when the card comes into view. Afterwards, every so often, the card
+ * glitches back to the rendered layer, holds it a moment and shifts to the real photo again, so
+ * a reader who missed the first shift still sees what happened. Each card keeps its own irregular
+ * timer, so they drift out of step, and none repeats while out of view or in a hidden tab. The
+ * animation itself is CSS (styles/base.css, "The portrait shift"); band timings match
+ * brand/portraits/glitch.js.
  */
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-const DURATION = 600; // --portrait-shift: 500 to 700 ms, once, never loops
+const DURATION = 600; // --portrait-shift: 500 to 700 ms per shift
 const BANDS = 9;
 const DELAY = 900; // after the card is mostly in view
 const STAGGER = 240; // between cards
+const HOLD = 1100; // on the rendered layer, when a repeat glitches back to it
+const AGAIN_MIN = 5000; // between repeats, drawn afresh each time
+const AGAIN_MAX = 11000;
 
 function prng(seed: number) {
   let a = seed >>> 0;
@@ -27,11 +34,11 @@ function el(className: string, parent: Element): HTMLElement {
   return node;
 }
 
-function bands(index: number): HTMLElement {
+function bands(seed: number): HTMLElement {
   const shift = document.createElement('div');
   shift.className = 'shift';
   shift.setAttribute('aria-hidden', 'true');
-  const rand = prng(20261028 + index * 7919);
+  const rand = prng(20261028 + seed);
   for (let k = 0; k < BANDS; k++) {
     const start = 0.05 + rand() * 0.25;
     const amp = (3.5 + rand() * 6) * (rand() < 0.5 ? -1 : 1); // % of the frame's width
@@ -69,31 +76,58 @@ function prepare(card: HTMLElement, index: number) {
   Promise.all([rendered.decode(), real.decode()])
     .then(() => {
       if (reduce.matches) return;
-      const shift = bands(index);
-      card.style.setProperty('--rendered', `url("${rendered.currentSrc}")`);
-      card.style.setProperty('--observed', `url("${real.currentSrc}")`);
-      card.append(rendered, shift);
+      const ai = `url("${rendered.currentSrc}")`;
+      const observed = `url("${real.currentSrc}")`;
+      card.append(rendered);
       card.classList.add('is-rendered');
 
-      const play = () => {
+      let cycle = 0;
+      let started = false;
+      let visible = false;
+      let due = false; // a repeat came round while the card was out of sight
+
+      // One shift, to the real photo or back to the rendered one. Fresh bands every time.
+      const shift = (toObserved: boolean, then: () => void) => {
+        const layer = bands(index * 7919 + cycle++ * 104729);
+        layer.style.setProperty('--rendered', toObserved ? ai : observed);
+        layer.style.setProperty('--observed', toObserved ? observed : ai);
+        card.append(layer);
         card.classList.add('is-shifting');
-        setTimeout(() => card.classList.remove('is-rendered'), DURATION / 2);
+        card.classList.remove('is-observed');
+        setTimeout(() => card.classList.toggle('is-rendered', !toObserved), DURATION / 2);
         setTimeout(() => {
-          shift.remove();
-          rendered.remove();
+          layer.remove();
           card.classList.remove('is-shifting');
-          card.classList.add('is-observed');
+          card.classList.toggle('is-observed', toObserved);
+          then();
         }, DURATION + 50);
       };
-      const seen = new IntersectionObserver(
+      const later = () => setTimeout(again, AGAIN_MIN + Math.random() * (AGAIN_MAX - AGAIN_MIN));
+      const again = () => {
+        if (reduce.matches) return;
+        if (!visible || document.hidden) {
+          due = true;
+          return;
+        }
+        shift(false, () => setTimeout(() => shift(true, later), HOLD));
+      };
+      const resume = () => {
+        if (!due || !visible || document.hidden) return;
+        due = false;
+        later();
+      };
+
+      new IntersectionObserver(
         ([entry]) => {
-          if (!entry?.isIntersecting) return;
-          seen.disconnect();
-          setTimeout(play, DELAY + index * STAGGER);
+          visible = !!entry?.isIntersecting;
+          if (!visible) return;
+          if (started) return resume();
+          started = true;
+          setTimeout(() => shift(true, later), DELAY + index * STAGGER);
         },
         { threshold: 0.6 },
-      );
-      seen.observe(card);
+      ).observe(card);
+      document.addEventListener('visibilitychange', resume);
     })
     .catch(() => {
       /* keep the real photo */

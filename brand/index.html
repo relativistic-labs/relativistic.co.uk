@@ -442,10 +442,10 @@
     <h2 id="h-portraits">Rendered, then as observed</h2>
     <div class="grid2">
       <div>
-        <p>Founders are photographed as they really are, under identical conditions (see <a href="photography.md">photography.md</a>). Each photo also gets an AI edit, changing only clothes and grooming, that makes them look sharp and businesslike. On the site, the card shows the edit first, labelled <span class="label">Rendered / AI</span>, then shifts once to the real photo, labelled <span class="label">As observed</span>.</p>
+        <p>Founders are photographed as they really are, under identical conditions (see <a href="photography.md">photography.md</a>). Each photo also gets an AI edit, changing only clothes and grooming, that makes them look sharp and businesslike. On the site, the card shows the edit first, labelled <span class="label">Rendered / AI</span>, then shifts to the real photo, labelled <span class="label">As observed</span>. Every few seconds, at irregular moments, it glitches back to the edit for a beat and shifts again, so nobody misses it.</p>
         <ul>
           <li><strong>The real photo is always the default.</strong> It is the only image in the HTML, and the one used for social cards, LinkedIn, press, documents and slides. Readers without JavaScript, with reduced motion, or using a screen reader get the real photo.</li>
-          <li><strong>The shift is a Doppler shift.</strong> Bands on the 45° grid slide along their own diagonal, splitting into blueshift (accent) ahead and redshift (signal) behind. About 600&nbsp;ms, once per card, never looping, no flicker and no full-frame flash.</li>
+          <li><strong>The shift is a Doppler shift.</strong> Bands on the 45° grid slide along their own diagonal, splitting into blueshift (accent) ahead and redshift (signal) behind. About 600&nbsp;ms a shift, repeating at random intervals of 5 to 11&nbsp;s while the card is in view, out of step across cards. No flicker and no full-frame flash.</li>
           <li>Every founder consents to both images, and can withdraw consent to the edit at any time.</li>
         </ul>
         <p><a href="portraits/glitch-demo.html">Open the demo, frame by frame</a> · <code translate="no">portraits/glitch.js</code></p>

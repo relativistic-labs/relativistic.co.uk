@@ -84,7 +84,7 @@ const motion = {
   'duration-base': ['200ms', 'Most interface transitions'],
   'duration-slow': ['250ms', 'The longest interface transition allowed'],
   'ease-out': ['cubic-bezier(0.2, 0.8, 0.2, 1)', 'All interface transitions ease out'],
-  'portrait-shift': ['600ms', 'The portrait shift: plays once per card (500 to 700 ms), never loops'],
+  'portrait-shift': ['600ms', 'The portrait shift: 500 to 700 ms per shift'],
 };
 
 // ---------------------------------------------------------------------------
@@ -243,7 +243,7 @@ const json = {
     default: 'The real photograph. Used for social, LinkedIn, press, no-JS, reduced motion and screen readers',
     shift: {
       duration: '600ms',
-      plays: 'once per card, when 60% in view; never loops',
+      plays: 'when 60% in view, then back to the rendered image and again every 5 to 11 s at random, per card, only while in view',
       geometry: 'bands on the 45-degree grid, displaced along their own diagonal',
       split: { lead: 'accent (blueshift)', trail: 'signal (redshift)' },
       labels: { before: 'RENDERED / AI', after: 'AS OBSERVED' },

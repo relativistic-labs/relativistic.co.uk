@@ -50,21 +50,35 @@ test.describe('founder portraits', () => {
     expect(imgs[1]).toContain('tamlyn-observed');
     expect(imgs[2]).toContain('alt="Harry Robbins"');
     expect(imgs[2]).toContain('harry-observed');
-    expect(html).not.toMatch(/<(img|source)\b[^>]*harry-rendered/);
+    expect(html).not.toMatch(/<(img|source)\b[^>]*-rendered/);
   });
 
-  test('plays once and ends on the real photo', async ({ page }) => {
-    const card = page.locator('.portrait[data-rendered-srcset]');
-    await card.scrollIntoViewIfNeeded();
-    await expect(card).toHaveClass(/is-rendered/, { timeout: 10_000 });
-    await expect(card).toHaveClass(/is-observed/, { timeout: 10_000 });
-    await expect(card.locator('.shift, .portrait__rendered')).toHaveCount(0);
-    await expect(card.locator('img[alt="Harry Robbins"]')).toBeVisible();
+  test('shifts to the real photo, then glitches back to the edit now and then', async ({ page }) => {
+    test.setTimeout(60_000);
+    const cards = page.locator('.portrait[data-rendered-srcset]');
+    await expect(cards).toHaveCount(2);
+    // The cards can share a row, so only the first is sure to be caught before its first shift.
+    await cards.first().scrollIntoViewIfNeeded();
+    await expect(cards.first()).toHaveClass(/is-rendered/, { timeout: 10_000 });
+    for (const [i, name] of ['Ian George', 'Harry Robbins'].entries()) {
+      const card = cards.nth(i);
+      await card.scrollIntoViewIfNeeded();
+      await expect(card).toHaveClass(/is-observed/, { timeout: 10_000 });
+      await expect(card.locator('.shift')).toHaveCount(0);
+      await expect(card.locator('.portrait__rendered')).toBeHidden();
+      await expect(card.locator(`img[alt="${name}"]`)).toBeVisible();
+    }
+    // Repeats come every 5 to 11 s while the card is in view, and end on the real photo again.
+    const card = cards.nth(1);
+    await expect(card).toHaveClass(/is-rendered/, { timeout: 15_000 });
+    await expect(card.locator('.portrait__rendered')).toBeVisible({ timeout: 2_000 });
+    await expect(card).toHaveClass(/is-observed/, { timeout: 5_000 });
+    await expect(card.locator('.portrait__rendered')).toBeHidden();
   });
 
   test('reduced motion never requests the polished layer', async ({ page }) => {
     const requested: string[] = [];
-    page.on('request', (r) => r.url().includes('harry-rendered') && requested.push(r.url()));
+    page.on('request', (r) => r.url().includes('-rendered') && requested.push(r.url()));
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     await scrollThrough(page);

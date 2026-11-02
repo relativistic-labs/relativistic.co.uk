@@ -694,7 +694,8 @@
 }
 
 /* The portrait shift: a Doppler shift, CSS-driven (scripts/portraits.ts only adds the layers and
-   the class). Bands cut on the 45-degree grid slide along their own diagonal once, splitting into a
+   the classes, and swaps --rendered and --observed on the bands when a repeat shifts back). Bands
+   cut on the 45-degree grid slide along their own diagonal once per shift, splitting into a
    blueshifted copy ahead and a redshifted copy behind. The two tints add up to white, so where they
    overlap the photo keeps its colour and brightness: no full-frame flash. The real photo stays
    underneath throughout. */
@@ -721,7 +722,8 @@
   .portrait.is-shifting .shift {
     display: block;
   }
-  .portrait.is-shifting .portrait__rendered {
+  .portrait.is-shifting .portrait__rendered,
+  .portrait:not(.is-rendered) .portrait__rendered {
     visibility: hidden;
   }
   .shift__band {
