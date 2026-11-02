@@ -7,4 +7,4 @@ links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/iegeorge/
 ---
-I was platform technical lead at a large government department, and worked on infrastructure for HACE’s team using large language models.
+I’ve built software and platforms for startups, banks, large corporates and central government, most recently as platform tech lead on a government AI team, and before that for a mission-led AI startup.
