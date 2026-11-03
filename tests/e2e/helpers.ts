@@ -6,11 +6,12 @@ export const PAGES = ['/', '/privacy/', '/404.html', '/interest/sent/', '/intere
  * Word limits for the rendered <main>, counting headings, captions, form labels and button labels but
  * not diagram labels or the workspace sketch's interface. Round 3 set 700 with the team on and 560
  * without it; on 29 October they rose to fit the vibe-coding lines, the interest form, the package
- * actions and the sketch, which together added about 110 words. Models and sponsorship are off by
+ * actions and the sketch, which together added about 110 words. On 3 November the team limit rose
+ * by 15 for Alex's longer profile. Models and sponsorship are off by
  * default and have their own allowances, so switching them on can't hide an overrun elsewhere.
  */
 export const WORDS_CORE = 680;
-export const WORDS_ALL_ON = 830;
+export const WORDS_ALL_ON = 845;
 export const WORDS_MODELS = 60;
 export const WORDS_SPONSORSHIP = 100;
 
