@@ -88,6 +88,79 @@ test.describe('founder portraits', () => {
     await expect(page.locator('.portrait__rendered, .shift')).toHaveCount(0);
   });
 
+  test('the Portraits control stops the repeats: Smart holds the edit, Real the photo (WCAG 2.2.2)', async ({ page }) => {
+    test.setTimeout(60_000);
+    const control = page.getByRole('group', { name: 'Portraits' });
+    const cards = page.locator('.portrait[data-rendered-srcset]');
+    await control.scrollIntoViewIfNeeded();
+    await expect(control.getByRole('radio')).toHaveCount(3);
+    await expect(control.getByRole('radio', { name: 'Both' })).toBeChecked();
+    // Count every shift that starts from here on.
+    await page.evaluate(() => {
+      const w = window as unknown as { shifts: number };
+      w.shifts = 0;
+      new MutationObserver((list) => {
+        for (const m of list) for (const n of m.addedNodes) if ((n as Element).classList?.contains('shift')) w.shifts++;
+      }).observe(document.querySelector('[data-team]')!, { childList: true, subtree: true });
+    });
+    const shifts = () => page.evaluate(() => (window as unknown as { shifts: number }).shifts);
+
+    await control.getByRole('radio', { name: 'Smart' }).check();
+    for (let i = 0; i < 3; i++) {
+      await expect(cards.nth(i)).toHaveClass(/is-rendered/, { timeout: 5_000 });
+      await expect(cards.nth(i)).not.toHaveClass(/is-shifting/, { timeout: 2_000 });
+    }
+    const afterSmart = await shifts();
+    await page.waitForTimeout(6_000);
+    expect(await shifts()).toBe(afterSmart);
+
+    await control.getByRole('radio', { name: 'Real' }).check();
+    await expect(control.getByRole('radio', { name: 'Real' })).toBeChecked();
+    for (let i = 0; i < 3; i++) {
+      await expect(cards.nth(i)).toHaveClass(/is-observed/, { timeout: 5_000 });
+      await expect(cards.nth(i).locator('.portrait__rendered')).toBeHidden();
+    }
+    // Longer than the longest wait between repeats, with each card in view.
+    const afterReal = await shifts();
+    for (let i = 0; i < 3; i++) {
+      await cards.nth(i).scrollIntoViewIfNeeded();
+      await page.waitForTimeout(4_000);
+    }
+    expect(await shifts()).toBe(afterReal);
+
+    // Both starts the cycle again, and the choice is kept for the next visit.
+    await control.getByRole('radio', { name: 'Both' }).check();
+    await expect(cards.first()).toHaveClass(/is-rendered/, { timeout: 15_000 });
+    await page.reload();
+    await expect(page.getByRole('group', { name: 'Portraits' }).getByRole('radio', { name: 'Both' })).toBeChecked();
+  });
+
+  test('a stored Real choice never fetches the edit', async ({ page }) => {
+    const requested: string[] = [];
+    page.on('request', (r) => r.url().includes('-rendered') && requested.push(r.url()));
+    await page.addInitScript(() => localStorage.setItem('relativistic:portraits', 'real'));
+    await page.goto('/');
+    await page.locator('#team').scrollIntoViewIfNeeded();
+    await expect(page.getByRole('group', { name: 'Portraits' }).getByRole('radio', { name: 'Real' })).toBeChecked();
+    await page.waitForTimeout(3000);
+    expect(requested).toEqual([]);
+    await expect(page.locator('.portrait__rendered, .shift')).toHaveCount(0);
+  });
+
+  test('reduced motion: Real by default, and Smart cuts to the edit with no shift', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    const control = page.getByRole('group', { name: 'Portraits' });
+    await control.scrollIntoViewIfNeeded();
+    await expect(control.getByRole('radio', { name: 'Real' })).toBeChecked();
+    await control.getByRole('radio', { name: 'Smart' }).check();
+    const cards = page.locator('.portrait[data-rendered-srcset]');
+    for (let i = 0; i < 3; i++) {
+      await expect(cards.nth(i).locator('.portrait__rendered')).toBeVisible({ timeout: 5_000 });
+    }
+    await expect(page.locator('.shift')).toHaveCount(0);
+  });
+
   test('every other founder shows initials, with no image and no label', async ({ page }) => {
     await expect(page.locator('.portrait--pending')).toHaveCount(2);
     await expect(page.locator('.portrait--pending img')).toHaveCount(0);

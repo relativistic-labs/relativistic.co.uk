@@ -14,14 +14,14 @@ export const WORDS_ALL_ON = 830;
 export const WORDS_MODELS = 60;
 export const WORDS_SPONSORSHIP = 100;
 
-/** Words in an element as a reader sees them, leaving out diagram labels and the workspace sketch's interface. */
+/** Words in an element as a reader sees them, leaving out diagram labels and interface: the workspace sketch's and the Portraits control. */
 export async function wordsIn(page: Page, selector: string): Promise<number> {
   const text = await page.evaluate((sel) => {
     const el = document.querySelector(sel) as HTMLElement | null;
     if (!el) return '';
     // innerText needs a rendered element: lay out a copy without the diagrams, off-screen.
     const copy = el.cloneNode(true) as HTMLElement;
-    copy.querySelectorAll('figure svg, .demo__window').forEach((el) => el.remove());
+    copy.querySelectorAll('figure svg, .demo__window, .portrait-mode').forEach((el) => el.remove());
     copy.removeAttribute('id');
     copy.style.position = 'absolute';
     copy.style.left = '-100000px';

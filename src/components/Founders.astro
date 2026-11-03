@@ -15,6 +15,13 @@ const founders = await Promise.all(
     return { ...f, rendered: rendered?.srcSet.attribute };
   }),
 );
+// The Portraits control: shown only when JavaScript runs, since without it there is only the photo.
+// It stops the repeating shift (WCAG 2.2.2). Smart: the AI edit. Real: the photo. Both: the shift.
+const modes = [
+  ['smart', 'Smart'],
+  ['real', 'Real'],
+  ['both', 'Both'],
+] as const;
 const initials = (name: string) =>
   name
     .split(' ')
@@ -23,6 +30,21 @@ const initials = (name: string) =>
 ---
 
 <Section id="team" question={team.question} heading={team.heading}>
+  {
+    founders.some((f) => f.rendered) && (
+      <fieldset class="portrait-mode" data-portrait-mode hidden>
+        <legend>Portraits</legend>
+        <div class="portrait-mode__options">
+          {modes.map(([value, label]) => (
+            <span class="portrait-mode__option">
+              <input id={`portraits-${value}`} type="radio" name="portraits" value={value} />
+              <label for={`portraits-${value}`}>{label}</label>
+            </span>
+          ))}
+        </div>
+      </fieldset>
+    )
+  }
   <ul class="founders" data-team>
     {
       founders.map((f) => (
@@ -72,5 +94,5 @@ const initials = (name: string) =>
   import { initPortraits } from '../scripts/portraits';
 
   const section = document.querySelector('[data-team]');
-  if (section) initPortraits(section);
+  if (section) initPortraits(section, document.querySelector('[data-portrait-mode]'));
 </script>
