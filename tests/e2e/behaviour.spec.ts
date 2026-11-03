@@ -56,11 +56,11 @@ test.describe('founder portraits', () => {
   test('shifts to the real photo, then glitches back to the edit now and then', async ({ page }) => {
     test.setTimeout(60_000);
     const cards = page.locator('.portrait[data-rendered-srcset]');
-    await expect(cards).toHaveCount(2);
+    await expect(cards).toHaveCount(3);
     // The cards can share a row, so only the first is sure to be caught before its first shift.
     await cards.first().scrollIntoViewIfNeeded();
     await expect(cards.first()).toHaveClass(/is-rendered/, { timeout: 10_000 });
-    for (const [i, name] of ['Ian George', 'Harry Robbins'].entries()) {
+    for (const [i, name] of ['Ian George', 'Tamlyn Rhodes', 'Harry Robbins'].entries()) {
       const card = cards.nth(i);
       await card.scrollIntoViewIfNeeded();
       await expect(card).toHaveClass(/is-observed/, { timeout: 10_000 });
@@ -69,7 +69,7 @@ test.describe('founder portraits', () => {
       await expect(card.locator(`img[alt="${name}"]`)).toBeVisible();
     }
     // Repeats come every 5 to 11 s while the card is in view, and end on the real photo again.
-    const card = cards.nth(1);
+    const card = cards.nth(2);
     await expect(card).toHaveClass(/is-rendered/, { timeout: 15_000 });
     await expect(card.locator('.portrait__rendered')).toBeVisible({ timeout: 2_000 });
     await expect(card).toHaveClass(/is-observed/, { timeout: 5_000 });

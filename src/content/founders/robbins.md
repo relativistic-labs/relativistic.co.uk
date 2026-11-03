@@ -2,8 +2,8 @@
 name: Harry Robbins
 role: Product and delivery
 order: 5
-portrait: ../../assets/founders/harry-observed.jpg
-portraitRendered: ../../assets/founders/harry-rendered.jpg
+portrait: ../../assets/founders/harry-observed.avif
+portraitRendered: ../../assets/founders/harry-rendered.avif
 pronouns: they/them/he/him
 links:
   - label: LinkedIn

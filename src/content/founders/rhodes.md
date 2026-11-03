@@ -2,7 +2,8 @@
 name: Tamlyn Rhodes
 role: Product engineering
 order: 4
-portrait: ../../assets/founders/tamlyn-observed.jpg
+portrait: ../../assets/founders/tamlyn-observed.avif
+portraitRendered: ../../assets/founders/tamlyn-rendered.avif
 links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/tamlynrhodes/
