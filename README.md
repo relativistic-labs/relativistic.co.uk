@@ -1,6 +1,6 @@
 # Relativistic
 
-The site for Relativistic: one static page, built with Astro, that deploys unchanged to GitHub Pages and to Cloudflare Workers static assets.
+The site for Relativistic: one static page, built with Astro, deployed to Cloudflare Workers static assets.
 
 - No framework runtime, no third-party requests, no cookies, no server code.
 - JavaScript draws the particle field and the portrait shift, and nothing else. Every word and link works without it.
@@ -55,7 +55,7 @@ CLOUDFLARE_INCLUDE_PROCESS_ENV=true FORWARD_TO=you@example.org \
 
 If `relativistic-mail`'s `Team` entrypoint changes, deploy it (infra `email-worker/deploy.sh`) before the site.
 
-**GitHub Pages (fallback).** Pushes to `main` still build the site and upload `dist/` only (`.github/workflows/pages.yml`), with the optional sections following the repository variables of the same names. Pages has no server, so there the interest form writes an email for the visitor's own email app to send. DNS no longer points there.
+**GitHub Pages (retired).** The site used to be published to GitHub Pages as well. That workflow was removed on 4 November 2026 and Pages is switched off for the repository. The default `pnpm build` still targets a static host with no server, so its interest form writes an email for the visitor's own email app to send.
 
 **Review build.** `pnpm deploy:review` builds with every section on and deploys `wrangler.review.jsonc` (`relativistic-site-review`, also in the Relativistic account) to https://relativistic-site-review.relativistic-labs.workers.dev only. Run it from CI with the Deploy workflow, target `review`. Review builds send `X-Robots-Tag: noindex` on every path and a robots `noindex` meta tag on every page. Cloudflare Access in front of it, by one-time PIN to the team list, is managed in the infra repository.
 
