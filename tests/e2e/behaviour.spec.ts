@@ -43,26 +43,28 @@ test.describe('founder portraits', () => {
   test('the real photos are the only portrait <img>s in the HTML', async ({ request }) => {
     const html = await (await request.get('/')).text();
     const imgs = (html.match(/<img\b[^>]*>/g) ?? []).filter((i) => !i.includes('lockup.svg'));
-    expect(imgs).toHaveLength(4);
-    expect(imgs[0]).toContain('alt="Ian George"');
-    expect(imgs[0]).toContain('ian-observed');
-    expect(imgs[1]).toContain('alt="Alex Haslehurst"');
-    expect(imgs[1]).toContain('alex-observed');
-    expect(imgs[2]).toContain('alt="Tamlyn Rhodes"');
-    expect(imgs[2]).toContain('tamlyn-observed');
-    expect(imgs[3]).toContain('alt="Harry Robbins"');
-    expect(imgs[3]).toContain('harry-observed');
+    expect(imgs).toHaveLength(5);
+    expect(imgs[0]).toContain('alt="Lewis Crawford"');
+    expect(imgs[0]).toContain('lewis-observed');
+    expect(imgs[1]).toContain('alt="Ian George"');
+    expect(imgs[1]).toContain('ian-observed');
+    expect(imgs[2]).toContain('alt="Alex Haslehurst"');
+    expect(imgs[2]).toContain('alex-observed');
+    expect(imgs[3]).toContain('alt="Tamlyn Rhodes"');
+    expect(imgs[3]).toContain('tamlyn-observed');
+    expect(imgs[4]).toContain('alt="Harry Robbins"');
+    expect(imgs[4]).toContain('harry-observed');
     expect(html).not.toMatch(/<(img|source)\b[^>]*-rendered/);
   });
 
   test('shifts to the real photo, then glitches back to the edit now and then', async ({ page }) => {
     test.setTimeout(60_000);
     const cards = page.locator('.portrait[data-rendered-srcset]');
-    await expect(cards).toHaveCount(4);
+    await expect(cards).toHaveCount(5);
     // The cards can share a row, so only the first is sure to be caught before its first shift.
     await cards.first().scrollIntoViewIfNeeded();
     await expect(cards.first()).toHaveClass(/is-rendered/, { timeout: 10_000 });
-    for (const [i, name] of ['Ian George', 'Alex Haslehurst', 'Tamlyn Rhodes', 'Harry Robbins'].entries()) {
+    for (const [i, name] of ['Lewis Crawford', 'Ian George', 'Alex Haslehurst', 'Tamlyn Rhodes', 'Harry Robbins'].entries()) {
       const card = cards.nth(i);
       await card.scrollIntoViewIfNeeded();
       await expect(card).toHaveClass(/is-observed/, { timeout: 10_000 });
@@ -108,7 +110,7 @@ test.describe('founder portraits', () => {
     const shifts = () => page.evaluate(() => (window as unknown as { shifts: number }).shifts);
 
     await control.getByRole('radio', { name: 'Smart' }).check();
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       await expect(cards.nth(i)).toHaveClass(/is-rendered/, { timeout: 5_000 });
       await expect(cards.nth(i)).not.toHaveClass(/is-shifting/, { timeout: 2_000 });
     }
@@ -118,13 +120,13 @@ test.describe('founder portraits', () => {
 
     await control.getByRole('radio', { name: 'Real' }).check();
     await expect(control.getByRole('radio', { name: 'Real' })).toBeChecked();
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       await expect(cards.nth(i)).toHaveClass(/is-observed/, { timeout: 5_000 });
       await expect(cards.nth(i).locator('.portrait__rendered')).toBeHidden();
     }
     // Longer than the longest wait between repeats, with each card in view.
     const afterReal = await shifts();
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       await cards.nth(i).scrollIntoViewIfNeeded();
       await page.waitForTimeout(4_000);
     }
@@ -157,16 +159,15 @@ test.describe('founder portraits', () => {
     await expect(control.getByRole('radio', { name: 'Real' })).toBeChecked();
     await control.getByRole('radio', { name: 'Smart' }).check();
     const cards = page.locator('.portrait[data-rendered-srcset]');
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       await expect(cards.nth(i).locator('.portrait__rendered')).toBeVisible({ timeout: 5_000 });
     }
     await expect(page.locator('.shift')).toHaveCount(0);
   });
 
-  test('every other founder shows initials, with no image and no label', async ({ page }) => {
-    await expect(page.locator('.portrait--pending')).toHaveCount(1);
-    await expect(page.locator('.portrait--pending img')).toHaveCount(0);
-    await expect(page.locator('.portrait--pending .portrait__monogram')).toHaveCount(1);
+  test('every founder has a portrait, so none falls back to initials or a label', async ({ page }) => {
+    await expect(page.locator('.portrait--pending')).toHaveCount(0);
+    await expect(page.locator('.portrait__monogram')).toHaveCount(0);
     await expect(page.locator('.portrait p')).toHaveCount(0);
   });
 });

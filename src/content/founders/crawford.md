@@ -2,7 +2,8 @@
 name: Lewis Crawford
 role: Data and AI architecture
 order: 1
-portrait: to-come
+portrait: ../../assets/founders/lewis-observed.avif
+portraitRendered: ../../assets/founders/lewis-rendered.avif
 links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/lewiscrawford/
