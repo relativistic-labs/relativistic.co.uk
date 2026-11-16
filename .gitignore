@@ -5,6 +5,7 @@ scratch/*
 # Local planning documents contain internal commercial discussions.
 # This repository is public; keep these files out of Git as well as Pages.
 /docs/plans/
+/docs/research/
 
 # Dependencies and build output
 node_modules/
